@@ -681,44 +681,44 @@ function createRiskIcon(color,faded){const o=faded?0.5:1;return L.divIcon({html:
 function createRutaIcon(verificada){return L.divIcon({html:`<div class="ruta-marker ${verificada?'verificada-marker':'pendiente-marker'}">${verificada?'✅':'🐕'}</div>`,iconSize:[28,28],iconAnchor:[14,14],className:''});}
 function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'success');setTimeout(()=>t.classList.remove('show'),3000);}
 function checkHotZone(){
- const box=document.getElementById('hotZoneBox');
- const text=document.getElementById('hotZoneText');
+const box=document.getElementById('hotZoneBox');
+const text=document.getElementById('hotZoneText');
 
- if(!box || !text) return;
+if(!box||!text) return;
 
- if(!userLat || !userLng){
-   box.style.display='none';
-   return;
- }
+if(!userLat||!userLng){
+box.style.display='none';
+return;
+}
 
- let nearby = cachedAvistamientos.filter(a=>{
-   if(!a.lat || !a.lng) return false;
+let nearby=cachedAvistamientos.filter(a=>{
+if(!a.lat||!a.lng) return false;
 
-   const d = getDistance(
-     userLat,
-     userLng,
-     parseFloat(a.lat),
-     parseFloat(a.lng)
-   );
+const d=getDistance(
+userLat,
+userLng,
+parseFloat(a.lat),
+parseFloat(a.lng)
+);
 
-   return d <= 2;
- });
+return d<=2;
+});
 
- if(nearby.length >= 3){
-   box.style.display='block';
-   box.style.borderColor='#c0392b';
-   text.textContent='🔥 Zona caliente: varios reportes a menos de 2 km';
- }
- else if(nearby.length >= 1){
-   box.style.display='block';
-   box.style.borderColor='#e67e22';
-   text.textContent='⚠️ Precaución: hay reportes cerca';
- }
- else{
-   box.style.display='block';
-   box.style.borderColor='#27ae60';
-   text.textContent='✅ Sin actividad cercana';
- }
+if(nearby.length>=3){
+box.style.display='block';
+box.style.borderColor='#c0392b';
+text.textContent='🔥 Zona caliente: varios reportes a menos de 2 km';
+}
+else if(nearby.length>=1){
+box.style.display='block';
+box.style.borderColor='#e67e22';
+text.textContent='⚠️ Precaución: hay reportes cerca';
+}
+else{
+box.style.display='block';
+box.style.borderColor='#27ae60';
+text.textContent='✅ Sin actividad cercana';
+}
 }
 
 // VETS

@@ -1,16 +1,16 @@
 {
-  "name": "Procesionaria Mallorca",
-  "short_name": "Procesionaria",
-  "start_url": "/procesionaria-app/",
-  "scope": "/procesionaria-app/",
-  "display": "standalone",
-  "background_color": "#111111",
-  "theme_color": "#c0392b",
-  "icons": [
-    {
-      "src": "/procesionaria-app/icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+    "name": "Perros de la Isla · Paseos Felices y Seguros",
+    "short_name": "Perros Isla",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#111111",
+    "theme_color": "#c0392b",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }

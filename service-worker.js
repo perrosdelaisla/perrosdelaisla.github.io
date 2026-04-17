@@ -1,5 +1,3 @@
-self.addEventListener("install", (event) => {
-  console.log("Service Worker instalado");
-});
-
-self.addEventListener("fetch", (event) => {});
+self.addEventListener('install', e => self.skipWaiting());
+self.addEventListener('activate', e => clients.claim());
+self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));

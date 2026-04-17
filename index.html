@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c0392b">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procesionaria Mallorca · Perros de la Isla</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#111;color:#f0f0f0;font-family:'Inter',sans-serif}
+.app{max-width:480px;margin:0 auto;background:#111;min-height:100vh}
+header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #222;position:sticky;top:0;z-index:1000}
+.logo-circle{width:48px;height:48px;border-radius:50%;background:#000;border:2px solid #c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.header-text h1{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:#fff;line-height:1}
+.header-text p{font-size:11px;color:#c0392b;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.nav{display:flex;background:#111;border-bottom:1px solid #222;position:sticky;top:74px;z-index:999}
+.nav button{flex:1;padding:11px 4px;border:none;background:none;font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#555;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav button span{font-size:16px}
+.nav button.active{color:#c0392b;border-bottom-color:#c0392b}
+.section{
+  display:none;
+  padding:16px;
+  padding-bottom:90px;
+}
+.section.active{display:block}
+.alerta-banner{background:#c0392b;border-radius:10px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.alerta-banner .icon{font-size:26px;flex-shrink:0}
+.alerta-banner h3{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.5px;color:#fff}
+.alerta-banner p{font-size:12px;color:rgba(255,255,255,0.85);margin-top:2px}
+.season-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:14px}
+.season-card h3{font-size:12px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.months{display:flex;gap:3px}
+.month{flex:1;text-align:center;padding:7px 2px;border-radius:5px;font-size:10px;font-weight:600;background:#222;color:#555}
+.month.risk{background:#7d1c0a;color:#f5a49a}
+.month.high-risk{background:#c0392b;color:#fff}
+.info-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:12px}
+.info-card h3{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.5px;color:#fff;margin-bottom:8px}
+.info-card p{font-size:13px;color:#aaa;line-height:1.65}
+.info-card p strong{color:#f0f0f0}
+.sintomas{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.sintoma{background:#222;border:1px solid #333;border-radius:7px;padding:8px;font-size:12px;color:#e17055;text-align:center;font-weight:500}
+.protocolo{margin-top:4px}
+.paso{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.paso-num{background:#c0392b;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.paso p{font-size:13px;color:#aaa;line-height:1.5}
+.paso p strong{color:#f0f0f0}
+.card-urgente{background:#1a0a0a;border:1px solid #c0392b}
+.card-urgente h3{color:#c0392b}
+.zonas p{font-size:13px;color:#aaa;line-height:2}
+#map{height:270px;border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #2a2a2a}
+.leyenda{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.leyenda-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#777}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.avist-list h3{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.5px;color:#fff;margin-bottom:10px}
+.avist-item{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.avist-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.avist-info h4{font-size:13px;font-weight:600;color:#f0f0f0}
+.avist-info p{font-size:12px;color:#666;margin-top:2px}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;margin-top:5px;letter-spacing:.5px}
+.badge.alto{background:#3a0a0a;color:#e17055;border:1px solid #5a1a1a}
+.badge.medio{background:#2a2200;color:#f9ca24;border:1px solid #4a3a00}
+.reportar-btn{
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 420px;
+  padding: 14px;
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  z-index: 1500;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+.reportar-btn:active{background:#a93226}
+.filtros{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
+.filtros::-webkit-scrollbar{display:none}
+.filtro{padding:6px 14px;border-radius:20px;border:1px solid #333;background:#1a1a1a;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#666;cursor:pointer;white-space:nowrap;transition:all .2s}
+.filtro.active{background:#c0392b;color:#fff;border-color:#c0392b}
+.vet-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:10px}
+.vet-top{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.vet-ico{font-size:24px;flex-shrink:0}
+.vet-name{font-size:14px;font-weight:600;color:#f0f0f0;line-height:1.3}
+.vet-addr{font-size:12px;color:#666;margin-top:3px}
+.badges-row{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.badge-24h{background:#0a2a0a;color:#27ae60;border:1px solid #1a4a1a;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.5px}
+.vet-rating{font-size:12px;color:#666;margin-bottom:10px}
+.vet-rating span{color:#f9ca24}
+.vet-actions{display:flex;gap:8px}
+.btn-call{flex:1;padding:9px;background:#c0392b;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:background .2s}
+.btn-call:active{background:#a93226}
+.btn-nav{flex:1;padding:9px;background:#1a1a1a;color:#f0f0f0;border:1px solid #333;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s}
+.btn-nav:active{background:#222}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:2000;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.modal-box{background:#1a1a1a;border-radius:16px 16px 0 0;border-top:1px solid #2a2a2a;padding:22px 20px 36px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
+.modal-box h2{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:#fff;margin-bottom:16px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#666;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;border:1px solid #333;border-radius:8px;font-size:14px;color:#f0f0f0;background:#111;font-family:'Inter',sans-serif}
+.form-group textarea{height:75px;resize:none}
+.form-group select option{background:#1a1a1a}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
+.btn-cancel{flex:1;padding:12px;background:#222;color:#888;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-submit{flex:2;padding:12px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer}
+.brand-footer{text-align:center;padding:20px 16px 32px;border-top:1px solid #1a1a1a;margin-top:8px}
+.brand-footer p{font-size:11px;color:#444;letter-spacing:.5px}
+.brand-footer strong{color:#c0392b}
+.toast{display:none;position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:3000;white-space:nowrap;letter-spacing:.3px}
+.toast.show{display:block}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo-circle">
+      <img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" style="width:44px;height:44px;object-fit:contain;border-radius:50%"/>
+    </div>
+    <div class="header-text">
+      <h1>Perros de la Isla</h1>
+      <p>Procesionaria Mallorca</p>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <button class="active" onclick="showTab('info',this)"><span>⚠️</span>Alerta</button>
+    <button onclick="showTab('mapa',this)"><span>🗺️</span>Mapa</button>
+    <button onclick="showTab('vets',this)"><span>🏥</span>Urgencias</button>
+  </nav>
+
+  <div id="info" class="section active">
+    <div class="alerta-banner">
+      <div class="icon">🚨</div>
+      <div>
+        <h3>Temporada de alto riesgo activa</h3>
+        <p>Enero – Abril: máxima precaución en pinares de Mallorca</p>
+      </div>
+    </div>
+    <div class="season-card">
+      <h3>Riesgo por meses</h3>
+      <div class="months">
+        <div class="month risk">E</div>
+        <div class="month high-risk">F</div>
+        <div class="month high-risk">M</div>
+        <div class="month high-risk">A</div>
+        <div class="month risk">M</div>
+        <div class="month">J</div>
+        <div class="month">J</div>
+        <div class="month">A</div>
+        <div class="month">S</div>
+        <div class="month">O</div>
+        <div class="month risk">N</div>
+        <div class="month risk">D</div>
+      </div>
+      <p style="font-size:11px;color:#555;margin-top:9px">🔴 Alto riesgo &nbsp;·&nbsp; 🟡 Riesgo moderado</p>
+    </div>
+    <div class="info-card">
+      <h3>¿Qué es la procesionaria?</h3>
+      <p>La procesionaria del pino (<em>Thaumetopoea pityocampa</em>) es una oruga muy común en los pinares de Mallorca. Sus pelos urticantes son <strong>extremadamente peligrosos</strong> para los perros: pueden causar necrosis en la lengua e incluso la muerte si no se actúa rápido.</p>
+    </div>
+    <div class="info-card">
+      <h3>Síntomas en tu perro</h3>
+      <p>Si tu perro tiene contacto, puede presentar de inmediato:</p>
+      <div class="sintomas">
+        <div class="sintoma">Babeo intenso</div>
+        <div class="sintoma">Inflamación lengua</div>
+        <div class="sintoma">Rascado de boca</div>
+        <div class="sintoma">Vómitos</div>
+        <div class="sintoma">Dificultad al respirar</div>
+        <div class="sintoma">Lengua morada</div>
+      </div>
+    </div>
+    <div class="info-card card-urgente">
+      <h3>Protocolo de emergencia</h3>
+      <div class="protocolo">
+        <div class="paso"><div class="paso-num">1</div><p><strong>No toques</strong> la zona afectada sin guantes — los pelos urticantes también afectan a humanos</p></div>
+        <div class="paso"><div class="paso-num">2</div><p>Lava la boca y zona de contacto con <strong>agua fría abundante</strong> durante 5–10 minutos</p></div>
+        <div class="paso"><div class="paso-num">3</div><p><strong>Ve al veterinario de urgencias de inmediato</strong> — no esperes a ver si mejora</p></div>
+        <div class="paso"><div class="paso-num">4</div><p>Usa la pestaña <strong>Urgencias</strong> para encontrar la clínica más cercana con un toque</p></div>
+      </div>
+    </div>
+    <div class="info-card zonas">
+      <h3>Zonas de mayor riesgo en Mallorca</h3>
+      <p>🌲 Serra de Tramuntana — Sóller, Valldemossa, Deià<br>🌲 Bosques de Calvià y Andratx<br>🌲 Pinares de Llucmajor y Campos<br>🌲 Zona norte — Alcúdia, Pollença, Formentor<br>🌲 Cualquier pinar en toda la isla</p>
+    </div>
+    <div class="brand-footer">
+      <p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p>
+    </div>
+  </div>
+
+  <div id="mapa" class="section">
+    <div id="map"></div>
+    <button onclick="goToUserLocation()" style="width:100%;padding:10px;background:#1a1a1a;color:#fff;border:1px solid #333;border-radius:8px;margin-bottom:10px;">
+📍 Usar mi ubicación
+</button>
+    <div class="leyenda">
+  <div class="leyenda-item">
+    <div class="dot" style="background:#c0392b"></div>Alto riesgo
+  </div>
+  <div class="leyenda-item">
+    <div class="dot" style="background:#f1c40f"></div>Riesgo medio
+  </div>
+  <div class="leyenda-item">
+    <div class="dot" style="background:#bdc3c7"></div>Riesgo bajo
+  </div>
+  <div class="leyenda-item">
+    <div class="dot" style="background:#2980b9"></div>Veterinaria
+  </div>
+</div>
+    <div class="avist-list">
+      <h3>Avistamientos recientes</h3>
+      <div id="avist-container"><p style="color:#555;font-size:13px">Cargando avistamientos...</p></div>
+    </div>
+    <button class="reportar-btn" onclick="openModal()">📍 Reportar avistamiento</button>
+    <div class="brand-footer">
+      <p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p>
+    </div>
+  </div>
+
+  <div id="vets" class="section">
+    <div class="filtros">
+      <button class="filtro active" onclick="filterVets('all',this)">Todas</button>
+      <button class="filtro" onclick="filterVets('24h',this)">24h</button>
+      <button class="filtro" onclick="filterVets('palma',this)">Palma</button>
+      <button class="filtro" onclick="filterVets('norte',this)">Norte</button>
+      <button class="filtro" onclick="filterVets('este',this)">Este</button>
+    </div>
+    <div id="vet-list"></div>
+    <div class="brand-footer">
+      <p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h2>📍 Reportar avistamiento</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:10px">👉 Primero toca el mapa para marcar la ubicación exacta</p>
+    <div class="form-group">
+      <label>Ubicación</label>
+      <input type="text" placeholder="Ej: Pinar de Gènova, junto al camino principal">
+    </div>
+    <div class="form-group">
+      <label>Nivel de riesgo</label>
+      <select>
+        <option>⚠️ Alto — Procesión activa en el suelo</option>
+        <option>⚡ Medio — Bolsas visibles en los pinos</option>
+        <option>🔍 Bajo — Indicios o rastros secos</option>
+      </select>
+    </div>
+   
+    <div class="form-group">
+      <label>Descripción</label>
+      <textarea placeholder="¿Qué viste? ¿Es un camino frecuentado por perros?"></textarea>
+      <div class="form-group">
+  <label>Foto (opcional)</label>
+  <input type="file" id="foto" accept="image/*">
+</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-submit" onclick="submitReport()">Enviar alerta</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ Avistamiento reportado. ¡Gracias!</div>
+
+<script>
+const SUPA_URL = "https://vqpdrncugaipfpcmpout.supabase.co";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxcGRybmN1Z2FpcGZwY21wb3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwODcxNTUsImV4cCI6MjA5MTY2MzE1NX0.5EZ026A8BvsbPuffe9dyg-Qo7yL3vXvOqxEwb35KY_E";
+const HEADERS = {"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
+
+const vets=[
+  {name:"Veterinary Hospital Canis",addr:"C/ Agnès de Pacs 12, Palma",phone:"+34971732100",rating:4.3,reviews:3123,h24:true,zone:"palma",lat:39.5956,lng:2.6529,maps:"https://maps.google.com/?q=39.5956,2.6529"},
+  {name:"AniCura Aragó Hospital Veterinari",addr:"C/ Son Morro 4, Palma",phone:"+34971479354",rating:4.1,reviews:1612,h24:true,zone:"palma",lat:39.5741,lng:2.6872,maps:"https://maps.google.com/?q=39.5741,2.6872"},
+  {name:"Hospital Veterinari Ciutat d'Inca",addr:"C/ dels Pagesos 14, Inca",phone:"+34971505483",rating:4.1,reviews:759,h24:true,zone:"norte",lat:39.7123,lng:2.9122,maps:"https://maps.google.com/?q=39.7123,2.9122"},
+  {name:"MiVet Hospital Veterinario",addr:"Ctra. Palma-Artà km 47, Manacor",phone:"+34971845047",rating:3.9,reviews:331,h24:true,zone:"este",lat:39.5723,lng:3.1937,maps:"https://maps.google.com/?q=39.5723,3.1937"},
+  {name:"Veterclinic Son Servera",addr:"Av. de la Constitució 19, Son Servera",phone:"+34971567474",rating:4.6,reviews:484,h24:true,zone:"este",lat:39.6183,lng:3.3633,maps:"https://maps.google.com/?q=39.6183,3.3633"},
+  {name:"Clínica Veterinaria Peludets",addr:"C/ de Jesús 36, Palma",phone:"+34640377985",rating:4.6,reviews:387,h24:false,zone:"palma",lat:39.5822,lng:2.6438,maps:"https://maps.google.com/?q=39.5822,2.6438"}
+];
+
+function renderVets(list){
+  document.getElementById('vet-list').innerHTML=list.map(v=>`
+    <div class="vet-card">
+      <div class="vet-top"><div class="vet-ico">🏥</div>
+        <div>
+          <div class="vet-name">${v.name}</div>
+          <div class="vet-addr">${v.addr}</div>
+          <div class="badges-row">${v.h24?'<span class="badge-24h">24H URGENCIAS</span>':''}</div>
+        </div>
+<div style="font-size:11px;color:#aaa;margin-top:4px">
+  ${
+    v.h24
+      ? "🟢 Abierto 24 horas"
+      : "🟠 Llamar para confirmar urgencia"
+  }
+</div>
+      </div>
+      <div class="vet-rating"><span>⭐</span> ${v.rating} · ${v.reviews.toLocaleString()} reseñas</div>
+      <div class="vet-actions">
+        <button class="btn-call" onclick="window.location.href='tel:${v.phone}'">📞 Llamar</button>
+        <button class="btn-nav" onclick="window.open('${v.maps}')">🧭 Cómo llegar</button>
+      </div>
+    </div>`).join('');
+}
+
+function filterVets(zone,btn){
+  document.querySelectorAll('.filtro').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const f=zone==='all'?vets:zone==='24h'?vets.filter(v=>v.h24):vets.filter(v=>v.zone===zone);
+  renderVets(f);
+}
+renderVets(vets);
+
+function showTab(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='mapa') setTimeout(initMap,100);
+}
+
+let markersLayer, selectedLat=null, selectedLng=null, tempMarker=null, mapInit=false;
+let userLat = null;
+let userLng = null;
+function initMap(){
+  if(mapInit) return;
+  mapInit=true;
+  markersLayer=L.layerGroup();
+  window.map=L.map('map',{zoomControl:false}).setView([39.65,2.95],9);
+  markersLayer.addTo(window.map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB'}).addTo(window.map);
+  window.rIcon=L.divIcon({html:'<div style="background:#c0392b;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>',iconSize:[13,13],iconAnchor:[6,6],className:''});
+  const bIcon=L.divIcon({html:'<div style="background:#2980b9;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>',iconSize:[13,13],iconAnchor:[6,6],className:''});
+  window.map.on('click',function(e){
+  selectedLat = e.latlng.lat;
+  selectedLng = e.latlng.lng;
+
+  if(tempMarker) window.map.removeLayer(tempMarker);
+
+  tempMarker = L.marker([selectedLat,selectedLng],{icon:window.rIcon})
+    .addTo(window.map)
+    .bindPopup("📍 Ubicación seleccionada")
+    .openPopup();
+
+  // 👉 abrir modal automáticamente
+  openModal();
+
+  // 👉 rellenar ubicación automática
+  setTimeout(() => {
+    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`)
+      .then(res => res.json())
+      .then(data => {
+        let lugar = data.address.city || data.address.town || data.address.village || "Zona desconocida";
+
+        document.querySelector('#modal input').value =
+          lugar + " (" + selectedLat.toFixed(5) + ", " + selectedLng.toFixed(5) + ")";
+      })
+      .catch(() => {
+        document.querySelector('#modal input').value =
+          "Ubicación seleccionada (" + selectedLat.toFixed(5) + ", " + selectedLng.toFixed(5) + ")";
+      });
+  }, 100);
+});
+  vets.forEach(v => {
+  L.marker([v.lat, v.lng], { icon: bIcon })
+    .addTo(window.map)
+    .bindPopup(`
+      <div style="font-size:13px">
+        🏥 <b>${v.name}</b><br>
+        <small>${v.addr}</small><br><br>
+
+        <a href="tel:${v.phone}" 
+          style="display:block;margin-bottom:6px;background:#c0392b;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none;">
+          📞 Llamar
+        </a>
+
+        <a href="${v.maps}" target="_blank" 
+          style="display:block;background:#3498db;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none;">
+          🧭 Cómo llegar
+        </a>
+      </div>
+    `);
+});
+  console.log("ANTES DE CARGAR AVISTAMIENTOS");
+  loadAvistamientos();
+}
+
+async function loadAvistamientos(){
+  try{
+    const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*",{headers:HEADERS});
+    if(!res.ok){console.error("Error HTTP:",res.status);return;}
+    const data=await res.json();
+    if(userLat && userLng){
+      console.log("USER LOCATION:", userLat, userLng);
+  data.forEach(a => {
+    if(a.lat && a.lng){
+      a.distance = getDistance(userLat, userLng, parseFloat(a.lat), parseFloat(a.lng));
+    }
+  });
+
+  data.sort((a, b) => (a.distance || 9999) - (b.distance || 9999));
+}
+console.log("DATA REAL:", data);
+    markersLayer.clearLayers();
+    data.forEach(a=>{
+      const lat=parseFloat(a.lat), lng=parseFloat(a.lng);
+      if(!isNaN(lat)&&!isNaN(lng)){
+
+  let color = "#c0392b"; // rojo por defecto
+
+  if (a.Riesgo && a.Riesgo.toLowerCase().includes("medio")) color = "#f1c40f";
+  if (a.Riesgo && a.Riesgo.toLowerCase().includes("bajo")) color = "#bdc3c7";
+
+  const icon = L.divIcon({
+    html: `<div style="background:${color};width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>`,
+    iconSize:[13,13],
+    iconAnchor:[6,6],
+    className:''
+  });
+
+  L.marker([lat,lng],{icon})
+    .addTo(markersLayer)
+    .bindPopup(`🌲 <b>${a.Ubicacion}</b><br>${a.Riesgo}`);
+} // rojo por defecto
+    });
+    const container=document.getElementById('avist-container');
+    container.innerHTML = data.length === 0
+  ? '<p style="color:#555;font-size:13px">Aún no hay avistamientos reportados.</p>'
+  : data.map(a => {
+
+    const riesgoTexto = a.Riesgo || "Sin especificar";
+
+    const claseRiesgo = riesgoTexto.includes("Medio") 
+      ? "medio" 
+      : riesgoTexto.includes("Bajo") 
+        ? "medio" 
+        : "alto";
+
+    return `
+      <div class="avist-item">
+        <div class="avist-icon">🌲</div>
+        <div class="avist-info">
+          <h4>${a.Ubicacion || "Ubicación desconocida"}</h4>
+          ${a.foto ? `<img src="${a.foto}" style="width:100%;border-radius:10px;margin-top:8px;max-height:200px;object-fit:cover;">` : ""}
+          ${a.distance ? `<p style="color:#888;font-size:11px">📍 A ${a.distance.toFixed(1)} km</p>` : ""}
+<p>${a["Descripción"] || a.Descripcion || a.descripcion || "Sin descripción"}</p>
+          <span class="badge ${claseRiesgo}">${riesgoTexto}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+  }catch(err){console.error("Error:",err);}
+}
+function getDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c;
+}
+function openModal(){
+  if(!selectedLat || !selectedLng){
+    alert("Primero toca el mapa o usa tu ubicación");
+    return;
+  }
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+
+async function submitReport(){
+  const ubicacion=document.querySelector('#modal input').value;
+  const riesgo=document.querySelector('#modal select').value;
+  const descripcion=document.querySelector('#modal textarea').value;
+  const fileInput = document.getElementById('foto');
+const file = fileInput.files[0];
+  console.log("DATOS QUE SE ENVÍAN:", { 
+  ubicacion, 
+  descripcion, 
+  riesgo, 
+  lat: selectedLat, 
+  lng: selectedLng 
+});
+  if(!selectedLat||!selectedLng){alert("Toca el mapa para marcar la ubicación exacta");return;}
+  if(!ubicacion){alert("Escribe la ubicación");return;}
+  try{
+    let imageUrl = null;
+
+if(file){
+  const fileName = Date.now() + "_" + file.name;
+
+  const uploadRes = await fetch(
+    SUPA_URL + "/storage/v1/object/avistamientos/" + fileName,
+    {
+      method: "POST",
+      headers: {
+        "apikey": SUPA_KEY,
+        "Authorization": "Bearer " + SUPA_KEY,
+        "Content-Type": file.type
+      },
+      body: file
+    }
+  );
+
+  if(uploadRes.ok){
+    imageUrl = SUPA_URL + "/storage/v1/object/public/avistamientos/" + fileName;
+  } else {
+    console.error("Error subiendo imagen");
+  }
+}
+    console.log("IMAGE URL FINAL:", imageUrl);
+    const res=await fetch(SUPA_URL+"/rest/v1/avistamientos",{
+      method:"POST",
+      headers:{
+  ...HEADERS,
+  "Prefer":"return=representation",
+  "Content-Type":"application/json"
+},
+      body: JSON.stringify({
+  Ubicacion: ubicacion,
+  Descripción: descripcion,
+  Riesgo: riesgo,
+  lat: selectedLat,
+  lng: selectedLng,
+  foto: imageUrl
+})
+    });
+    if(!res.ok){console.error("Error guardando:",res.status);alert("Error al guardar");return;}
+    L.marker([selectedLat,selectedLng],{icon:window.rIcon}).addTo(markersLayer).bindPopup(`🌲 <b>${ubicacion}</b><br>${riesgo}`);
+    closeModal();
+    loadAvistamientos();
+    const t=document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),3000);
+  }catch(err){alert("Error al guardar el avistamiento");console.error(err);}
+}
+</script>
+  <script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+ <div id="installBanner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid #c0392b;color:#fff;padding:14px 16px;border-radius:10px;z-index:9999;width:90%;max-width:360px;text-align:center;font-size:13px;">
+  
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <span>📲 Instala la app para mejor experiencia</span>
+    <button onclick="closeBanner()" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;">✕</button>
+  </div>
+
+  <button onclick="installApp()" style="margin-top:10px;background:#c0392b;border:none;color:#fff;padding:8px 14px;border-radius:6px;font-weight:600;cursor:pointer;">
+    Instalar
+  </button>
+</div>
+
+<script>
+let deferredPrompt;
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  if (!isStandalone() && !localStorage.getItem('bannerClosed')) {
+    document.getElementById('installBanner').style.display = 'block';
+  }
+});
+
+function installApp(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(()=>{
+      deferredPrompt = null;
+      document.getElementById('installBanner').style.display = 'none';
+    });
+  } else {
+    alert("En tu móvil: menú ⋮ → 'Añadir a pantalla de inicio'");
+  }
+}
+
+function closeBanner(){
+  document.getElementById('installBanner').style.display = 'none';
+  localStorage.setItem('bannerClosed', 'true');
+}
+  function goToUserLocation() {
+  if (!navigator.geolocation) {
+    alert("Tu dispositivo no soporta geolocalización");
+    return;
+  }
+   navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      window.map.setView([lat, lng], 15);
+
+      L.marker([lat, lng], {
+        icon: L.divIcon({
+          html: '<div style="background:#3498db;width:14px;height:14px;border-radius:50%;border:2px solid #fff"></div>',
+          className: ''
+        })
+      })
+      .addTo(window.map)
+      .bindPopup("📍 Estás aquí")
+      .openPopup();
+      selectedLat = lat;
+      selectedLng = lng;
+      userLat = lat;
+      userLng = lng;
+      loadAvistamientos();
+
+setTimeout(() => {
+   fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+  .then(res => res.json())
+  .then(data => {
+    let lugar = data.address.city || data.address.town || data.address.village || "Zona desconocida";
+
+    document.querySelector('#modal input').value =
+      lugar + " (" + lat.toFixed(5) + ", " + lng.toFixed(5) + ")";
+  })
+  .catch(() => {
+    document.querySelector('#modal input').value =
+      "Ubicación automática (" + lat.toFixed(5) + ", " + lng.toFixed(5) + ")";
+  });
+}, 100);
+    },
+    () => {
+      alert("No se pudo obtener tu ubicación");
+    }
+  );
+}
+</script>
+</body>
+</html>

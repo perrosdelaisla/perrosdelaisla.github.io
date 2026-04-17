@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json?v=4">
 <meta name="theme-color" content="#c0392b">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,38 +9,39 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#111;color:#f0f0f0;font-family:'Inter',sans-serif}
+body{background:#111;color:#f0f0f0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
 .app{max-width:480px;margin:0 auto;background:#111;min-height:100vh}
 header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #222;position:sticky;top:0;z-index:1000}
 .logo-circle{width:48px;height:48px;border-radius:50%;background:#000;border:2px solid #c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.header-text{flex:1}
 .header-text h1{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:#fff;line-height:1}
 .header-text p{font-size:11px;color:#c0392b;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.profile-btn{width:36px;height:36px;border-radius:50%;background:#1a1a1a;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;transition:all .2s}
+.profile-btn:active{background:#333}
+.profile-btn.has-profile{border-color:#9cb64b;background:#1a2a1a}
 .nav{display:flex;background:#111;border-bottom:1px solid #222;position:sticky;top:74px;z-index:999}
-.nav button{flex:1;padding:11px 4px;border:none;background:none;font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#555;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav button{flex:1;padding:11px 2px;border:none;background:none;font-size:9.5px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#555;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px}
 .nav button span{font-size:16px}
 .nav button.active{color:#c0392b;border-bottom-color:#c0392b}
-.section{
-  display:none;
-  padding:16px;
-  padding-bottom:90px;
-}
+.nav button.nav-training.active{color:#9cb64b;border-bottom-color:#9cb64b}
+.section{display:none;padding:16px;padding-bottom:90px}
 .section.active{display:block}
+.season-card,.info-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:12px}
+.season-card h3{font-size:12px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.info-card h3{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.5px;color:#fff;margin-bottom:8px}
+.info-card p{font-size:13px;color:#aaa;line-height:1.65}
+.info-card p strong{color:#f0f0f0}
 .alerta-banner{background:#c0392b;border-radius:10px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
 .alerta-banner .icon{font-size:26px;flex-shrink:0}
 .alerta-banner h3{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.5px;color:#fff}
 .alerta-banner p{font-size:12px;color:rgba(255,255,255,0.85);margin-top:2px}
-.season-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:14px}
-.season-card h3{font-size:12px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
 .months{display:flex;gap:3px}
-.month{flex:1;text-align:center;padding:7px 2px;border-radius:5px;font-size:10px;font-weight:600;background:#222;color:#555}
-.month.risk{background:#7d1c0a;color:#f5a49a}
+.month{flex:1;text-align:center;padding:7px 2px;border-radius:5px;font-size:10px;font-weight:600}
 .month.high-risk{background:#c0392b;color:#fff}
-.info-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:12px}
-.info-card h3{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.5px;color:#fff;margin-bottom:8px}
-.info-card p{font-size:13px;color:#aaa;line-height:1.65}
-.info-card p strong{color:#f0f0f0}
+.month.risk{background:#b7950b;color:#fff}
+.month.safe{background:#1a3a1a;color:#6fcf6f}
 .sintomas{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
 .sintoma{background:#222;border:1px solid #333;border-radius:7px;padding:8px;font-size:12px;color:#e17055;text-align:center;font-weight:500}
 .protocolo{margin-top:4px}
@@ -51,38 +52,31 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .card-urgente{background:#1a0a0a;border:1px solid #c0392b}
 .card-urgente h3{color:#c0392b}
 .zonas p{font-size:13px;color:#aaa;line-height:2}
-#map{height:270px;border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #2a2a2a}
+#map{height:270px;border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #2a2a2a;position:relative}
+#map.fullscreen{position:fixed;inset:0;height:100vh !important;width:100vw !important;z-index:2000;border-radius:0;margin:0}
 .leyenda{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap}
 .leyenda-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#777}
 .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .avist-list h3{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.5px;color:#fff;margin-bottom:10px}
-.avist-item{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.avist-item{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;transition:opacity .3s}
+.avist-item.historico{opacity:.5}
 .avist-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.avist-info{flex:1;min-width:0}
 .avist-info h4{font-size:13px;font-weight:600;color:#f0f0f0}
-.avist-info p{font-size:12px;color:#666;margin-top:2px}
-.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;margin-top:5px;letter-spacing:.5px}
+.avist-info p{font-size:12px;color:#888;margin-top:4px;line-height:1.5}
+.avist-meta{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap;font-size:11px;color:#666}
+.avist-meta .dot-sep{color:#444}
+.avist-reporter{font-size:11px;color:#9cb64b;margin-top:5px;font-style:italic}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px}
 .badge.alto{background:#3a0a0a;color:#e17055;border:1px solid #5a1a1a}
 .badge.medio{background:#2a2200;color:#f9ca24;border:1px solid #4a3a00}
-.reportar-btn{
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 32px);
-  max-width: 420px;
-  padding: 14px;
-  background: #c0392b;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 18px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  z-index: 1500;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
+.badge.bajo{background:#1a1a1a;color:#bdc3c7;border:1px solid #333}
+.badge.historico{background:#1a1a1a;color:#666;border:1px solid #333}
+.reportar-btn{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;padding:14px;background:#c0392b;color:#fff;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;z-index:1500;box-shadow:0 8px 20px rgba(0,0,0,0.4)}
 .reportar-btn:active{background:#a93226}
+.reportar-btn:disabled{background:#555;cursor:not-allowed}
+.btn-secondary{width:100%;padding:10px;background:#1a1a1a;color:#fff;border:1px solid #333;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-secondary:active{background:#222}
 .filtros{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
 .filtros::-webkit-scrollbar{display:none}
 .filtro{padding:6px 14px;border-radius:20px;border:1px solid #333;background:#1a1a1a;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#666;cursor:pointer;white-space:nowrap;transition:all .2s}
@@ -97,9 +91,9 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .vet-rating{font-size:12px;color:#666;margin-bottom:10px}
 .vet-rating span{color:#f9ca24}
 .vet-actions{display:flex;gap:8px}
-.btn-call{flex:1;padding:9px;background:#c0392b;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:background .2s}
+.btn-call{flex:1;padding:9px;background:#c0392b;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
 .btn-call:active{background:#a93226}
-.btn-nav{flex:1;padding:9px;background:#1a1a1a;color:#f0f0f0;border:1px solid #333;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s}
+.btn-nav{flex:1;padding:9px;background:#1a1a1a;color:#f0f0f0;border:1px solid #333;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
 .btn-nav:active{background:#222}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:2000;align-items:flex-end;justify-content:center}
 .modal.open{display:flex}
@@ -113,131 +107,220 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .modal-actions{display:flex;gap:10px;margin-top:16px}
 .btn-cancel{flex:1;padding:12px;background:#222;color:#888;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
 .btn-submit{flex:2;padding:12px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer}
+.btn-submit:disabled{background:#555;cursor:not-allowed}
+.confirm-actions{display:flex;gap:6px;margin-top:8px}
+.btn-confirm,.btn-deny{flex:1;padding:7px 10px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
+.btn-confirm{background:#0a2a0a;color:#27ae60;border:1px solid #1a4a1a}
+.btn-confirm:active{background:#1a4a1a}
+.btn-confirm:disabled{opacity:.4;cursor:not-allowed}
+.btn-deny{background:#2a0a0a;color:#c0392b;border:1px solid #4a1a1a}
+.btn-deny:active{background:#4a1a1a}
+.btn-deny:disabled{opacity:.4;cursor:not-allowed}
+.confirm-count{font-size:10px;color:#666;margin-top:5px}
 .brand-footer{text-align:center;padding:20px 16px 32px;border-top:1px solid #1a1a1a;margin-top:8px}
-.brand-footer p{font-size:11px;color:#444;letter-spacing:.5px}
+.brand-footer p{font-size:11px;color:#444;letter-spacing:.5px;line-height:1.6}
 .brand-footer strong{color:#c0392b}
-.toast{display:none;position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:3000;white-space:nowrap;letter-spacing:.3px}
-.toast.show{display:block}
+.toast{display:none;position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:3000;white-space:nowrap;letter-spacing:.3px;box-shadow:0 4px 12px rgba(0,0,0,0.4)}
+.toast.show{display:block;animation:toastSlide .3s ease-out}
+.toast.success{background:#27ae60}
+.toast.error{background:#c0392b}
+@keyframes toastSlide{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#exitFullBtn{display:none;position:absolute;top:10px;right:10px;z-index:9999;background:#c0392b;color:#fff;border:none;padding:6px 10px;border-radius:6px;font-size:12px;cursor:pointer}
+#installBanner{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid #c0392b;color:#fff;padding:14px 16px;border-radius:10px;z-index:9999;width:90%;max-width:360px;text-align:center;font-size:13px}
+#imgModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:3000;justify-content:center;align-items:center}
+#imgModal img{max-width:90%;max-height:90%;border-radius:10px}
+.avist-img{width:100%;border-radius:8px;margin-top:8px;max-height:180px;object-fit:cover;cursor:pointer}
+
+/* ONBOARDING */
+.onboarding{position:fixed;inset:0;background:#111;z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}
+.onboarding.hidden{display:none}
+.onb-box{width:100%;max-width:400px;text-align:center}
+.onb-logo{width:80px;height:80px;border-radius:50%;border:3px solid #c0392b;margin:0 auto 16px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000}
+.onb-logo img{width:76px;height:76px;object-fit:contain;border-radius:50%}
+.onb-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;letter-spacing:1px;margin-bottom:4px}
+.onb-sub{font-size:12px;color:#c0392b;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px}
+.onb-text{font-size:14px;color:#aaa;line-height:1.6;margin-bottom:20px}
+.onb-form .form-group{text-align:left;margin-bottom:14px}
+.onb-form .form-group label{display:block;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#666;margin-bottom:6px}
+.onb-form .form-group input,.onb-form .form-group select{width:100%;padding:11px 12px;border:1px solid #333;border-radius:8px;font-size:14px;color:#f0f0f0;background:#1a1a1a;font-family:'Inter',sans-serif}
+.onb-form .form-group select option{background:#1a1a1a}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;text-align:left}
+.toggle-row span{font-size:13px;color:#ccc;flex:1}
+.toggle-row small{display:block;font-size:11px;color:#666;margin-top:3px}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0;margin-left:12px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:#333;border-radius:24px;cursor:pointer;transition:.3s}
+.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#888;bottom:3px;left:3px;transition:.3s}
+.toggle input:checked+.toggle-slider{background:#9cb64b}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px);background:#fff}
+.btn-onboarding{width:100%;padding:14px;background:#c0392b;color:#fff;border:none;border-radius:10px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;cursor:pointer;margin-top:10px}
+.btn-onboarding:active{background:#a93226}
+
+/* PERFIL MODAL */
+.profile-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:4000;align-items:center;justify-content:center;padding:20px}
+.profile-modal.open{display:flex}
+.profile-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;width:100%;max-width:380px;padding:24px 20px;text-align:center;max-height:90vh;overflow-y:auto}
+.profile-avatar{width:60px;height:60px;border-radius:50%;background:#9cb64b;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;color:#111;font-weight:700;font-family:'Bebas Neue',sans-serif}
+.profile-name{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:.5px}
+.profile-dog{font-size:13px;color:#9cb64b;margin-top:2px}
+.profile-zone{font-size:12px;color:#888;margin-top:4px}
+.profile-since{font-size:11px;color:#555;margin-top:4px}
+.profile-stats{display:flex;gap:12px;margin-top:16px}
+.stat-box{flex:1;background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:12px 8px;text-align:center}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff}
+.stat-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* INSIGNIAS */
+.badges-title{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#9cb64b;letter-spacing:1px;margin-top:18px;margin-bottom:10px;text-transform:uppercase}
+.badges-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.badge-item{background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:10px 8px;text-align:center;transition:all .3s}
+.badge-item.unlocked{border-color:#9cb64b;background:#111a0a}
+.badge-item.locked{opacity:.35}
+.badge-emoji{font-size:24px;display:block;margin-bottom:4px}
+.badge-name{font-size:11px;font-weight:700;color:#fff;line-height:1.2}
+.badge-desc{font-size:9px;color:#888;margin-top:3px;line-height:1.3}
+.badge-lock{font-size:10px;color:#555;margin-top:3px}
+
+.profile-actions{margin-top:16px;display:flex;gap:8px}
+.btn-profile-edit{flex:1;padding:10px;background:#222;color:#aaa;border:1px solid #333;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-profile-close{flex:1;padding:10px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* ADIESTRAMIENTO */
+#adiestramiento{background:#050505;padding:0 0 40px 0}
+.adi-wrap{max-width:460px;margin:0 auto}
+.adi-hero{background:linear-gradient(180deg,#5c0909 0%,#0b0b0b 100%);border:1px solid #2a2a2a;border-radius:14px;overflow:hidden;margin-bottom:16px}
+.adi-hero img{width:100%;height:180px;object-fit:cover;display:block}
+.adi-hero-content{padding:16px}
+.adi-name{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:1px;color:#fff;margin-bottom:4px}
+.adi-sub{color:#ff5a47;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.adi-text{color:#ddd;font-size:15px;line-height:1.7;margin-bottom:12px;padding:0 16px}
+.adi-text strong{color:#fff}
+.adi-note{background:#10140c;border:1px solid #33441c;color:#b8d66b;padding:12px;border-radius:10px;font-size:13px;line-height:1.5;margin:0 16px 16px 16px}
+.adi-title{font-family:'Bebas Neue',sans-serif;color:#9cb64b;font-size:28px;letter-spacing:1px;margin:20px 16px 10px 16px}
+.srv-card{background:#111;border:1px solid #2b2b2b;border-left:4px solid #9cb64b;border-radius:12px;padding:16px;margin:0 16px 12px 16px}
+.srv-name{font-family:'Bebas Neue',sans-serif;color:#fff;font-size:22px;margin-bottom:8px}
+.srv-text{color:#cfcfcf;font-size:15px;line-height:1.6;margin-bottom:14px}
+.wa-btn{display:block;width:100%;text-align:center;background:#25D366;color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:10px;font-size:16px;font-family:'Inter',sans-serif;border:none;cursor:pointer}
+.wa-btn:active{background:#1fb757}
+.group-card{background:linear-gradient(135deg,#10200d,#161616);border:1px solid #35572c;border-radius:12px;padding:16px;margin:6px 16px 14px 16px}
+.badge-season{display:inline-block;background:#8aa14c;color:#111;font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.ig-btn{display:block;width:100%;text-align:center;background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045);color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:10px;margin-top:12px;font-family:'Inter',sans-serif}
+.ig-card{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center;margin:0 16px 18px 16px;text-decoration:none}
+.ig-logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ig-user{color:#fff;font-weight:700;font-size:16px}
+.ig-sub{color:#8b8b8b;font-size:13px;margin-top:2px}
+.contact-card{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin:0 16px 8px 16px}
+.contact-row{display:block;padding:10px 0;border-bottom:1px solid #222;text-decoration:none;color:inherit}
+.contact-row:last-of-type{border-bottom:none}
+.contact-label{color:#fff;font-weight:700;font-size:18px;margin-bottom:4px}
+.contact-value{color:#8e8e8e;font-size:14px}
+.hours{background:#090909;border-radius:10px;padding:14px;margin-top:14px;color:#bfbfbf;font-size:14px;line-height:1.8}
+.hours strong{color:#f0f0f0}
+.final-msg{text-align:center;margin:28px 16px 12px 16px;font-family:'Bebas Neue',sans-serif;color:#ff4c3a;font-size:38px;line-height:1.1;letter-spacing:1px}
+.final-sub{text-align:center;color:#666;font-size:13px;letter-spacing:4px;text-transform:uppercase;margin-bottom:20px}
 </style>
 </head>
 <body>
+
+<!-- ONBOARDING -->
+<div class="onboarding" id="onboarding">
+  <div class="onb-box">
+    <div class="onb-logo"><img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" alt="Perros de la Isla"></div>
+    <div class="onb-title">Perros de la Isla</div>
+    <div class="onb-sub">Por paseos felices y seguros</div>
+    <p class="onb-text">Únete a la comunidad que protege los paseos de nuestros perros en Mallorca. Configura tu perfil en 15 segundos.</p>
+    <div class="onb-form">
+      <div class="form-group"><label>Tu nombre</label><input type="text" id="onb-nombre" placeholder="Ej: Carlos, María, Alex..."></div>
+      <div class="form-group"><label>Nombre de tu perro</label><input type="text" id="onb-perro" placeholder="Ej: Luna, Max, Kira..."></div>
+      <div class="form-group"><label>Zona habitual de paseo</label><select id="onb-zona"><option value="Palma">Palma</option><option value="Norte">Norte (Alcúdia, Pollença, Inca)</option><option value="Este">Este (Manacor, Son Servera)</option><option value="Centro">Centro (Sineu, Santa Maria)</option><option value="Tramuntana">Serra de Tramuntana</option><option value="Sur">Sur (Llucmajor, Campos)</option><option value="Poniente">Poniente (Calvià, Andratx)</option></select></div>
+      <div class="toggle-row"><span>Mostrar mi nombre en los reportes<small>Si no, aparecerás como "Un vecino de tu zona"</small></span><label class="toggle"><input type="checkbox" id="onb-visible" checked><span class="toggle-slider"></span></label></div>
+    </div>
+    <button class="btn-onboarding" onclick="saveProfile()">🐾 Unirme a la comunidad</button>
+    <p style="font-size:11px;color:#555;margin-top:10px">Sin email ni contraseña. Tus datos se guardan solo en tu dispositivo.</p>
+  </div>
+</div>
+
+<!-- PERFIL MODAL -->
+<div class="profile-modal" id="profileModal">
+  <div class="profile-card">
+    <div class="profile-avatar" id="prof-avatar">?</div>
+    <div class="profile-name" id="prof-name">—</div>
+    <div class="profile-dog" id="prof-dog">—</div>
+    <div class="profile-zone" id="prof-zone">—</div>
+    <div class="profile-since" id="prof-since">—</div>
+    <div class="profile-stats">
+      <div class="stat-box"><div class="stat-num" id="prof-reports">0</div><div class="stat-label">Reportes</div></div>
+      <div class="stat-box"><div class="stat-num" id="prof-confirms">0</div><div class="stat-label">Votos</div></div>
+    </div>
+    <div class="badges-title">🏅 Tus insignias</div>
+    <div class="badges-grid" id="badges-grid"></div>
+    <div class="profile-actions">
+      <button class="btn-profile-edit" onclick="editProfile()">✏️ Editar perfil</button>
+      <button class="btn-profile-close" onclick="closeProfile()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
 <div class="app">
   <header>
-    <div class="logo-circle">
-      <img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" style="width:44px;height:44px;object-fit:contain;border-radius:50%"/>
-    </div>
-    <div class="header-text">
-      <h1>Perros de la Isla</h1>
-      <p>Procesionaria Mallorca</p>
-    </div>
+    <div class="logo-circle"><img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" alt="Perros de la Isla" style="width:44px;height:44px;object-fit:contain;border-radius:50%"/></div>
+    <div class="header-text"><h1>Perros de la Isla</h1><p>Por paseos felices y seguros</p></div>
+    <div class="profile-btn" id="headerProfileBtn" onclick="openProfile()">👤</div>
   </header>
-
   <nav class="nav">
     <button class="active" onclick="showTab('info',this)"><span>⚠️</span>Alerta</button>
     <button onclick="showTab('mapa',this)"><span>🗺️</span>Mapa</button>
     <button onclick="showTab('vets',this)"><span>🏥</span>Urgencias</button>
+    <button class="nav-training" onclick="showTab('adiestramiento',this)"><span>🐾</span>Adiestramiento</button>
   </nav>
 
   <div id="info" class="section active">
-    <div class="alerta-banner">
-      <div class="icon">🚨</div>
-      <div>
-        <h3>Temporada de alto riesgo activa</h3>
-        <p>Enero – Abril: máxima precaución en pinares de Mallorca</p>
-      </div>
-    </div>
-    <div class="season-card">
-      <h3>Riesgo por meses</h3>
-      <div class="months">
-        <div class="month risk">E</div>
-        <div class="month high-risk">F</div>
-        <div class="month high-risk">M</div>
-        <div class="month high-risk">A</div>
-        <div class="month risk">M</div>
-        <div class="month">J</div>
-        <div class="month">J</div>
-        <div class="month">A</div>
-        <div class="month">S</div>
-        <div class="month">O</div>
-        <div class="month risk">N</div>
-        <div class="month risk">D</div>
-      </div>
-      <p style="font-size:11px;color:#555;margin-top:9px">🔴 Alto riesgo &nbsp;·&nbsp; 🟡 Riesgo moderado</p>
-    </div>
-    <div class="info-card">
-      <h3>¿Qué es la procesionaria?</h3>
-      <p>La procesionaria del pino (<em>Thaumetopoea pityocampa</em>) es una oruga muy común en los pinares de Mallorca. Sus pelos urticantes son <strong>extremadamente peligrosos</strong> para los perros: pueden causar necrosis en la lengua e incluso la muerte si no se actúa rápido.</p>
-    </div>
-    <div class="info-card">
-      <h3>Síntomas en tu perro</h3>
-      <p>Si tu perro tiene contacto, puede presentar de inmediato:</p>
-      <div class="sintomas">
-        <div class="sintoma">Babeo intenso</div>
-        <div class="sintoma">Inflamación lengua</div>
-        <div class="sintoma">Rascado de boca</div>
-        <div class="sintoma">Vómitos</div>
-        <div class="sintoma">Dificultad al respirar</div>
-        <div class="sintoma">Lengua morada</div>
-      </div>
-    </div>
-    <div class="info-card card-urgente">
-      <h3>Protocolo de emergencia</h3>
-      <div class="protocolo">
-        <div class="paso"><div class="paso-num">1</div><p><strong>No toques</strong> la zona afectada sin guantes — los pelos urticantes también afectan a humanos</p></div>
-        <div class="paso"><div class="paso-num">2</div><p>Lava la boca y zona de contacto con <strong>agua fría abundante</strong> durante 5–10 minutos</p></div>
-        <div class="paso"><div class="paso-num">3</div><p><strong>Ve al veterinario de urgencias de inmediato</strong> — no esperes a ver si mejora</p></div>
-        <div class="paso"><div class="paso-num">4</div><p>Usa la pestaña <strong>Urgencias</strong> para encontrar la clínica más cercana con un toque</p></div>
-      </div>
-    </div>
-    <div class="info-card zonas">
-      <h3>Zonas de mayor riesgo en Mallorca</h3>
-      <p>🌲 Serra de Tramuntana — Sóller, Valldemossa, Deià<br>🌲 Bosques de Calvià y Andratx<br>🌲 Pinares de Llucmajor y Campos<br>🌲 Zona norte — Alcúdia, Pollença, Formentor<br>🌲 Cualquier pinar en toda la isla</p>
-    </div>
-    <div class="brand-footer">
-      <p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p>
-    </div>
+    <div class="alerta-banner"><div class="icon">🚨</div><div><h3>Temporada de alto riesgo activa</h3><p>Enero – Abril: máxima precaución en pinares de Mallorca</p></div></div>
+    <div class="season-card"><h3>Riesgo por meses</h3><div class="months"><div class="month risk">E</div><div class="month high-risk">F</div><div class="month high-risk">M</div><div class="month high-risk">A</div><div class="month risk">M</div><div class="month safe">J</div><div class="month safe">J</div><div class="month safe">A</div><div class="month safe">S</div><div class="month safe">O</div><div class="month risk">N</div><div class="month risk">D</div></div><p style="font-size:11px;color:#555;margin-top:9px">🔴 Alto riesgo · 🟡 Riesgo moderado · 🟢 Bajo riesgo</p></div>
+    <div class="info-card"><h3>¿Qué es la procesionaria?</h3><p>La procesionaria del pino (<em>Thaumetopoea pityocampa</em>) es una oruga muy común en los pinares de Mallorca. Sus pelos urticantes son <strong>extremadamente peligrosos</strong> para los perros: pueden causar necrosis en la lengua e incluso la muerte si no se actúa rápido.</p></div>
+    <div class="info-card"><h3>Síntomas en tu perro</h3><p>Si tu perro tiene contacto, puede presentar de inmediato:</p><div class="sintomas"><div class="sintoma">Babeo intenso</div><div class="sintoma">Inflamación lengua</div><div class="sintoma">Rascado de boca</div><div class="sintoma">Vómitos</div><div class="sintoma">Dificultad al respirar</div><div class="sintoma">Lengua morada</div></div></div>
+    <div class="info-card card-urgente"><h3>Protocolo de emergencia</h3><div class="protocolo"><div class="paso"><div class="paso-num">1</div><p><strong>No toques</strong> la zona afectada sin guantes</p></div><div class="paso"><div class="paso-num">2</div><p>Lava con <strong>agua fría abundante</strong> durante 5–10 minutos</p></div><div class="paso"><div class="paso-num">3</div><p><strong>Ve al veterinario de urgencias de inmediato</strong></p></div><div class="paso"><div class="paso-num">4</div><p>Usa la pestaña <strong>Urgencias</strong> para encontrar la clínica más cercana</p></div></div></div>
+    <div class="info-card zonas"><h3>Zonas de mayor riesgo en Mallorca</h3><p>🌲 Serra de Tramuntana — Sóller, Valldemossa, Deià<br>🌲 Bosques de Calvià y Andratx<br>🌲 Pinares de Llucmajor y Campos<br>🌲 Zona norte — Alcúdia, Pollença, Formentor<br>🌲 Cualquier pinar en toda la isla</p></div>
+    <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
   </div>
 
   <div id="mapa" class="section">
-    <div id="map"></div>
-    <button onclick="goToUserLocation()" style="width:100%;padding:10px;background:#1a1a1a;color:#fff;border:1px solid #333;border-radius:8px;margin-bottom:10px;">
-📍 Usar mi ubicación
-</button>
-    <div class="leyenda">
-  <div class="leyenda-item">
-    <div class="dot" style="background:#c0392b"></div>Alto riesgo
-  </div>
-  <div class="leyenda-item">
-    <div class="dot" style="background:#f1c40f"></div>Riesgo medio
-  </div>
-  <div class="leyenda-item">
-    <div class="dot" style="background:#bdc3c7"></div>Riesgo bajo
-  </div>
-  <div class="leyenda-item">
-    <div class="dot" style="background:#2980b9"></div>Veterinaria
-  </div>
-</div>
-    <div class="avist-list">
-      <h3>Avistamientos recientes</h3>
-      <div id="avist-container"><p style="color:#555;font-size:13px">Cargando avistamientos...</p></div>
-    </div>
-    <button class="reportar-btn" onclick="openModal()">📍 Reportar avistamiento</button>
-    <div class="brand-footer">
-      <p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p>
-    </div>
+    <div id="map"><button id="exitFullBtn" onclick="toggleMapFull(event)">❌ Salir</button></div>
+    <div id="hotZoneBox" style="display:none;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:12px;font-size:13px;color:#f0f0f0">🔥 <strong id="hotZoneText"></strong></div>
+    <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
+    <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
+    <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Confirmado reciente</div><div class="leyenda-item"><div class="dot" style="background:#e67e22"></div>Reporte nuevo</div><div class="leyenda-item"><div class="dot" style="background:#f1c40f"></div>Antiguo relevante</div><div class="leyenda-item"><div class="dot" style="background:#27ae60"></div>Ya no está</div><div class="leyenda-item"><div class="dot" style="background:#7f8c8d"></div>Histórico</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
+    <div class="avist-list"><h3>Avistamientos recientes</h3><div id="avist-container"><p style="color:#555;font-size:13px">Cargando avistamientos...</p></div></div>
+    <button class="reportar-btn" onclick="activateReportMode()">📍 Reportar avistamiento</button>
+    <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
   </div>
 
   <div id="vets" class="section">
-    <div class="filtros">
-      <button class="filtro active" onclick="filterVets('all',this)">Todas</button>
-      <button class="filtro" onclick="filterVets('24h',this)">24h</button>
-      <button class="filtro" onclick="filterVets('palma',this)">Palma</button>
-      <button class="filtro" onclick="filterVets('norte',this)">Norte</button>
-      <button class="filtro" onclick="filterVets('este',this)">Este</button>
-    </div>
+    <div class="filtros"><button class="filtro active" onclick="filterVets('all',this)">Todas</button><button class="filtro" onclick="filterVets('24h',this)">24h</button><button class="filtro" onclick="filterVets('palma',this)">Palma</button><button class="filtro" onclick="filterVets('norte',this)">Norte</button><button class="filtro" onclick="filterVets('este',this)">Este</button></div>
     <div id="vet-list"></div>
-    <div class="brand-footer">
-      <p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p>
+    <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
+  </div>
+
+  <div id="adiestramiento" class="section">
+    <div class="adi-wrap">
+      <div class="adi-hero"><img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" alt="Perros de la Isla" style="object-fit:contain;padding:30px;background:#3a0f0f"><div class="adi-hero-content"><div class="adi-name">Perros de la Isla</div><div class="adi-sub">Instructor Canino Profesional · Mallorca</div></div></div>
+      <div class="adi-text">Hola, soy <strong>Carlos Acevedo</strong>. Llevo más de <strong>14 años</strong> trabajando como adiestrador, dedicado al bienestar emocional de los perros y al vínculo con sus familias. En <strong>2019</strong> llegué a Mallorca y fundé <strong>Perros de la Isla</strong>.</div>
+      <div class="adi-text">Trabajo con métodos respetuosos para fortalecer la relación entre tú y tu perro, resolver lo que os cuesta y construir juntos una convivencia más feliz.</div>
+      <div class="adi-note">💡 Si has visto una procesionaria, repórtala en la pestaña <strong>Mapa</strong>. Esta zona es solo para consultas de adiestramiento.</div>
+      <div class="adi-title">Servicios Destacados</div>
+      <div class="srv-card"><div class="srv-name">Educación Canina Básica y Avanzada</div><div class="srv-text">Obediencia, modales en casa, paseo correcto, llamada y convivencia diaria.</div><a class="wa-btn" href="#" onclick="return openWhatsApp('educacion')">💬 Consultar por WhatsApp</a></div>
+      <div class="srv-card"><div class="srv-name">Control de Reactividad e Impulsividad</div><div class="srv-text">Para perros que reaccionan ante otros perros, personas o estímulos del entorno.</div><a class="wa-btn" href="#" onclick="return openWhatsApp('reactividad')">💬 Consultar por WhatsApp</a></div>
+      <div class="srv-card"><div class="srv-name">Educación Temprana para Cachorros</div><div class="srv-text">Socialización, higiene, autocontrol y bases sólidas desde el principio.</div><a class="wa-btn" href="#" onclick="return openWhatsApp('cachorros')">💬 Consultar por WhatsApp</a></div>
+      <div class="adi-title">Actividades en Grupo</div>
+      <div class="group-card"><div class="badge-season">🌿 Actividad Estacional</div><div class="srv-name">Expediciones Caninas</div><div class="srv-text">Paseos grupales educativos y socialización en naturaleza. Fechas anunciadas en Instagram.</div><a class="ig-btn" href="https://instagram.com/perrosdelaisla" target="_blank" rel="noopener">📣 Ver anuncios en Instagram</a></div>
+      <a href="https://instagram.com/perrosdelaisla" target="_blank" rel="noopener" class="ig-card"><div class="ig-logo">📷</div><div><div class="ig-user">@perrosdelaisla</div><div class="ig-sub">Sígueme para novedades, consejos y actividades</div></div></a>
+      <div class="adi-title">Contacto</div>
+      <div class="contact-card"><a href="#" onclick="return openWhatsApp('general')" class="contact-row"><div class="contact-label">💬 WhatsApp · 622 922 173</div><div class="contact-value">Consultas de adiestramiento</div></a><a href="mailto:perrosdelaislapalma@gmail.com" class="contact-row"><div class="contact-label">✉️ Email</div><div class="contact-value">perrosdelaislapalma@gmail.com</div></a><a href="https://perrosdelaisla.com" target="_blank" rel="noopener" class="contact-row"><div class="contact-label">🌐 Web oficial</div><div class="contact-value">perrosdelaisla.com</div></a><div class="hours"><strong>Horario</strong><br>Lunes a Viernes · 10:00 a 13:00 · 17:00 a 20:00<br>Sábados · 10:00 a 13:00 · Domingos cerrado</div></div>
+      <div class="final-msg">TU PERRO MERECE<br>SER FELIZ, HOY.</div>
+      <div class="final-sub">Perros de la Isla · Palma de Mallorca</div>
     </div>
   </div>
 </div>
@@ -246,411 +329,282 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
   <div class="modal-box">
     <h2>📍 Reportar avistamiento</h2>
     <p style="font-size:12px;color:#888;margin-bottom:10px">👉 Primero toca el mapa para marcar la ubicación exacta</p>
-    <div class="form-group">
-      <label>Ubicación</label>
-      <input type="text" placeholder="Ej: Pinar de Gènova, junto al camino principal">
-    </div>
-    <div class="form-group">
-      <label>Nivel de riesgo</label>
-      <select>
-        <option>⚠️ Alto — Procesión activa en el suelo</option>
-        <option>⚡ Medio — Bolsas visibles en los pinos</option>
-        <option>🔍 Bajo — Indicios o rastros secos</option>
-      </select>
-    </div>
-   
-    <div class="form-group">
-      <label>Descripción</label>
-      <textarea placeholder="¿Qué viste? ¿Es un camino frecuentado por perros?"></textarea>
-      <div class="form-group">
-  <label>Foto (opcional)</label>
-  <input type="file" id="foto" accept="image/*">
-</div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-submit" onclick="submitReport()">Enviar alerta</button>
-    </div>
+    <div class="form-group"><label>Ubicación</label><input type="text" id="inp-ubicacion" placeholder="Ej: Pinar de Gènova, junto al camino principal"></div>
+    <div class="form-group"><label>Nivel de riesgo</label><select id="inp-riesgo"><option value="Alto">⚠️ Alto — Procesión activa en el suelo</option><option value="Medio">⚡ Medio — Bolsas visibles en los pinos</option><option value="Bajo">🔍 Bajo — Indicios o rastros secos</option></select></div>
+    <div class="form-group"><label>Descripción</label><textarea id="inp-descripcion" placeholder="¿Qué viste? ¿Es un camino frecuentado por perros?"></textarea></div>
+    <div class="form-group"><label>Foto (opcional)</label><input type="file" id="foto" accept="image/*" onchange="previewPhoto(event)" style="display:none"><div style="display:flex;gap:8px;margin-top:8px"><button type="button" onclick="abrirCamara()" style="flex:1;padding:10px;background:#c0392b;color:#fff;border:none;border-radius:8px">📷 Cámara</button><button type="button" onclick="abrirGaleria()" style="flex:1;padding:10px;background:#222;color:#fff;border:1px solid #444;border-radius:8px">🖼️ Galería</button></div><p style="font-size:11px;color:#666;margin-top:5px">Las fotos se comprimen automáticamente</p><div id="previewWrap" style="display:none;margin-top:10px"><img id="previewImg" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;border:1px solid #333"></div></div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-submit" id="btn-submit" onclick="submitReport()">Enviar alerta</button></div>
   </div>
 </div>
 
-<div class="toast" id="toast">✅ Avistamiento reportado. ¡Gracias!</div>
+<div class="toast" id="toast"></div>
+<div id="installBanner"><div style="display:flex;justify-content:space-between;align-items:center"><span>📲 Instala la app</span><button onclick="closeBanner()" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer">✕</button></div><button onclick="installApp()" style="margin-top:10px;background:#c0392b;border:none;color:#fff;padding:8px 14px;border-radius:6px;font-weight:600;cursor:pointer">Instalar</button></div>
+<div id="imgModal"><img id="imgModalContent" alt="Foto del avistamiento"></div>
 
 <script>
-const SUPA_URL = "https://vqpdrncugaipfpcmpout.supabase.co";
-const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxcGRybmN1Z2FpcGZwY21wb3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwODcxNTUsImV4cCI6MjA5MTY2MzE1NX0.5EZ026A8BvsbPuffe9dyg-Qo7yL3vXvOqxEwb35KY_E";
-const HEADERS = {"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
+const SUPA_URL="https://vqpdrncugaipfpcmpout.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxcGRybmN1Z2FpcGZwY21wb3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwODcxNTUsImV4cCI6MjA5MTY2MzE1NX0.5EZ026A8BvsbPuffe9dyg-Qo7yL3vXvOqxEwb35KY_E";
+const HEADERS={"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
+const WA="34622922173";
+const WA_MSG={educacion:"Hola Carlos, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Educación canina básica y avanzada.",reactividad:"Hola Carlos, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Control de reactividad e impulsividad.",cachorros:"Hola Carlos, te escribo desde la app de Perros de la Isla. Me interesa el programa de Educación temprana para cachorros.",general:"Hola Carlos, te escribo desde la app de Perros de la Isla. Me gustaría consultarte sobre tus servicios de adiestramiento."};
+function openWhatsApp(s){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(WA_MSG[s]||WA_MSG.general),"_blank");return false;}
+function previewPhoto(event){
+  const file = event.target.files[0];
+  const wrap = document.getElementById('previewWrap');
+  const img = document.getElementById('previewImg');
 
-const vets=[
-  {name:"Veterinary Hospital Canis",addr:"C/ Agnès de Pacs 12, Palma",phone:"+34971732100",rating:4.3,reviews:3123,h24:true,zone:"palma",lat:39.5956,lng:2.6529,maps:"https://maps.google.com/?q=39.5956,2.6529"},
-  {name:"AniCura Aragó Hospital Veterinari",addr:"C/ Son Morro 4, Palma",phone:"+34971479354",rating:4.1,reviews:1612,h24:true,zone:"palma",lat:39.5741,lng:2.6872,maps:"https://maps.google.com/?q=39.5741,2.6872"},
-  {name:"Hospital Veterinari Ciutat d'Inca",addr:"C/ dels Pagesos 14, Inca",phone:"+34971505483",rating:4.1,reviews:759,h24:true,zone:"norte",lat:39.7123,lng:2.9122,maps:"https://maps.google.com/?q=39.7123,2.9122"},
-  {name:"MiVet Hospital Veterinario",addr:"Ctra. Palma-Artà km 47, Manacor",phone:"+34971845047",rating:3.9,reviews:331,h24:true,zone:"este",lat:39.5723,lng:3.1937,maps:"https://maps.google.com/?q=39.5723,3.1937"},
-  {name:"Veterclinic Son Servera",addr:"Av. de la Constitució 19, Son Servera",phone:"+34971567474",rating:4.6,reviews:484,h24:true,zone:"este",lat:39.6183,lng:3.3633,maps:"https://maps.google.com/?q=39.6183,3.3633"},
-  {name:"Clínica Veterinaria Peludets",addr:"C/ de Jesús 36, Palma",phone:"+34640377985",rating:4.6,reviews:387,h24:false,zone:"palma",lat:39.5822,lng:2.6438,maps:"https://maps.google.com/?q=39.5822,2.6438"}
+  if(!file){
+    wrap.style.display='none';
+    img.src='';
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+    img.src = e.target.result;
+    wrap.style.display='block';
+  };
+
+  reader.readAsDataURL(file);
+}
+  function abrirCamara(){
+  const input=document.getElementById('foto');
+  input.setAttribute('capture','environment');
+  input.click();
+}
+
+function abrirGaleria(){
+  const input=document.getElementById('foto');
+  input.removeAttribute('capture');
+  input.click();
+}
+// ============================================
+// INSIGNIAS
+// ============================================
+const BADGES=[
+  {id:'primer_rastro',emoji:'🐾',name:'Primer Rastro',desc:'Primer avistamiento reportado',check:(r,v)=>r>=1},
+  {id:'olfato_fino',emoji:'👃',name:'Olfato Fino',desc:'10 avistamientos confirmados por otros',check:(r,v)=>r>=10},
+  {id:'perro_explorador',emoji:'🧭',name:'Perro Explorador',desc:'Reportado en 5+ municipios',check:(r,v)=>r>=5},
+  {id:'lider_manada',emoji:'🐺',name:'Líder de Manada',desc:'20 confirmaciones dadas',check:(r,v)=>v>=20},
+  {id:'leyenda_isla',emoji:'👑',name:'Leyenda de la Isla',desc:'Top 10 del año',check:(r,v)=>r>=25&&v>=50},
+  {id:'expedicionario',emoji:'⚡',name:'Expedicionario',desc:'Activo toda la temporada',check:(r,v)=>r>=8&&v>=15}
 ];
 
-function renderVets(list){
-  document.getElementById('vet-list').innerHTML=list.map(v=>`
-    <div class="vet-card">
-      <div class="vet-top"><div class="vet-ico">🏥</div>
-        <div>
-          <div class="vet-name">${v.name}</div>
-          <div class="vet-addr">${v.addr}</div>
-          <div class="badges-row">${v.h24?'<span class="badge-24h">24H URGENCIAS</span>':''}</div>
-        </div>
-<div style="font-size:11px;color:#aaa;margin-top:4px">
-  ${
-    v.h24
-      ? "🟢 Abierto 24 horas"
-      : "🟠 Llamar para confirmar urgencia"
-  }
-</div>
-      </div>
-      <div class="vet-rating"><span>⭐</span> ${v.rating} · ${v.reviews.toLocaleString()} reseñas</div>
-      <div class="vet-actions">
-        <button class="btn-call" onclick="window.location.href='tel:${v.phone}'">📞 Llamar</button>
-        <button class="btn-nav" onclick="window.open('${v.maps}')">🧭 Cómo llegar</button>
-      </div>
-    </div>`).join('');
+function getUnlockedBadges(reportCount,voteCount){
+  return BADGES.filter(b=>b.check(reportCount,voteCount));
 }
 
-function filterVets(zone,btn){
-  document.querySelectorAll('.filtro').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const f=zone==='all'?vets:zone==='24h'?vets.filter(v=>v.h24):vets.filter(v=>v.zone===zone);
-  renderVets(f);
+function getHighestBadge(reportCount,voteCount){
+  const unlocked=getUnlockedBadges(reportCount,voteCount);
+  return unlocked.length>0?unlocked[unlocked.length-1]:null;
 }
+
+function renderBadges(reportCount,voteCount){
+  const grid=document.getElementById('badges-grid');
+  grid.innerHTML=BADGES.map(b=>{
+    const unlocked=b.check(reportCount,voteCount);
+    return `<div class="badge-item ${unlocked?'unlocked':'locked'}">
+      <span class="badge-emoji">${unlocked?b.emoji:'🔒'}</span>
+      <div class="badge-name">${b.name}</div>
+      <div class="badge-desc">${b.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================
+// PERFIL
+// ============================================
+function getUserId(){let id=localStorage.getItem('pdi_user_id');if(!id){id='u_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('pdi_user_id',id);}return id;}
+const USER_ID=getUserId();
+function getProfile(){const p=localStorage.getItem('pdi_profile');return p?JSON.parse(p):null;}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const profile=getProfile();
+  if(profile){document.getElementById('onboarding').classList.add('hidden');updateProfileBtn();}
+  const im=document.getElementById('imgModal');
+  if(im) im.addEventListener('click',()=>{im.style.display='none';});
+});
+
+function saveProfile(){
+  const nombre=document.getElementById('onb-nombre').value.trim();
+  const perro=document.getElementById('onb-perro').value.trim();
+  const zona=document.getElementById('onb-zona').value;
+  const visible=document.getElementById('onb-visible').checked;
+  if(!nombre){showToast('Escribe tu nombre','error');return;}
+  if(!perro){showToast('Escribe el nombre de tu perro','error');return;}
+  const profile={nombre,nombre_perro:perro,zona,visible,created_at:new Date().toISOString()};
+  localStorage.setItem('pdi_profile',JSON.stringify(profile));
+  fetch(SUPA_URL+"/rest/v1/usuarios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({id:USER_ID,nombre,nombre_perro:perro,zona,visible})}).catch(()=>{});
+  document.getElementById('onboarding').classList.add('hidden');
+  updateProfileBtn();
+  showToast(`¡Bienvenido/a ${nombre}! 🐾`,'success');
+}
+
+function updateProfileBtn(){const btn=document.getElementById('headerProfileBtn');const p=getProfile();if(p){btn.classList.add('has-profile');btn.textContent=p.nombre.charAt(0).toUpperCase();}}
+
+async function openProfile(){
+  const p=getProfile();
+  if(!p){document.getElementById('onboarding').classList.remove('hidden');return;}
+  document.getElementById('prof-avatar').textContent=p.nombre.charAt(0).toUpperCase();
+  document.getElementById('prof-name').textContent=p.nombre;
+  document.getElementById('prof-dog').textContent='🐕 '+p.nombre_perro;
+  document.getElementById('prof-zone').textContent='📍 '+p.zona;
+  const since=p.created_at?new Date(p.created_at):new Date();
+  const months=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('prof-since').textContent='Miembro desde '+months[since.getMonth()]+' '+since.getFullYear();
+
+  // Contar votos locales
+  const voteCount=Object.keys(localStorage).filter(k=>k.startsWith('pdi_conf_')).length;
+  document.getElementById('prof-confirms').textContent=voteCount;
+
+  // Contar reportes desde Supabase
+  let reportCount=0;
+  try{
+    const r=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&select=id`,{headers:HEADERS});
+    const data=await r.json();
+    reportCount=data.length||0;
+  }catch(e){}
+  document.getElementById('prof-reports').textContent=reportCount;
+
+  // Renderizar insignias
+  renderBadges(reportCount,voteCount);
+
+  document.getElementById('profileModal').classList.add('open');
+}
+
+function closeProfile(){document.getElementById('profileModal').classList.remove('open');}
+function editProfile(){
+  closeProfile();
+  const p=getProfile();
+  if(p){document.getElementById('onb-nombre').value=p.nombre;document.getElementById('onb-perro').value=p.nombre_perro;document.getElementById('onb-zona').value=p.zona;document.getElementById('onb-visible').checked=p.visible;}
+  document.getElementById('onboarding').classList.remove('hidden');
+}
+
+// ============================================
+// HELPERS
+// ============================================
+function escapeHtml(t){if(t===null||t===undefined) return '';return String(t).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');}
+function getDistance(lat1,lng1,lat2,lng2){const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+function timeAgo(d){if(!d) return 'Fecha desconocida';const m=Math.floor((Date.now()-new Date(d).getTime())/60000);if(m<1) return 'Ahora mismo';if(m<60) return `Hace ${m} min`;const h=Math.floor(m/60);if(h<24) return `Hace ${h} h`;const dd=Math.floor(h/24);if(dd<30) return `Hace ${dd} día${dd>1?'s':''}`;const mm=Math.floor(dd/30);return `Hace ${mm} mes${mm>1?'es':''}`;}
+function isHistorico(d){if(!d) return false;return(Date.now()-new Date(d).getTime())/86400000>30;}
+function colorForRisk(a){const now=Date.now();if(a.denials&&a.denials>=2) return '#27ae60';if(a.last_confirmed_at){const ch=(now-new Date(a.last_confirmed_at).getTime())/3600000;if(ch<=48) return '#c0392b';}if(a.created_at){const ah=(now-new Date(a.created_at).getTime())/3600000;if(ah<=48) return '#e67e22';if(ah<=168) return '#f1c40f';}return '#7f8c8d';}
+function createRiskIcon(color,faded){const o=faded?0.5:1;return L.divIcon({html:`<div style="background:${color};width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6);opacity:${o}"></div>`,iconSize:[13,13],iconAnchor:[6,6],className:''});}
+function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'success');setTimeout(()=>t.classList.remove('show'),3000);}
+function checkHotZone(){const box=document.getElementById('hotZoneBox'),text=document.getElementById('hotZoneText');if(!box||!text) return;if(!userLat||!userLng){box.style.display='none';return;}const items=document.querySelectorAll('.avist-item');if(items.length===0){box.style.display='none';return;}if(items.length>=3){box.style.display='block';box.style.borderColor='#c0392b';text.textContent='🚨 Zona caliente: varios reportes cerca';return;}if(items.length>=1){box.style.display='block';box.style.borderColor='#e67e22';text.textContent='⚠️ Precaución: hay reportes cercanos';return;}box.style.display='block';box.style.borderColor='#27ae60';text.textContent='✅ Sin actividad cercana';}
+
+// VETS
+const vets=[{name:"Veterinary Hospital Canis",addr:"C/ Agnès de Pacs 12, Palma",phone:"+34971732100",rating:4.3,reviews:3123,h24:true,zone:"palma",lat:39.5956,lng:2.6529,maps:"https://maps.google.com/?q=39.5956,2.6529"},{name:"AniCura Aragó Hospital Veterinari",addr:"C/ Son Morro 4, Palma",phone:"+34971479354",rating:4.1,reviews:1612,h24:true,zone:"palma",lat:39.5741,lng:2.6872,maps:"https://maps.google.com/?q=39.5741,2.6872"},{name:"Hospital Veterinari Ciutat d'Inca",addr:"C/ dels Pagesos 14, Inca",phone:"+34971505483",rating:4.1,reviews:759,h24:true,zone:"norte",lat:39.7123,lng:2.9122,maps:"https://maps.google.com/?q=39.7123,2.9122"},{name:"MiVet Hospital Veterinario",addr:"Ctra. Palma-Artà km 47, Manacor",phone:"+34971845047",rating:3.9,reviews:331,h24:true,zone:"este",lat:39.5723,lng:3.1937,maps:"https://maps.google.com/?q=39.5723,3.1937"},{name:"Veterclinic Son Servera",addr:"Av. de la Constitució 19, Son Servera",phone:"+34971567474",rating:4.6,reviews:484,h24:true,zone:"este",lat:39.6183,lng:3.3633,maps:"https://maps.google.com/?q=39.6183,3.3633"},{name:"Clínica Veterinaria Peludets",addr:"C/ de Jesús 36, Palma",phone:"+34640377985",rating:4.6,reviews:387,h24:false,zone:"palma",lat:39.5822,lng:2.6438,maps:"https://maps.google.com/?q=39.5822,2.6438"}];
+function renderVets(list){document.getElementById('vet-list').innerHTML=list.map(v=>`<div class="vet-card"><div class="vet-top"><div class="vet-ico">🏥</div><div style="flex:1"><div class="vet-name">${v.name}</div><div class="vet-addr">${v.addr}</div><div class="badges-row">${v.h24?'<span class="badge-24h">24H URGENCIAS</span>':''}</div><div style="font-size:11px;color:#aaa;margin-top:4px">${v.h24?"🟢 Abierto 24 horas":"🟠 Llamar para confirmar urgencia"}</div></div></div><div class="vet-rating"><span>⭐</span> ${v.rating} · ${v.reviews.toLocaleString()} reseñas</div><div class="vet-actions"><button class="btn-call" onclick="window.location.href='tel:${v.phone}'">📞 Llamar</button><button class="btn-nav" onclick="window.open('${v.maps}')">🧭 Cómo llegar</button></div></div>`).join('');}
+function filterVets(zone,btn){document.querySelectorAll('.filtro').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderVets(zone==='all'?vets:zone==='24h'?vets.filter(v=>v.h24):vets.filter(v=>v.zone===zone));}
 renderVets(vets);
 
-function showTab(id,btn){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-  if(id==='mapa') setTimeout(initMap,100);
+// NAV
+function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);window.scrollTo({top:0,behavior:'smooth'});}
+
+// MAP
+let markersLayer,selectedLat=null,selectedLng=null,tempMarker=null,mapInit=false;
+let reportMode=false,userLat=null,userLng=null,userMarker=null,isSubmitting=false;
+let namesCache={};
+
+async function loadNamesCache(ids){
+  const toFetch=ids.filter(id=>id&&!namesCache[id]);
+  if(toFetch.length===0) return;
+  try{const qs=toFetch.map(id=>`"${id}"`).join(',');const res=await fetch(SUPA_URL+`/rest/v1/usuarios?id=in.(${qs})&select=id,nombre,nombre_perro,zona,visible`,{headers:HEADERS});const users=await res.json();users.forEach(u=>{namesCache[u.id]=u.visible?{name:u.nombre+' y '+u.nombre_perro+' 🐕',reports:0}:{name:'Un vecino de '+u.zona,reports:0};});toFetch.forEach(id=>{if(!namesCache[id]) namesCache[id]={name:'Un vecino de Mallorca',reports:0};});}catch(e){}
 }
 
-let markersLayer, selectedLat=null, selectedLng=null, tempMarker=null, mapInit=false;
-let userLat = null;
-let userLng = null;
 function initMap(){
-  if(mapInit) return;
-  mapInit=true;
-  markersLayer=L.layerGroup();
-  window.map=L.map('map',{zoomControl:false}).setView([39.65,2.95],9);
-  markersLayer.addTo(window.map);
+  if(mapInit) return;mapInit=true;
+  markersLayer=L.layerGroup();window.map=L.map('map',{zoomControl:false}).setView([39.65,2.95],9);markersLayer.addTo(window.map);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB'}).addTo(window.map);
-  window.rIcon=L.divIcon({html:'<div style="background:#c0392b;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>',iconSize:[13,13],iconAnchor:[6,6],className:''});
+  window.rIcon=createRiskIcon('#c0392b');
   const bIcon=L.divIcon({html:'<div style="background:#2980b9;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>',iconSize:[13,13],iconAnchor:[6,6],className:''});
-  window.map.on('click',function(e){
-  selectedLat = e.latlng.lat;
-  selectedLng = e.latlng.lng;
-
-  if(tempMarker) window.map.removeLayer(tempMarker);
-
-  tempMarker = L.marker([selectedLat,selectedLng],{icon:window.rIcon})
-    .addTo(window.map)
-    .bindPopup("📍 Ubicación seleccionada")
-    .openPopup();
-
-  // 👉 abrir modal automáticamente
-  openModal();
-
-  // 👉 rellenar ubicación automática
-  setTimeout(() => {
-    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`)
-      .then(res => res.json())
-      .then(data => {
-        let lugar = data.address.city || data.address.town || data.address.village || "Zona desconocida";
-
-        document.querySelector('#modal input').value =
-          lugar + " (" + selectedLat.toFixed(5) + ", " + selectedLng.toFixed(5) + ")";
-      })
-      .catch(() => {
-        document.querySelector('#modal input').value =
-          "Ubicación seleccionada (" + selectedLat.toFixed(5) + ", " + selectedLng.toFixed(5) + ")";
-      });
-  }, 100);
-});
-  vets.forEach(v => {
-  L.marker([v.lat, v.lng], { icon: bIcon })
-    .addTo(window.map)
-    .bindPopup(`
-      <div style="font-size:13px">
-        🏥 <b>${v.name}</b><br>
-        <small>${v.addr}</small><br><br>
-
-        <a href="tel:${v.phone}" 
-          style="display:block;margin-bottom:6px;background:#c0392b;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none;">
-          📞 Llamar
-        </a>
-
-        <a href="${v.maps}" target="_blank" 
-          style="display:block;background:#3498db;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none;">
-          🧭 Cómo llegar
-        </a>
-      </div>
-    `);
-});
-  console.log("ANTES DE CARGAR AVISTAMIENTOS");
+  window.map.on('click',function(e){if(!reportMode) return;selectedLat=e.latlng.lat;selectedLng=e.latlng.lng;checkHotZone();if(tempMarker) window.map.removeLayer(tempMarker);tempMarker=L.marker([selectedLat,selectedLng],{icon:window.rIcon}).addTo(window.map).bindPopup("📍 Ubicación seleccionada").openPopup();openModal();reportMode=false;setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Zona desconocida";document.getElementById('inp-ubicacion').value=lugar+" ("+selectedLat.toFixed(5)+", "+selectedLng.toFixed(5)+")";}).catch(()=>{});},100);});
+  vets.forEach(v=>{L.marker([v.lat,v.lng],{icon:bIcon}).addTo(window.map).bindPopup(`<div style="font-size:13px">🏥 <b>${v.name}</b><br><small>${v.addr}</small><br><br><a href="tel:${v.phone}" style="display:block;margin-bottom:6px;background:#c0392b;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none">📞 Llamar</a><a href="${v.maps}" target="_blank" style="display:block;background:#3498db;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none">🧭 Cómo llegar</a></div>`);});
   loadAvistamientos();
 }
 
 async function loadAvistamientos(){
   try{
-    const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*",{headers:HEADERS});
-    if(!res.ok){console.error("Error HTTP:",res.status);return;}
-    const data=await res.json();
-    if(userLat && userLng){
-      console.log("USER LOCATION:", userLat, userLng);
-  data.forEach(a => {
-    if(a.lat && a.lng){
-      a.distance = getDistance(userLat, userLng, parseFloat(a.lat), parseFloat(a.lng));
-    }
-  });
+    const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});
+    if(!res.ok){document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando avistamientos.</p>';return;}
+    let data=await res.json();
+    data=data.filter(a=>{if(!a.created_at) return true;const days=(Date.now()-new Date(a.created_at).getTime())/86400000;if(days<=7) return true;if(a.last_confirmed_at){if((Date.now()-new Date(a.last_confirmed_at).getTime())/86400000<=7) return true;}return false;});
 
-  data.sort((a, b) => (a.distance || 9999) - (b.distance || 9999));
-}
-console.log("DATA REAL:", data);
+    const reporterIds=[...new Set(data.map(a=>a.reporter_id).filter(Boolean))];
+    await loadNamesCache(reporterIds);
+
+    // Contar reportes por usuario para insignias en avistamientos
+    const reportCounts={};
+    data.forEach(a=>{if(a.reporter_id){reportCounts[a.reporter_id]=(reportCounts[a.reporter_id]||0)+1;}});
+
+    if(userLat&&userLng){data=data.map(a=>({...a,distance:(a.lat&&a.lng)?getDistance(userLat,userLng,parseFloat(a.lat),parseFloat(a.lng)):null}));data.sort((a,b)=>{if(a.distance===null) return 1;if(b.distance===null) return -1;return a.distance-b.distance;});}
+
     markersLayer.clearLayers();
-    data.forEach(a=>{
-      const lat=parseFloat(a.lat), lng=parseFloat(a.lng);
-      if(!isNaN(lat)&&!isNaN(lng)){
+    data.forEach(a=>{const lat=parseFloat(a.lat),lng=parseFloat(a.lng);if(isNaN(lat)||isNaN(lng)) return;const color=colorForRisk(a);const icon=createRiskIcon(color,isHistorico(a.created_at));L.marker([lat,lng],{icon}).addTo(markersLayer).bindPopup(`<div style="font-size:13px">🌲 <b>${escapeHtml(a.ubicacion||'Sin ubicación')}</b><br><span style="color:#666;font-size:11px">${timeAgo(a.created_at)}</span><br>${escapeHtml(a.riesgo||'')}</div>`);});
 
-  let color = "#c0392b"; // rojo por defecto
-
-  if (a.Riesgo && a.Riesgo.toLowerCase().includes("medio")) color = "#f1c40f";
-  if (a.Riesgo && a.Riesgo.toLowerCase().includes("bajo")) color = "#bdc3c7";
-
-  const icon = L.divIcon({
-    html: `<div style="background:${color};width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>`,
-    iconSize:[13,13],
-    iconAnchor:[6,6],
-    className:''
-  });
-
-  L.marker([lat,lng],{icon})
-    .addTo(markersLayer)
-    .bindPopup(`🌲 <b>${a.Ubicacion}</b><br>${a.Riesgo}`);
-} // rojo por defecto
-    });
     const container=document.getElementById('avist-container');
-    container.innerHTML = data.length === 0
-  ? '<p style="color:#555;font-size:13px">Aún no hay avistamientos reportados.</p>'
-  : data.map(a => {
+    if(data.length===0){container.innerHTML='<p style="color:#555;font-size:13px">Aún no hay avistamientos reportados. ¡Sé el primero!</p>';return;}
 
-    const riesgoTexto = a.Riesgo || "Sin especificar";
+    container.innerHTML=data.map(a=>{
+      const riesgo=a.riesgo||'Sin especificar';
+      const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';
+      const hist=isHistorico(a.created_at);
+      const conf=a.confirmations||0;
+      const ya=localStorage.getItem('pdi_conf_'+a.id);
+      const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;
+      const reporterName=nameInfo?nameInfo.name:'';
+      const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;
+      const topBadge=getHighestBadge(rCount,0);
+      const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';
 
-    const claseRiesgo = riesgoTexto.includes("Medio") 
-      ? "medio" 
-      : riesgoTexto.includes("Bajo") 
-        ? "medio" 
-        : "alto";
-
-    return `
-      <div class="avist-item">
-        <div class="avist-icon">🌲</div>
-        <div class="avist-info">
-          <h4>${a.Ubicacion || "Ubicación desconocida"}</h4>
-          ${a.foto ? `<img src="${a.foto}" style="width:100%;border-radius:10px;margin-top:8px;max-height:200px;object-fit:cover;">` : ""}
-          ${a.distance ? `<p style="color:#888;font-size:11px">📍 A ${a.distance.toFixed(1)} km</p>` : ""}
-<p>${a["Descripción"] || a.Descripcion || a.descripcion || "Sin descripción"}</p>
-          <span class="badge ${claseRiesgo}">${riesgoTexto}</span>
-        </div>
-      </div>
-    `;
-  }).join('');
-  }catch(err){console.error("Error:",err);}
+      return `<div class="avist-item ${hist?'historico':''}"><div class="avist-icon">🌲</div><div class="avist-info">
+        <h4>${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4>
+        ${a.foto?`<img src="${a.foto}" alt="Avistamiento" onclick="openImage('${a.foto}')" class="avist-img">`:''}
+        <p>${escapeHtml(a.descripcion||'Sin descripción')}</p>
+        <div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>
+        ${reporterName?`<p class="avist-reporter">Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}
+        ${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}
+        <div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div>
+      </div></div>`;
+    }).join('');
+    checkHotZone();
+  }catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
 }
-function getDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371;
 
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * Math.PI / 180) *
-    Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLng / 2) * Math.sin(dLng / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return R * c;
+async function confirmSighting(id,isConfirm){
+  if(localStorage.getItem('pdi_conf_'+id)){showToast('Ya has votado en este avistamiento','error');return;}
+  try{const r=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${id}&select=confirmations,denials`,{headers:HEADERS});const[c]=await r.json();if(!c) return;const nc=isConfirm?(c.confirmations||0)+1:c.confirmations||0;const nd=!isConfirm?(c.denials||0)+1:c.denials||0;const up={confirmations:nc,denials:nd};if(isConfirm) up.last_confirmed_at=new Date().toISOString();if(nd>=3) up.status='archivado';const res=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${id}`,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify(up)});if(res.ok){localStorage.setItem('pdi_conf_'+id,isConfirm?'confirm':'deny');showToast(isConfirm?'✅ Gracias por confirmar':'🚫 Gracias por avisar','success');loadAvistamientos();}else showToast('Error al votar','error');}catch(e){showToast('Error de conexión','error');}
 }
-function openModal(){
-  if(!selectedLat || !selectedLng){
-    alert("Primero toca el mapa o usa tu ubicación");
-    return;
-  }
-  document.getElementById('modal').classList.add('open');
-}
-function closeModal(){document.getElementById('modal').classList.remove('open')}
+
+function activateReportMode(){if(!window.map){showToast('Abre primero el mapa','error');return;}if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}reportMode=true;selectedLat=null;selectedLng=null;if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}showToast('Toca el mapa para marcar la ubicación','success');}
+function openModal(){if(!selectedLat||!selectedLng){showToast('Primero toca el mapa o usa tu ubicación','error');return;}document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}selectedLat=null;selectedLng=null;reportMode=false;document.getElementById('inp-ubicacion').value='';document.getElementById('inp-descripcion').value='';document.getElementById('foto').value='';document.getElementById('previewWrap').style.display='none';document.getElementById('previewImg').src='';}
+
+async function compressImage(file,maxW,q){maxW=maxW||1200;q=q||0.75;return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');let w=img.width,h=img.height;if(w>maxW){h=(maxW/w)*h;w=maxW;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>res(b),'image/jpeg',q);};img.onerror=rej;img.src=e.target.result;};r.onerror=rej;r.readAsDataURL(file);});}
 
 async function submitReport(){
-  const ubicacion=document.querySelector('#modal input').value;
-  const riesgo=document.querySelector('#modal select').value;
-  const descripcion=document.querySelector('#modal textarea').value;
-  const fileInput = document.getElementById('foto');
-const file = fileInput.files[0];
-  console.log("DATOS QUE SE ENVÍAN:", { 
-  ubicacion, 
-  descripcion, 
-  riesgo, 
-  lat: selectedLat, 
-  lng: selectedLng 
-});
-  if(!selectedLat||!selectedLng){alert("Toca el mapa para marcar la ubicación exacta");return;}
-  if(!ubicacion){alert("Escribe la ubicación");return;}
-  try{
-    let imageUrl = null;
-
-if(file){
-  const fileName = Date.now() + "_" + file.name;
-
-  const uploadRes = await fetch(
-    SUPA_URL + "/storage/v1/object/avistamientos/" + fileName,
-    {
-      method: "POST",
-      headers: {
-        "apikey": SUPA_KEY,
-        "Authorization": "Bearer " + SUPA_KEY,
-        "Content-Type": file.type
-      },
-      body: file
-    }
-  );
-
-  if(uploadRes.ok){
-    imageUrl = SUPA_URL + "/storage/v1/object/public/avistamientos/" + fileName;
-  } else {
-    console.error("Error subiendo imagen");
-  }
-}
-    console.log("IMAGE URL FINAL:", imageUrl);
-    const res=await fetch(SUPA_URL+"/rest/v1/avistamientos",{
-      method:"POST",
-      headers:{
-  ...HEADERS,
-  "Prefer":"return=representation",
-  "Content-Type":"application/json"
-},
-      body: JSON.stringify({
-  Ubicacion: ubicacion,
-  Descripción: descripcion,
-  Riesgo: riesgo,
-  lat: selectedLat,
-  lng: selectedLng,
-  foto: imageUrl
-})
-    });
-    if(!res.ok){console.error("Error guardando:",res.status);alert("Error al guardar");return;}
-    L.marker([selectedLat,selectedLng],{icon:window.rIcon}).addTo(markersLayer).bindPopup(`🌲 <b>${ubicacion}</b><br>${riesgo}`);
-    closeModal();
-    loadAvistamientos();
-    const t=document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'),3000);
-  }catch(err){alert("Error al guardar el avistamiento");console.error(err);}
-}
-</script>
-  <script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
-}
-</script>
- <div id="installBanner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid #c0392b;color:#fff;padding:14px 16px;border-radius:10px;z-index:9999;width:90%;max-width:360px;text-align:center;font-size:13px;">
-  
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <span>📲 Instala la app para mejor experiencia</span>
-    <button onclick="closeBanner()" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;">✕</button>
-  </div>
-
-  <button onclick="installApp()" style="margin-top:10px;background:#c0392b;border:none;color:#fff;padding:8px 14px;border-radius:6px;font-weight:600;cursor:pointer;">
-    Instalar
-  </button>
-</div>
-
-<script>
-let deferredPrompt;
-
-function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if(isSubmitting) return;isSubmitting=true;const btn=document.getElementById('btn-submit');
+  const ubicacion=document.getElementById('inp-ubicacion').value.trim();const riesgo=document.getElementById('inp-riesgo').value;const descripcion=document.getElementById('inp-descripcion').value.trim();const file=document.getElementById('foto').files[0];
+  if(!selectedLat||!selectedLng){showToast('Toca el mapa para marcar la ubicación exacta','error');isSubmitting=false;return;}
+  if(!ubicacion){showToast('Escribe la ubicación','error');isSubmitting=false;return;}
+  try{const oneH=new Date(Date.now()-3600000).toISOString();const cr=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&created_at=gte.${oneH}&select=id`,{headers:HEADERS});const recent=await cr.json();if(recent.length>=5){showToast('Has reportado mucho en la última hora.','error');isSubmitting=false;return;}const sixH=new Date(Date.now()-21600000).toISOString();const nr=await fetch(SUPA_URL+`/rest/v1/avistamientos?created_at=gte.${sixH}&select=lat,lng`,{headers:HEADERS});const nearby=await nr.json();for(const r of nearby){if(!r.lat||!r.lng) continue;if(getDistance(selectedLat,selectedLng,parseFloat(r.lat),parseFloat(r.lng))<=0.08){showToast('Ya existe un reporte reciente muy cerca.','error');isSubmitting=false;return;}}}catch(e){}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando...';
+  try{let imageUrl=null;if(file){try{const compressed=await compressImage(file);const fn=Date.now()+"_"+Math.random().toString(36).substr(2,6)+".jpg";const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}
+  const res=await fetch(SUPA_URL+"/rest/v1/avistamientos",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({ubicacion,descripcion,riesgo,lat:selectedLat,lng:selectedLng,foto:imageUrl,reporter_id:USER_ID})});
+  if(!res.ok){showToast('Error al guardar.','error');btn.disabled=false;btn.innerHTML='Enviar alerta';isSubmitting=false;return;}
+  userLat=selectedLat;userLng=selectedLng;closeModal();await loadAvistamientos();showToast('✅ Avistamiento reportado. ¡Gracias!','success');}catch(err){showToast('Error al guardar.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar alerta';}
 }
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
+function goToUserLocation(){if(!navigator.geolocation){showToast('Tu dispositivo no soporta geolocalización','error');return;}navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude,lng=pos.coords.longitude;window.map.setView([lat,lng],15);if(userMarker) window.map.removeLayer(userMarker);userMarker=L.marker([lat,lng],{icon:L.divIcon({html:'<div style="background:#3498db;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.6)"></div>',className:''})}).addTo(window.map).bindPopup("📍 Estás aquí").openPopup();selectedLat=lat;selectedLng=lng;userLat=lat;userLng=lng;loadAvistamientos();checkHotZone();setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Ubicación actual";document.getElementById('inp-ubicacion').value=lugar+" ("+lat.toFixed(5)+", "+lng.toFixed(5)+")";}).catch(()=>{});},100);},err=>{if(err.code===1) showToast('Permiso de ubicación bloqueado','error');else if(err.code===2) showToast('No se pudo detectar tu ubicación','error');else if(err.code===3) showToast('La ubicación tardó demasiado','error');else showToast('Error al obtener ubicación','error');},{enableHighAccuracy:false,timeout:5000,maximumAge:60000});}
+function toggleMapFull(e){if(e){e.stopPropagation();e.preventDefault();}const m=document.getElementById('map'),b=document.getElementById('exitFullBtn');const f=m.classList.toggle('fullscreen');b.style.display=f?'block':'none';setTimeout(()=>{if(window.map) window.map.invalidateSize();},200);}
+function openImage(src){document.getElementById('imgModalContent').src=src;document.getElementById('imgModal').style.display='flex';}
 
-  if (!isStandalone() && !localStorage.getItem('bannerClosed')) {
-    document.getElementById('installBanner').style.display = 'block';
-  }
-});
-
-function installApp(){
-  if(deferredPrompt){
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(()=>{
-      deferredPrompt = null;
-      document.getElementById('installBanner').style.display = 'none';
-    });
-  } else {
-    alert("En tu móvil: menú ⋮ → 'Añadir a pantalla de inicio'");
-  }
-}
-
-function closeBanner(){
-  document.getElementById('installBanner').style.display = 'none';
-  localStorage.setItem('bannerClosed', 'true');
-}
-  function goToUserLocation() {
-  if (!navigator.geolocation) {
-    alert("Tu dispositivo no soporta geolocalización");
-    return;
-  }
-   navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
-      window.map.setView([lat, lng], 15);
-
-      L.marker([lat, lng], {
-        icon: L.divIcon({
-          html: '<div style="background:#3498db;width:14px;height:14px;border-radius:50%;border:2px solid #fff"></div>',
-          className: ''
-        })
-      })
-      .addTo(window.map)
-      .bindPopup("📍 Estás aquí")
-      .openPopup();
-      selectedLat = lat;
-      selectedLng = lng;
-      userLat = lat;
-      userLng = lng;
-      loadAvistamientos();
-
-setTimeout(() => {
-   fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
-  .then(res => res.json())
-  .then(data => {
-    let lugar = data.address.city || data.address.town || data.address.village || "Zona desconocida";
-
-    document.querySelector('#modal input').value =
-      lugar + " (" + lat.toFixed(5) + ", " + lng.toFixed(5) + ")";
-  })
-  .catch(() => {
-    document.querySelector('#modal input').value =
-      "Ubicación automática (" + lat.toFixed(5) + ", " + lng.toFixed(5) + ")";
-  });
-}, 100);
-    },
-    () => {
-      alert("No se pudo obtener tu ubicación");
-    }
-  );
-}
+let deferredPrompt;function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(!isStandalone()&&!localStorage.getItem('bannerClosed')) document.getElementById('installBanner').style.display='block';});
+function installApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').style.display='none';});}else alert("En tu móvil: menú ⋮ → 'Añadir a pantalla de inicio'");}
+function closeBanner(){document.getElementById('installBanner').style.display='none';localStorage.setItem('bannerClosed','true');}
+if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{});}
 </script>
 </body>
 </html>

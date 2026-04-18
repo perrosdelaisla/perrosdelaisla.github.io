@@ -158,8 +158,6 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .toggle input:checked+.toggle-slider:before{transform:translateX(20px);background:#fff}
 .btn-onboarding{width:100%;padding:14px;background:#c0392b;color:#fff;border:none;border-radius:10px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;cursor:pointer;margin-top:10px}
 .btn-onboarding:active{background:#a93226}
-
-/* FOTO DE PERFIL EN ONBOARDING */
 .photo-picker{margin:0 auto 16px;width:80px;height:80px;position:relative;cursor:pointer}
 .photo-picker-circle{width:80px;height:80px;border-radius:50%;border:2px dashed #555;background:#1a1a1a;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .2s}
 .photo-picker-circle:active{border-color:#9cb64b}
@@ -179,14 +177,15 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .profile-dog{font-size:13px;color:#9cb64b;margin-top:2px}
 .profile-zone{font-size:12px;color:#888;margin-top:4px}
 .profile-since{font-size:11px;color:#555;margin-top:4px}
-.profile-stats{display:flex;gap:12px;margin-top:16px}
-.stat-box{flex:1;background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:12px 8px;text-align:center}
-.stat-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff}
-.stat-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.profile-stats{display:flex;gap:8px;margin-top:16px}
+.stat-box{flex:1;background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:10px 6px;text-align:center}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff}
+.stat-label{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 .badges-title{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#9cb64b;letter-spacing:1px;margin-top:18px;margin-bottom:10px;text-transform:uppercase}
 .badges-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .badge-item{background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:10px 8px;text-align:center;transition:all .3s}
 .badge-item.unlocked{border-color:#9cb64b;background:#111a0a}
+.badge-item.unlocked-ruta{border-color:#2980b9;background:#0a1520}
 .badge-item.locked{opacity:.35}
 .badge-emoji{font-size:24px;display:block;margin-bottom:4px}
 .badge-name{font-size:11px;font-weight:700;color:#fff;line-height:1.2}
@@ -229,19 +228,18 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .final-msg{text-align:center;margin:28px 16px 12px 16px;font-family:'Bebas Neue',sans-serif;color:#ff4c3a;font-size:38px;line-height:1.1;letter-spacing:1px}
 .final-sub{text-align:center;color:#666;font-size:13px;letter-spacing:4px;text-transform:uppercase;margin-bottom:20px}
 
-/* ===== TOGGLE MAPA/RUTAS ===== */
+/* TOGGLE MAPA/RUTAS */
 .map-toggle{display:flex;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:3px;margin-bottom:14px;gap:3px}
 .map-toggle button{flex:1;padding:10px 6px;border:none;background:transparent;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#555;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:6px}
 .map-toggle button.active{color:#fff}
 .map-toggle button.toggle-avistamientos.active{background:#c0392b;box-shadow:0 2px 8px rgba(192,57,43,0.35)}
 .map-toggle button.toggle-rutas.active{background:#2980b9;box-shadow:0 2px 8px rgba(41,128,185,0.35)}
 
-/* ===== RUTAS ===== */
+/* RUTAS */
 .rutas-content{display:none}
 .rutas-content.active{display:block}
 .avistamientos-content{display:none}
 .avistamientos-content.active{display:block}
-
 .ruta-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;overflow:hidden;margin-bottom:12px;transition:border-color .3s}
 .ruta-card.verificada{border-color:#1a5a3a}
 .ruta-card-img{width:100%;height:140px;object-fit:cover;display:block;background:#111}
@@ -260,35 +258,29 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .ruta-tag.tag-agua{color:#2980b9}
 .ruta-tag.tag-suelo{color:#e67e22}
 .ruta-tag.tag-perro{color:#f39c12}
-
 .ruta-alertas{background:#1a0a0a;border:1px solid #3a1a1a;border-radius:8px;padding:10px 12px;margin-bottom:10px}
 .ruta-alertas-title{font-size:11px;font-weight:700;color:#e17055;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
 .ruta-alerta-item{font-size:12px;color:#cc6655;line-height:1.5;padding:3px 0}
 .ruta-safe{background:#0a1a0a;border:1px solid #1a3a1a;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:#27ae60;display:flex;align-items:center;gap:6px}
-
 .ruta-notas-carlos{background:#0d1520;border:1px solid #1a3555;border-radius:8px;padding:10px 12px;margin-bottom:10px}
 .ruta-notas-carlos-title{font-size:11px;font-weight:700;color:#5dade2;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;display:flex;align-items:center;gap:5px}
 .ruta-notas-carlos p{font-size:12px;color:#88b8d8;line-height:1.5}
-
 .ruta-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:11px;color:#666;margin-top:6px}
 .ruta-actions{display:flex;gap:8px;margin-top:10px}
 .btn-ruta-nav{flex:1;padding:9px;background:#2980b9;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
 .btn-ruta-nav:active{background:#2471a3}
-
 .rutas-filtros{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
 .rutas-filtros::-webkit-scrollbar{display:none}
 .rutas-filtro{padding:6px 14px;border-radius:20px;border:1px solid #333;background:#1a1a1a;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#666;cursor:pointer;white-space:nowrap;transition:all .2s}
 .rutas-filtro.active{background:#2980b9;color:#fff;border-color:#2980b9}
-
 .reportar-ruta-btn{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;padding:14px;background:#2980b9;color:#fff;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;z-index:1500;box-shadow:0 8px 20px rgba(0,0,0,0.4)}
 .reportar-ruta-btn:active{background:#2471a3}
-
-/* Ruta marker */
 .ruta-marker{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5)}
 .ruta-marker.verificada-marker{background:#27ae60}
 .ruta-marker.pendiente-marker{background:#b7950b}
+.ruta-distance-calc{font-size:12px;color:#5dade2;margin-bottom:8px;display:flex;align-items:center;gap:5px}
 
-/* ===== BARRA DE TRAZADO ===== */
+/* BARRA DE TRAZADO */
 .trace-toolbar{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:1600;background:#0d1520;border:1px solid #2980b9;border-radius:14px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
 .trace-toolbar.active{display:block;animation:toastSlide .3s ease-out}
 .trace-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
@@ -306,14 +298,9 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .btn-trace-done{background:#2980b9;color:#fff}
 .btn-trace-done:active{background:#2471a3}
 .btn-trace-done:disabled{opacity:.3;cursor:not-allowed}
-
-/* Waypoint markers */
 .wp-start{width:22px;height:22px;border-radius:50%;background:#27ae60;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
 .wp-end{width:22px;height:22px;border-radius:50%;background:#c0392b;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
 .wp-mid{width:14px;height:14px;border-radius:50%;background:#2980b9;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
-
-/* Distancia calculada en ficha */
-.ruta-distance-calc{font-size:12px;color:#5dade2;margin-bottom:8px;display:flex;align-items:center;gap:5px}
 </style>
 </head>
 <body>
@@ -327,18 +314,13 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <p class="onb-text">Únete a la comunidad que protege los paseos de nuestros perros en Mallorca.</p>
     <div class="onb-form">
       <div class="photo-picker" onclick="document.getElementById('onb-foto').click()">
-        <div class="photo-picker-circle" id="onb-foto-preview">
-          <div class="placeholder"><span>📷</span>Tu foto</div>
-        </div>
+        <div class="photo-picker-circle" id="onb-foto-preview"><div class="placeholder"><span>📷</span>Tu foto</div></div>
         <div class="photo-picker-badge">✏️</div>
         <input type="file" id="onb-foto" accept="image/*" onchange="previewProfilePhoto(event)">
       </div>
       <div class="form-group"><label>Tu nombre</label><input type="text" id="onb-nombre" placeholder="Ej: Carlos, María, Alex..."></div>
       <div class="form-group"><label>Nombre de tu perro</label><input type="text" id="onb-perro" placeholder="Ej: Luna, Max, Kira..."></div>
-      <div class="form-group">
-<label>Municipio habitual de paseo</label>
-<select id="onb-zona"><option value="Palma">Palma</option><option value="Inca">Inca</option><option value="Manacor">Manacor</option><option value="Calvià">Calvià</option><option value="Llucmajor">Llucmajor</option><option value="Alcúdia">Alcúdia</option><option value="Sóller">Sóller</option><option value="Marratxí">Marratxí</option><option value="Andratx">Andratx</option><option value="Pollença">Pollença</option><option value="Campos">Campos</option><option value="Felanitx">Felanitx</option><option value="Son Servera">Son Servera</option><option value="Artà">Artà</option><option value="Santa Maria">Santa Maria</option><option value="Otro">Otro</option></select>
-        </div>
+      <div class="form-group"><label>Municipio habitual de paseo</label><select id="onb-zona"><option value="Palma">Palma</option><option value="Inca">Inca</option><option value="Manacor">Manacor</option><option value="Calvià">Calvià</option><option value="Llucmajor">Llucmajor</option><option value="Alcúdia">Alcúdia</option><option value="Sóller">Sóller</option><option value="Marratxí">Marratxí</option><option value="Andratx">Andratx</option><option value="Pollença">Pollença</option><option value="Campos">Campos</option><option value="Felanitx">Felanitx</option><option value="Son Servera">Son Servera</option><option value="Artà">Artà</option><option value="Santa Maria">Santa Maria</option><option value="Otro">Otro</option></select></div>
       <div class="toggle-row"><span>Mostrar mi nombre en los reportes<small>Si no, aparecerás como "Un vecino de tu zona"</small></span><label class="toggle"><input type="checkbox" id="onb-visible" checked><span class="toggle-slider"></span></label></div>
     </div>
     <button class="btn-onboarding" onclick="saveProfile()">🐾 Unirme a la comunidad</button>
@@ -355,11 +337,14 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <div class="profile-zone" id="prof-zone">—</div>
     <div class="profile-since" id="prof-since">—</div>
     <div class="profile-stats">
-      <div class="stat-box"><div class="stat-num" id="prof-reports">0</div><div class="stat-label">Reportes</div></div>
+      <div class="stat-box"><div class="stat-num" id="prof-reports">0</div><div class="stat-label">Alertas</div></div>
       <div class="stat-box"><div class="stat-num" id="prof-confirms">0</div><div class="stat-label">Votos</div></div>
+      <div class="stat-box"><div class="stat-num" id="prof-rutas">0</div><div class="stat-label">Rutas</div></div>
     </div>
-    <div class="badges-title">🏅 Tus insignias</div>
-    <div class="badges-grid" id="badges-grid"></div>
+    <div class="badges-title">⚠️ Insignias de alerta</div>
+    <div class="badges-grid" id="badges-grid-alertas"></div>
+    <div class="badges-title" style="color:#5dade2">🗺️ Insignias de rutas</div>
+    <div class="badges-grid" id="badges-grid-rutas"></div>
     <div class="profile-actions">
       <button class="btn-profile-edit" onclick="editProfile()">✏️ Editar perfil</button>
       <button class="btn-profile-close" onclick="closeProfile()">Cerrar</button>
@@ -385,25 +370,21 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <div class="alerta-banner"><div class="icon">🚨</div><div><h3>Temporada de alto riesgo activa</h3><p>Enero – Abril: máxima precaución en pinares de Mallorca</p></div></div>
     <div class="season-card"><h3>Riesgo por meses</h3><div class="months"><div class="month risk">E</div><div class="month high-risk">F</div><div class="month high-risk">M</div><div class="month high-risk">A</div><div class="month risk">M</div><div class="month safe">J</div><div class="month safe">J</div><div class="month safe">A</div><div class="month safe">S</div><div class="month safe">O</div><div class="month risk">N</div><div class="month risk">D</div></div><p style="font-size:11px;color:#555;margin-top:9px">🔴 Alto riesgo · 🟡 Riesgo moderado · 🟢 Bajo riesgo</p></div>
     <div class="info-card"><h3>¿Qué es la procesionaria?</h3><p>La procesionaria del pino (<em>Thaumetopoea pityocampa</em>) es una oruga muy común en los pinares de Mallorca. Sus pelos urticantes son <strong>extremadamente peligrosos</strong> para los perros: pueden causar necrosis en la lengua e incluso la muerte si no se actúa rápido.</p></div>
-    <div class="info-card"><h3>Aprende a reconocerla</h3><p>La procesionaria tiene dos formas visibles. Aprende a identificarlas para proteger a tu perro:</p><div style="display:flex;flex-direction:column;gap:10px;margin-top:12px"><div style="border-radius:8px;overflow:hidden;border:1px solid #333"><img src="https://i.ibb.co/BHP7LVrm/1024px-thaumetopoea-pityocampa800.jpg" alt="Procesionaria en procesión activa en el suelo" style="width:100%;height:140px;object-fit:cover"><div style="background:#2a0a0a;padding:8px 10px;font-size:12px"><strong style="color:#e17055">⚠️ Procesión activa en el suelo</strong><p style="color:#999;margin-top:3px;font-size:11px;line-height:1.4">Orugas en fila bajando del árbol o cruzando caminos. MÁXIMO PELIGRO. No dejes que tu perro se acerque.</p></div></div><div style="border-radius:8px;overflow:hidden;border:1px solid #333"><img src="https://i.ibb.co/qLrKDm82/d9737e72-f15b-4c34-b0c4-e04af16b8c01-16-9-aspect-ratio-1600w-0.jpg" alt="Bolsón de procesionaria en un pino" style="width:100%;height:140px;object-fit:cover"><div style="background:#2a2200;padding:8px 10px;font-size:12px"><strong style="color:#f9ca24">⚡ Bolsones en los árboles</strong><p style="color:#999;margin-top:3px;font-size:11px;line-height:1.4">Nidos de seda blanca en las copas de los pinos. Las orugas están dentro y bajarán pronto. Precaución.</p></div></div></div><p style="font-size:12px;color:#888;margin-top:10px;line-height:1.5">💡 <strong style="color:#bdc3c7">Importante:</strong> aunque las orugas estén muertas o secas, sus pelos urticantes siguen siendo peligrosos durante meses. Evita que tu perro olfatee restos en el suelo.</p></div>
+    <div class="info-card"><h3>Aprende a reconocerla</h3><p>La procesionaria tiene dos formas visibles. Aprende a identificarlas para proteger a tu perro:</p><div style="display:flex;flex-direction:column;gap:10px;margin-top:12px"><div style="border-radius:8px;overflow:hidden;border:1px solid #333"><img src="https://i.ibb.co/BHP7LVrm/1024px-thaumetopoea-pityocampa800.jpg" alt="Procesionaria en procesión activa" style="width:100%;height:140px;object-fit:cover"><div style="background:#2a0a0a;padding:8px 10px;font-size:12px"><strong style="color:#e17055">⚠️ Procesión activa en el suelo</strong><p style="color:#999;margin-top:3px;font-size:11px;line-height:1.4">Orugas en fila bajando del árbol o cruzando caminos. MÁXIMO PELIGRO.</p></div></div><div style="border-radius:8px;overflow:hidden;border:1px solid #333"><img src="https://i.ibb.co/qLrKDm82/d9737e72-f15b-4c34-b0c4-e04af16b8c01-16-9-aspect-ratio-1600w-0.jpg" alt="Bolsón de procesionaria" style="width:100%;height:140px;object-fit:cover"><div style="background:#2a2200;padding:8px 10px;font-size:12px"><strong style="color:#f9ca24">⚡ Bolsones en los árboles</strong><p style="color:#999;margin-top:3px;font-size:11px;line-height:1.4">Nidos de seda blanca en las copas de los pinos. Las orugas están dentro y bajarán pronto.</p></div></div></div><p style="font-size:12px;color:#888;margin-top:10px;line-height:1.5">💡 <strong style="color:#bdc3c7">Importante:</strong> aunque las orugas estén muertas o secas, sus pelos urticantes siguen siendo peligrosos durante meses.</p></div>
     <div class="info-card"><h3>Síntomas en tu perro</h3><p>Si tu perro tiene contacto, puede presentar de inmediato:</p><div class="sintomas"><div class="sintoma">Babeo intenso</div><div class="sintoma">Inflamación lengua</div><div class="sintoma">Rascado de boca</div><div class="sintoma">Vómitos</div><div class="sintoma">Dificultad al respirar</div><div class="sintoma">Lengua morada</div></div></div>
     <div class="info-card card-urgente"><h3>Protocolo de emergencia</h3><div class="protocolo"><div class="paso"><div class="paso-num">1</div><p><strong>No toques</strong> la zona afectada sin guantes</p></div><div class="paso"><div class="paso-num">2</div><p>Lava con <strong>agua fría abundante</strong> durante 5–10 minutos</p></div><div class="paso"><div class="paso-num">3</div><p><strong>Ve al veterinario de urgencias de inmediato</strong></p></div><div class="paso"><div class="paso-num">4</div><p>Usa la pestaña <strong>Urgencias</strong> para encontrar la clínica más cercana</p></div></div></div>
     <div class="info-card zonas"><h3>Zonas de mayor riesgo en Mallorca</h3><p>🌲 Serra de Tramuntana — Sóller, Valldemossa, Deià<br>🌲 Bosques de Calvià y Andratx<br>🌲 Pinares de Llucmajor y Campos<br>🌲 Zona norte — Alcúdia, Pollença, Formentor<br>🌲 Cualquier pinar en toda la isla</p></div>
     <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
   </div>
 
-  <!-- ===== PESTAÑA MAPA (con toggle avistamientos / rutas) ===== -->
   <div id="mapa" class="section">
-    <!-- TOGGLE AVISTAMIENTOS / RUTAS -->
     <div class="map-toggle">
       <button class="toggle-avistamientos active" onclick="switchMapMode('avistamientos',this)"><span>⚠️</span> Avistamientos</button>
       <button class="toggle-rutas" onclick="switchMapMode('rutas',this)"><span>🐕</span> Rutas seguras</button>
     </div>
-
     <div id="map"><button id="exitFullBtn" onclick="toggleMapFull(event)">❌ Salir</button></div>
     <div id="hotZoneBox" style="display:none;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:12px;font-size:13px;color:#f0f0f0">🔥 <strong id="hotZoneText"></strong></div>
 
-    <!-- ===== CONTENIDO AVISTAMIENTOS ===== -->
     <div class="avistamientos-content active" id="avistamientos-content">
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
@@ -412,28 +393,14 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
       <button class="reportar-btn" onclick="activateReportMode()">📍 Reportar avistamiento</button>
     </div>
 
-    <!-- ===== CONTENIDO RUTAS ===== -->
     <div class="rutas-content" id="rutas-content">
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
-      <div class="leyenda">
-        <div class="leyenda-item"><div class="dot" style="background:#27ae60"></div>Ruta verificada</div>
-        <div class="leyenda-item"><div class="dot" style="background:#b7950b"></div>Sugerencia pendiente</div>
-        <div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Alerta procesionaria</div>
-        <div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div>
-      </div>
-      <div class="rutas-filtros">
-        <button class="rutas-filtro active" onclick="filterRutas('all',this)">Todas</button>
-        <button class="rutas-filtro" onclick="filterRutas('verificada',this)">✅ Verificadas</button>
-        <button class="rutas-filtro" onclick="filterRutas('corta',this)">Corta</button>
-        <button class="rutas-filtro" onclick="filterRutas('media',this)">Media</button>
-        <button class="rutas-filtro" onclick="filterRutas('larga',this)">Larga</button>
-        <button class="rutas-filtro" onclick="filterRutas('facil',this)">Fácil</button>
-      </div>
+      <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#27ae60"></div>Ruta verificada</div><div class="leyenda-item"><div class="dot" style="background:#b7950b"></div>Sugerencia pendiente</div><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Alerta procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
+      <div class="rutas-filtros"><button class="rutas-filtro active" onclick="filterRutas('all',this)">Todas</button><button class="rutas-filtro" onclick="filterRutas('verificada',this)">✅ Verificadas</button><button class="rutas-filtro" onclick="filterRutas('corta',this)">Corta</button><button class="rutas-filtro" onclick="filterRutas('media',this)">Media</button><button class="rutas-filtro" onclick="filterRutas('larga',this)">Larga</button><button class="rutas-filtro" onclick="filterRutas('facil',this)">Fácil</button></div>
       <div class="avist-list"><h3>Rutas de paseo</h3><div id="rutas-container"><p style="color:#555;font-size:13px">Cargando rutas...</p></div></div>
       <button class="reportar-ruta-btn" onclick="openRutaModal()">🐕 Sugerir ruta de paseo</button>
     </div>
-
     <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
   </div>
 
@@ -484,75 +451,20 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <p style="font-size:12px;color:#888;margin-bottom:10px">👉 Has trazado una ruta en el mapa. Ahora completa los detalles:</p>
     <div class="form-group"><label>Nombre de la ruta</label><input type="text" id="ruta-nombre" placeholder="Ej: Paseo del Molinar, Ruta Son Hugo..."></div>
     <div class="form-group"><label>Descripción</label><textarea id="ruta-descripcion" placeholder="Describe la ruta: recorrido, paisaje, puntos de interés..."></textarea></div>
-    <div class="form-group">
-      <label>Distancia aproximada</label>
-      <select id="ruta-distancia">
-        <option value="Corta (< 2 km)">Corta (menos de 2 km)</option>
-        <option value="Media (2-5 km)" selected>Media (2–5 km)</option>
-        <option value="Larga (> 5 km)">Larga (más de 5 km)</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Dificultad</label>
-      <select id="ruta-dificultad">
-        <option value="Fácil">Fácil — Llano, accesible</option>
-        <option value="Moderada" selected>Moderada — Algo de desnivel</option>
-        <option value="Difícil">Difícil — Montaña o terreno técnico</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Tipo de suelo predominante</label>
-      <select id="ruta-suelo">
-        <option value="Tierra">Tierra</option>
-        <option value="Asfalto">Asfalto</option>
-        <option value="Piedra">Piedra / Roca</option>
-        <option value="Arena">Arena</option>
-        <option value="Mixto" selected>Mixto</option>
-      </select>
-    </div>
-    <div style="display:flex;gap:10px">
-      <div class="form-group" style="flex:1">
-        <label>Sombra</label>
-        <select id="ruta-sombra">
-          <option value="Mucha">Mucha</option>
-          <option value="Parcial" selected>Parcial</option>
-          <option value="Poca">Poca</option>
-          <option value="Nula">Nula</option>
-        </select>
-      </div>
-      <div class="form-group" style="flex:1">
-        <label>Agua disponible</label>
-        <select id="ruta-agua">
-          <option value="Sí">Sí, fuentes</option>
-          <option value="Natural">Torrente/mar</option>
-          <option value="No" selected>No</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Ideal para</label>
-      <select id="ruta-tipo-perro">
-        <option value="Todos" selected>Todos los perros</option>
-        <option value="Cachorros">Cachorros (suave, corta)</option>
-        <option value="Activos">Perros activos / deportistas</option>
-        <option value="Seniors">Perros senior (fácil, sin obstáculos)</option>
-        <option value="Reactivos">Perros reactivos (poca afluencia)</option>
-      </select>
-    </div>
+    <div class="form-group"><label>Distancia aproximada</label><select id="ruta-distancia"><option value="Corta (< 2 km)">Corta (menos de 2 km)</option><option value="Media (2-5 km)" selected>Media (2–5 km)</option><option value="Larga (> 5 km)">Larga (más de 5 km)</option></select></div>
+    <div class="form-group"><label>Dificultad</label><select id="ruta-dificultad"><option value="Fácil">Fácil — Llano, accesible</option><option value="Moderada" selected>Moderada — Algo de desnivel</option><option value="Difícil">Difícil — Montaña o terreno técnico</option></select></div>
+    <div class="form-group"><label>Tipo de suelo predominante</label><select id="ruta-suelo"><option value="Tierra">Tierra</option><option value="Asfalto">Asfalto</option><option value="Piedra">Piedra / Roca</option><option value="Arena">Arena</option><option value="Mixto" selected>Mixto</option></select></div>
+    <div style="display:flex;gap:10px"><div class="form-group" style="flex:1"><label>Sombra</label><select id="ruta-sombra"><option value="Mucha">Mucha</option><option value="Parcial" selected>Parcial</option><option value="Poca">Poca</option><option value="Nula">Nula</option></select></div><div class="form-group" style="flex:1"><label>Agua disponible</label><select id="ruta-agua"><option value="Sí">Sí, fuentes</option><option value="Natural">Torrente/mar</option><option value="No" selected>No</option></select></div></div>
+    <div class="form-group"><label>Ideal para</label><select id="ruta-tipo-perro"><option value="Todos" selected>Todos los perros</option><option value="Cachorros">Cachorros (suave, corta)</option><option value="Activos">Perros activos / deportistas</option><option value="Seniors">Perros senior (fácil, sin obstáculos)</option><option value="Reactivos">Perros reactivos (poca afluencia)</option></select></div>
     <div class="form-group"><label>Foto de la ruta (opcional)</label><input type="file" id="ruta-foto" accept="image/*" onchange="previewRutaPhoto(event)" style="display:none"><div style="display:flex;gap:8px;margin-top:8px"><button type="button" onclick="document.getElementById('ruta-foto').setAttribute('capture','environment');document.getElementById('ruta-foto').click()" style="flex:1;padding:10px;background:#2980b9;color:#fff;border:none;border-radius:8px;cursor:pointer">📷 Cámara</button><button type="button" onclick="document.getElementById('ruta-foto').removeAttribute('capture');document.getElementById('ruta-foto').click()" style="flex:1;padding:10px;background:#222;color:#fff;border:1px solid #444;border-radius:8px;cursor:pointer">🖼️ Galería</button></div><div id="rutaPreviewWrap" style="display:none;margin-top:10px"><img id="rutaPreviewImg" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;border:1px solid #333"></div></div>
-    <div style="background:#0d1520;border:1px solid #1a3555;border-radius:8px;padding:10px 12px;margin-top:6px">
-      <p style="font-size:12px;color:#5dade2;line-height:1.5">💡 <strong>Tu sugerencia será revisada por Carlos</strong> (Perros de la Isla) antes de recibir el sello de verificación. Las rutas pendientes ya aparecen en el mapa para la comunidad.</p>
-    </div>
+    <div style="background:#0d1520;border:1px solid #1a3555;border-radius:8px;padding:10px 12px;margin-top:6px"><p style="font-size:12px;color:#5dade2;line-height:1.5">💡 <strong>Tu sugerencia será revisada por Perros de la Isla</strong> antes de recibir el sello de verificación. Las rutas pendientes ya aparecen en el mapa para la comunidad.</p></div>
     <div class="modal-actions"><button class="btn-cancel" onclick="closeRutaModal()">Cancelar</button><button class="btn-submit" id="btn-submit-ruta" onclick="submitRuta()" style="background:#2980b9">Enviar sugerencia</button></div>
   </div>
 </div>
 
 <!-- BARRA DE TRAZADO DE RUTA -->
 <div class="trace-toolbar" id="traceToolbar">
-  <div class="trace-header">
-    <h4>🐕 Trazando ruta</h4>
-    <span class="trace-count" id="traceCount">0 puntos</span>
-  </div>
+  <div class="trace-header"><h4>🐕 Trazando ruta</h4><span class="trace-count" id="traceCount">0 puntos</span></div>
   <div class="trace-hint" id="traceHint"><strong>Toca el mapa</strong> para marcar el punto de inicio de tu ruta.</div>
   <div class="trace-actions">
     <button class="btn-trace-undo" id="btnTraceUndo" onclick="traceUndo()" disabled>↩️ Deshacer</button>
@@ -563,7 +475,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 
 <div class="toast" id="toast"></div>
 <div id="installBanner"><div style="display:flex;justify-content:space-between;align-items:center"><span>📲 Instala la app</span><button onclick="closeBanner()" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer">✕</button></div><button onclick="installApp()" style="margin-top:10px;background:#c0392b;border:none;color:#fff;padding:8px 14px;border-radius:6px;font-weight:600;cursor:pointer">Instalar</button></div>
-<div id="imgModal"><img id="imgModalContent" alt="Foto del avistamiento"></div>
+<div id="imgModal"><img id="imgModalContent" alt="Foto"></div>
 
 <script>
 const SUPA_URL="https://vqpdrncugaipfpcmpout.supabase.co";
@@ -573,144 +485,93 @@ const WA="34622922173";
 const WA_MSG={educacion:"Hola Carlos, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Educación canina básica y avanzada.",reactividad:"Hola Carlos, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Control de reactividad e impulsividad.",cachorros:"Hola Carlos, te escribo desde la app de Perros de la Isla. Me interesa el programa de Educación temprana para cachorros.",general:"Hola Carlos, te escribo desde la app de Perros de la Isla. Me gustaría consultarte sobre tus servicios de adiestramiento."};
 function openWhatsApp(s){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(WA_MSG[s]||WA_MSG.general),"_blank");return false;}
 
-// Preview foto avistamiento
 function previewPhoto(event){const file=event.target.files[0];const wrap=document.getElementById('previewWrap');const img=document.getElementById('previewImg');if(!file){wrap.style.display='none';img.src='';return;}const reader=new FileReader();reader.onload=function(e){img.src=e.target.result;wrap.style.display='block';};reader.readAsDataURL(file);}
 function abrirCamara(){const input=document.getElementById('foto');input.setAttribute('capture','environment');input.click();}
 function abrirGaleria(){const input=document.getElementById('foto');input.removeAttribute('capture');input.click();}
-
-// Preview foto ruta
 function previewRutaPhoto(event){const file=event.target.files[0];const wrap=document.getElementById('rutaPreviewWrap');const img=document.getElementById('rutaPreviewImg');if(!file){wrap.style.display='none';img.src='';return;}const reader=new FileReader();reader.onload=function(e){img.src=e.target.result;wrap.style.display='block';};reader.readAsDataURL(file);}
 
-// Preview foto de perfil en onboarding
 let profilePhotoFile=null;
-function previewProfilePhoto(event){
-  const file=event.target.files[0];
-  if(!file) return;
-  profilePhotoFile=file;
-  const reader=new FileReader();
-  reader.onload=function(e){
-    document.getElementById('onb-foto-preview').innerHTML=`<img src="${e.target.result}" alt="Tu foto">`;
-  };
-  reader.readAsDataURL(file);
-}
+function previewProfilePhoto(event){const file=event.target.files[0];if(!file) return;profilePhotoFile=file;const reader=new FileReader();reader.onload=function(e){document.getElementById('onb-foto-preview').innerHTML=`<img src="${e.target.result}" alt="Tu foto">`;};reader.readAsDataURL(file);}
 
-// INSIGNIAS
-const BADGES=[
+// ===== INSIGNIAS DE ALERTA =====
+const BADGES_ALERTAS=[
   {id:'primer_rastro',emoji:'🐾',name:'Primer Rastro',desc:'Primer avistamiento reportado',check:(r,v)=>r>=1},
-  {id:'olfato_fino',emoji:'👃',name:'Olfato Fino',desc:'10 avistamientos confirmados por otros',check:(r,v)=>r>=10},
+  {id:'olfato_fino',emoji:'👃',name:'Olfato Fino',desc:'10 avistamientos reportados',check:(r,v)=>r>=10},
   {id:'perro_explorador',emoji:'🧭',name:'Perro Explorador',desc:'Reportado en 5+ municipios',check:(r,v)=>r>=5},
   {id:'lider_manada',emoji:'🐺',name:'Líder de Manada',desc:'20 confirmaciones dadas',check:(r,v)=>v>=20},
   {id:'leyenda_isla',emoji:'👑',name:'Leyenda de la Isla',desc:'Top 10 del año',check:(r,v)=>r>=25&&v>=50},
   {id:'expedicionario',emoji:'⚡',name:'Expedicionario',desc:'Activo toda la temporada',check:(r,v)=>r>=8&&v>=15}
 ];
-function getUnlockedBadges(r,v){return BADGES.filter(b=>b.check(r,v));}
-function getHighestBadge(r,v){const u=getUnlockedBadges(r,v);return u.length>0?u[u.length-1]:null;}
-function renderBadges(r,v){document.getElementById('badges-grid').innerHTML=BADGES.map(b=>{const u=b.check(r,v);return `<div class="badge-item ${u?'unlocked':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');}
+
+// ===== INSIGNIAS DE RUTAS =====
+const BADGES_RUTAS=[
+  {id:'olfateador_caminos',emoji:'🗺️',name:'Olfateador de Caminos',desc:'Sugerir tu primera ruta',check:(rt,rv)=>rt>=1},
+  {id:'patas_inquietas',emoji:'🥾',name:'Patas Inquietas',desc:'3 rutas sugeridas',check:(rt,rv)=>rt>=3},
+  {id:'explorador_isla',emoji:'🏔️',name:'Explorador de la Isla',desc:'10 rutas sugeridas',check:(rt,rv)=>rt>=10},
+  {id:'cartografo_canino',emoji:'🌍',name:'Cartógrafo Canino',desc:'20 rutas sugeridas',check:(rt,rv)=>rt>=20},
+  {id:'ruta_dorada',emoji:'⭐',name:'Ruta Dorada',desc:'1 ruta verificada por Perros de la Isla',check:(rt,rv)=>rv>=1},
+  {id:'rastro_confianza',emoji:'🏅',name:'Rastro de Confianza',desc:'5 rutas verificadas por Perros de la Isla',check:(rt,rv)=>rv>=5},
+  {id:'trazador_pro',emoji:'📐',name:'Trazador Pro',desc:'Ruta con 10+ puntos de trazado',check:(rt,rv,hasDetailedRoute)=>hasDetailedRoute},
+  {id:'alpha_manada',emoji:'👑',name:'Alpha de la Manada',desc:'15 rutas + 3 verificadas',check:(rt,rv)=>rt>=15&&rv>=3}
+];
+
+function getHighestBadge(r,v){const u=BADGES_ALERTAS.filter(b=>b.check(r,v));return u.length>0?u[u.length-1]:null;}
+
+function renderAllBadges(reports,votes,rutasTotal,rutasVerificadas,hasDetailedRoute){
+  // Alertas
+  document.getElementById('badges-grid-alertas').innerHTML=BADGES_ALERTAS.map(b=>{const u=b.check(reports,votes);return `<div class="badge-item ${u?'unlocked':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
+  // Rutas
+  document.getElementById('badges-grid-rutas').innerHTML=BADGES_RUTAS.map(b=>{const u=b.check(rutasTotal,rutasVerificadas,hasDetailedRoute);return `<div class="badge-item ${u?'unlocked-ruta':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
+}
 
 // PERFIL
 function getUserId(){let id=localStorage.getItem('pdi_user_id');if(!id){id='u_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('pdi_user_id',id);}return id;}
 const USER_ID=getUserId();
 function getProfile(){const p=localStorage.getItem('pdi_profile');return p?JSON.parse(p):null;}
 
-document.addEventListener('DOMContentLoaded',()=>{
-  const profile=getProfile();
-  if(profile){document.getElementById('onboarding').classList.add('hidden');updateProfileBtn();}
-  const im=document.getElementById('imgModal');
-  if(im) im.addEventListener('click',()=>{im.style.display='none';});
-});
+document.addEventListener('DOMContentLoaded',()=>{const profile=getProfile();if(profile){document.getElementById('onboarding').classList.add('hidden');updateProfileBtn();}const im=document.getElementById('imgModal');if(im) im.addEventListener('click',()=>{im.style.display='none';});});
 
-async function uploadProfilePhoto(file){
-  try{
-    const compressed=await compressImage(file,400,0.8);
-    const fn='profile_'+USER_ID+'_'+Date.now()+'.jpg';
-    const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});
-    if(ur.ok) return SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;
-  }catch(e){console.error('Error subiendo foto perfil:',e);}
-  return null;
-}
+async function uploadProfilePhoto(file){try{const compressed=await compressImage(file,400,0.8);const fn='profile_'+USER_ID+'_'+Date.now()+'.jpg';const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) return SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){console.error('Error subiendo foto perfil:',e);}return null;}
 
-async function saveProfile(){
-  const nombre=document.getElementById('onb-nombre').value.trim();
-  const perro=document.getElementById('onb-perro').value.trim();
-  const zona=document.getElementById('onb-zona').value;
-  const visible=document.getElementById('onb-visible').checked;
-  if(!nombre){showToast('Escribe tu nombre','error');return;}
-  if(!perro){showToast('Escribe el nombre de tu perro','error');return;}
+async function saveProfile(){const nombre=document.getElementById('onb-nombre').value.trim();const perro=document.getElementById('onb-perro').value.trim();const zona=document.getElementById('onb-zona').value;const visible=document.getElementById('onb-visible').checked;if(!nombre){showToast('Escribe tu nombre','error');return;}if(!perro){showToast('Escribe el nombre de tu perro','error');return;}let fotoUrl=getProfile()?.foto||null;if(profilePhotoFile){showToast('Subiendo foto...','success');fotoUrl=await uploadProfilePhoto(profilePhotoFile);profilePhotoFile=null;}const profile={nombre,nombre_perro:perro,zona,visible,foto:fotoUrl,created_at:getProfile()?.created_at||new Date().toISOString()};localStorage.setItem('pdi_profile',JSON.stringify(profile));fetch(SUPA_URL+"/rest/v1/usuarios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal,resolution=merge-duplicates"},body:JSON.stringify({id:USER_ID,nombre,nombre_perro:perro,zona,visible,foto:fotoUrl})}).catch(()=>{});document.getElementById('onboarding').classList.add('hidden');updateProfileBtn();showToast(`¡Bienvenido/a ${nombre}! 🐾`,'success');}
 
-  let fotoUrl=getProfile()?.foto||null;
-  if(profilePhotoFile){
-    showToast('Subiendo foto...','success');
-    fotoUrl=await uploadProfilePhoto(profilePhotoFile);
-    profilePhotoFile=null;
-  }
-
-  const profile={nombre,nombre_perro:perro,zona,visible,foto:fotoUrl,created_at:getProfile()?.created_at||new Date().toISOString()};
-  localStorage.setItem('pdi_profile',JSON.stringify(profile));
-
-  fetch(SUPA_URL+"/rest/v1/usuarios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal,resolution=merge-duplicates"},body:JSON.stringify({id:USER_ID,nombre,nombre_perro:perro,zona,visible,foto:fotoUrl})}).catch(()=>{});
-
-  document.getElementById('onboarding').classList.add('hidden');
-  updateProfileBtn();
-  showToast(`¡Bienvenido/a ${nombre}! 🐾`,'success');
-}
-
-function updateProfileBtn(){
-  const btn=document.getElementById('headerProfileBtn');
-  const p=getProfile();
-  if(p){
-    btn.classList.add('has-profile');
-    if(p.foto){
-      btn.innerHTML=`<img src="${p.foto}" alt="${p.nombre}">`;
-    } else {
-      btn.textContent=p.nombre.charAt(0).toUpperCase();
-    }
-  }
-}
+function updateProfileBtn(){const btn=document.getElementById('headerProfileBtn');const p=getProfile();if(p){btn.classList.add('has-profile');if(p.foto){btn.innerHTML=`<img src="${p.foto}" alt="${p.nombre}">`;}else{btn.textContent=p.nombre.charAt(0).toUpperCase();}}}
 
 async function openProfile(){
   const p=getProfile();
   if(!p){document.getElementById('onboarding').classList.remove('hidden');return;}
-
   const avatar=document.getElementById('prof-avatar');
-  if(p.foto){
-    avatar.innerHTML=`<img src="${p.foto}" alt="${p.nombre}">`;
-  } else {
-    avatar.textContent=p.nombre.charAt(0).toUpperCase();
-  }
-
+  if(p.foto){avatar.innerHTML=`<img src="${p.foto}" alt="${p.nombre}">`;}else{avatar.textContent=p.nombre.charAt(0).toUpperCase();}
   document.getElementById('prof-name').textContent=p.nombre;
   document.getElementById('prof-dog').textContent='🐕 '+p.nombre_perro;
   document.getElementById('prof-zone').textContent='📍 '+p.zona;
   const since=p.created_at?new Date(p.created_at):new Date();
   const months=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   document.getElementById('prof-since').textContent='Miembro desde '+months[since.getMonth()]+' '+since.getFullYear();
-
   const voteCount=Object.keys(localStorage).filter(k=>k.startsWith('pdi_conf_')).length;
   document.getElementById('prof-confirms').textContent=voteCount;
 
   let reportCount=0;
   try{const r=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&select=id`,{headers:HEADERS});const data=await r.json();reportCount=data.length||0;}catch(e){}
   document.getElementById('prof-reports').textContent=reportCount;
-  renderBadges(reportCount,voteCount);
+
+  // Fetch route stats
+  let rutasTotal=0,rutasVerificadas=0,hasDetailedRoute=false;
+  try{
+    const rr=await fetch(SUPA_URL+`/rest/v1/rutas?reporter_id=eq.${USER_ID}&select=id,verificada,waypoints`,{headers:HEADERS});
+    const rutasData=await rr.json();
+    rutasTotal=rutasData.length||0;
+    rutasVerificadas=rutasData.filter(r=>r.verificada).length;
+    hasDetailedRoute=rutasData.some(r=>r.waypoints&&r.waypoints.length>=10);
+  }catch(e){}
+  document.getElementById('prof-rutas').textContent=rutasTotal;
+
+  renderAllBadges(reportCount,voteCount,rutasTotal,rutasVerificadas,hasDetailedRoute);
   document.getElementById('profileModal').classList.add('open');
 }
 
 function closeProfile(){document.getElementById('profileModal').classList.remove('open');}
-function editProfile(){
-  closeProfile();
-  const p=getProfile();
-  if(p){
-    document.getElementById('onb-nombre').value=p.nombre;
-    document.getElementById('onb-perro').value=p.nombre_perro;
-    document.getElementById('onb-zona').value=p.zona;
-    document.getElementById('onb-visible').checked=p.visible;
-    if(p.foto){
-      document.getElementById('onb-foto-preview').innerHTML=`<img src="${p.foto}" alt="Tu foto">`;
-    }
-  }
-  profilePhotoFile=null;
-  document.getElementById('onboarding').classList.remove('hidden');
-}
+function editProfile(){closeProfile();const p=getProfile();if(p){document.getElementById('onb-nombre').value=p.nombre;document.getElementById('onb-perro').value=p.nombre_perro;document.getElementById('onb-zona').value=p.zona;document.getElementById('onb-visible').checked=p.visible;if(p.foto){document.getElementById('onb-foto-preview').innerHTML=`<img src="${p.foto}" alt="Tu foto">`;}}profilePhotoFile=null;document.getElementById('onboarding').classList.remove('hidden');}
 
 // HELPERS
 function escapeHtml(t){if(t===null||t===undefined) return '';return String(t).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');}
@@ -722,6 +583,7 @@ function createRiskIcon(color,faded){const o=faded?0.5:1;return L.divIcon({html:
 function createRutaIcon(verificada){return L.divIcon({html:`<div class="ruta-marker ${verificada?'verificada-marker':'pendiente-marker'}">${verificada?'✅':'🐕'}</div>`,iconSize:[28,28],iconAnchor:[14,14],className:''});}
 function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'success');setTimeout(()=>t.classList.remove('show'),3000);}
 function checkHotZone(){const box=document.getElementById('hotZoneBox'),text=document.getElementById('hotZoneText');if(!box||!text) return;if(!userLat||!userLng){box.style.display='none';return;}const items=document.querySelectorAll('.avist-item');if(items.length===0){box.style.display='none';return;}if(items.length>=3){box.style.display='block';box.style.borderColor='#c0392b';text.textContent='🚨 Zona caliente: varios reportes cerca';return;}if(items.length>=1){box.style.display='block';box.style.borderColor='#e67e22';text.textContent='⚠️ Precaución: hay reportes cercanos';return;}box.style.display='block';box.style.borderColor='#27ae60';text.textContent='✅ Sin actividad cercana';}
+function calcWaypointsDistance(wps){if(!wps||wps.length<2) return null;let total=0;for(let i=1;i<wps.length;i++){total+=getDistance(wps[i-1].lat,wps[i-1].lng,wps[i].lat,wps[i].lng);}return total;}
 
 // VETS
 const vets=[{name:"Veterinary Hospital Canis",addr:"C/ Agnès de Pacs 12, Palma",phone:"+34971732100",rating:4.3,reviews:3123,h24:true,zone:"palma",lat:39.5956,lng:2.6529,maps:"https://maps.google.com/?q=39.5956,2.6529"},{name:"AniCura Aragó Hospital Veterinari",addr:"C/ Son Morro 4, Palma",phone:"+34971479354",rating:4.1,reviews:1612,h24:true,zone:"palma",lat:39.5741,lng:2.6872,maps:"https://maps.google.com/?q=39.5741,2.6872"},{name:"Hospital Veterinari Ciutat d'Inca",addr:"C/ dels Pagesos 14, Inca",phone:"+34971505483",rating:4.1,reviews:759,h24:true,zone:"inca",lat:39.7123,lng:2.9122,maps:"https://maps.google.com/?q=39.7123,2.9122"},{name:"MiVet Hospital Veterinario",addr:"Ctra. Palma-Artà km 47, Manacor",phone:"+34971845047",rating:3.9,reviews:331,h24:true,zone:"manacor",lat:39.5723,lng:3.1937,maps:"https://maps.google.com/?q=39.5723,3.1937"},{name:"Veterclinic Son Servera",addr:"Av. de la Constitució 19, Son Servera",phone:"+34971567474",rating:4.6,reviews:484,h24:true,zone:"manacor",lat:39.6183,lng:3.3633,maps:"https://maps.google.com/?q=39.6183,3.3633"},{name:"Clínica Veterinaria Peludets",addr:"C/ de Jesús 36, Palma",phone:"+34640377985",rating:4.6,reviews:387,h24:false,zone:"palma",lat:39.5822,lng:2.6438,maps:"https://maps.google.com/?q=39.5822,2.6438"},{name:"Calvià Veterinaris",addr:"Santa Ponça, Calvià",phone:"+34971690000",rating:4.5,reviews:210,h24:false,zone:"calvia",lat:39.5081,lng:2.4766,maps:"https://maps.google.com/?q=39.5081,2.4766"},{name:"Centre Veterinari Llucmajor",addr:"Av. Jaume III, Llucmajor",phone:"+34971660000",rating:4.4,reviews:168,h24:false,zone:"llucmajor",lat:39.4907,lng:2.8911,maps:"https://maps.google.com/?q=39.4907,2.8911"}];
@@ -732,30 +594,11 @@ renderVets(vets);
 // NAV
 function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);window.scrollTo({top:0,behavior:'smooth'});}
 
-// ===== MAP MODE TOGGLE =====
+// MAP MODE TOGGLE
 let currentMapMode='avistamientos';
 let rutasLayer,avistamientosLayer;
 let cachedAvistamientos=[];
-
-function switchMapMode(mode,btn){
-  currentMapMode=mode;
-  document.querySelectorAll('.map-toggle button').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-
-  const ac=document.getElementById('avistamientos-content');
-  const rc=document.getElementById('rutas-content');
-
-  if(mode==='avistamientos'){
-    ac.classList.add('active');rc.classList.remove('active');
-    if(rutasLayer) rutasLayer.clearLayers();
-    loadAvistamientos();
-  } else {
-    rc.classList.add('active');ac.classList.remove('active');
-    if(markersLayer) markersLayer.clearLayers();
-    loadRutas();
-  }
-  if(window.map) window.map.invalidateSize();
-}
+function switchMapMode(mode,btn){currentMapMode=mode;document.querySelectorAll('.map-toggle button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const ac=document.getElementById('avistamientos-content');const rc=document.getElementById('rutas-content');if(mode==='avistamientos'){ac.classList.add('active');rc.classList.remove('active');if(rutasLayer) rutasLayer.clearLayers();loadAvistamientos();}else{rc.classList.add('active');ac.classList.remove('active');if(markersLayer) markersLayer.clearLayers();loadRutas();}if(window.map) window.map.invalidateSize();}
 
 // MAP
 let markersLayer,selectedLat=null,selectedLng=null,tempMarker=null,mapInit=false;
@@ -763,64 +606,38 @@ let reportMode=false,userLat=null,userLng=null,userMarker=null,isSubmitting=fals
 let namesCache={};
 
 // TRACING STATE
-let traceMode=false;
-let traceWaypoints=[];
-let traceMarkers=[];
-let tracePolyline=null;
+let traceMode=false,traceWaypoints=[],traceMarkers=[],tracePolyline=null;
 
-async function loadNamesCache(ids){
-  const toFetch=ids.filter(id=>id&&!namesCache[id]);
-  if(toFetch.length===0) return;
-  try{const qs=toFetch.map(id=>`"${id}"`).join(',');const res=await fetch(SUPA_URL+`/rest/v1/usuarios?id=in.(${qs})&select=id,nombre,nombre_perro,zona,visible,foto`,{headers:HEADERS});const users=await res.json();users.forEach(u=>{namesCache[u.id]=u.visible?{name:u.nombre+' y '+u.nombre_perro+' 🐕',foto:u.foto||null}:{name:'Un vecino de '+u.zona,foto:null};});toFetch.forEach(id=>{if(!namesCache[id]) namesCache[id]={name:'Un vecino de Mallorca',foto:null};});}catch(e){}
-}
+async function loadNamesCache(ids){const toFetch=ids.filter(id=>id&&!namesCache[id]);if(toFetch.length===0) return;try{const qs=toFetch.map(id=>`"${id}"`).join(',');const res=await fetch(SUPA_URL+`/rest/v1/usuarios?id=in.(${qs})&select=id,nombre,nombre_perro,zona,visible,foto`,{headers:HEADERS});const users=await res.json();users.forEach(u=>{namesCache[u.id]=u.visible?{name:u.nombre+' y '+u.nombre_perro+' 🐕',foto:u.foto||null}:{name:'Un vecino de '+u.zona,foto:null};});toFetch.forEach(id=>{if(!namesCache[id]) namesCache[id]={name:'Un vecino de Mallorca',foto:null};});}catch(e){}}
 
 function initMap(){
   if(mapInit) return;mapInit=true;
-  markersLayer=L.layerGroup();
-  rutasLayer=L.layerGroup();
+  markersLayer=L.layerGroup();rutasLayer=L.layerGroup();
   window.map=L.map('map',{zoomControl:false}).setView([39.65,2.95],9);
-  markersLayer.addTo(window.map);
-  rutasLayer.addTo(window.map);
+  markersLayer.addTo(window.map);rutasLayer.addTo(window.map);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB'}).addTo(window.map);
   window.rIcon=createRiskIcon('#c0392b');
   const bIcon=L.divIcon({html:'<div style="background:#2980b9;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>',iconSize:[13,13],iconAnchor:[6,6],className:''});
 
   window.map.on('click',function(e){
-    // === TRACE MODE: multi-point route drawing ===
+    // TRACE MODE
     if(traceMode){
       const pt={lat:e.latlng.lat,lng:e.latlng.lng};
       traceWaypoints.push(pt);
       updateTraceUI();
-      // Add marker
       const idx=traceWaypoints.length;
       let icon;
-      if(idx===1){
-        icon=L.divIcon({html:'<div class="wp-start">A</div>',iconSize:[22,22],iconAnchor:[11,11],className:''});
-      } else {
-        icon=L.divIcon({html:'<div class="wp-mid"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''});
-      }
+      if(idx===1){icon=L.divIcon({html:'<div class="wp-start">A</div>',iconSize:[22,22],iconAnchor:[11,11],className:''});}
+      else{icon=L.divIcon({html:'<div class="wp-mid"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''});}
       const mk=L.marker([pt.lat,pt.lng],{icon}).addTo(window.map);
       traceMarkers.push(mk);
-      // Update previous "end" marker to "mid" if it existed (idx>=3 means there was already a mid)
-      if(idx>=3){
-        const prevMk=traceMarkers[idx-2];
-        prevMk.setIcon(L.divIcon({html:'<div class="wp-mid"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''}));
-      }
-      // If 2+ points, update last to "end" style
-      if(idx>=2){
-        const lastMk=traceMarkers[idx-1];
-        lastMk.setIcon(L.divIcon({html:'<div class="wp-end">B</div>',iconSize:[22,22],iconAnchor:[11,11],className:''}));
-      }
-      // Draw/update polyline
+      if(idx>=3){traceMarkers[idx-2].setIcon(L.divIcon({html:'<div class="wp-mid"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''}));}
+      if(idx>=2){traceMarkers[idx-1].setIcon(L.divIcon({html:'<div class="wp-end">B</div>',iconSize:[22,22],iconAnchor:[11,11],className:''}));}
       const latlngs=traceWaypoints.map(w=>[w.lat,w.lng]);
-      if(tracePolyline){
-        tracePolyline.setLatLngs(latlngs);
-      } else {
-        tracePolyline=L.polyline(latlngs,{color:'#2980b9',weight:4,opacity:0.8,dashArray:'8,6'}).addTo(window.map);
-      }
+      if(tracePolyline){tracePolyline.setLatLngs(latlngs);}else{tracePolyline=L.polyline(latlngs,{color:'#2980b9',weight:4,opacity:0.8,dashArray:'8,6'}).addTo(window.map);}
       return;
     }
-    // === SINGLE-POINT: avistamiento report ===
+    // REPORT MODE
     if(!reportMode) return;
     selectedLat=e.latlng.lat;selectedLng=e.latlng.lng;checkHotZone();
     if(tempMarker) window.map.removeLayer(tempMarker);
@@ -833,377 +650,43 @@ function initMap(){
   loadAvistamientos();
 }
 
+// TRACING FUNCTIONS
+function updateTraceUI(){const n=traceWaypoints.length;document.getElementById('traceCount').textContent=n+' punto'+(n!==1?'s':'');document.getElementById('btnTraceUndo').disabled=n===0;document.getElementById('btnTraceDone').disabled=n<2;const hint=document.getElementById('traceHint');if(n===0) hint.innerHTML='<strong>Toca el mapa</strong> para marcar el punto de inicio de tu ruta.';else if(n===1) hint.innerHTML='Punto de inicio marcado. <strong>Toca el mapa</strong> para añadir el siguiente punto.';else hint.innerHTML=`Ruta con <strong>${n} puntos</strong> · ${calcTraceDistance()} · Sigue añadiendo o pulsa <strong>Listo</strong>.`;}
+function calcTraceDistance(){if(traceWaypoints.length<2) return '0 m';let total=0;for(let i=1;i<traceWaypoints.length;i++){total+=getDistance(traceWaypoints[i-1].lat,traceWaypoints[i-1].lng,traceWaypoints[i].lat,traceWaypoints[i].lng);}if(total<1) return Math.round(total*1000)+' m';return total.toFixed(1)+' km';}
+function traceUndo(){if(traceWaypoints.length===0) return;traceWaypoints.pop();const mk=traceMarkers.pop();if(mk) window.map.removeLayer(mk);if(traceWaypoints.length>=2){tracePolyline.setLatLngs(traceWaypoints.map(w=>[w.lat,w.lng]));traceMarkers[traceMarkers.length-1].setIcon(L.divIcon({html:'<div class="wp-end">B</div>',iconSize:[22,22],iconAnchor:[11,11],className:''}));}else if(traceWaypoints.length===1){if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}traceMarkers[0].setIcon(L.divIcon({html:'<div class="wp-start">A</div>',iconSize:[22,22],iconAnchor:[11,11],className:''}));}else{if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}}updateTraceUI();}
+function traceCancel(){traceMarkers.forEach(mk=>window.map.removeLayer(mk));traceMarkers=[];traceWaypoints=[];if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}traceMode=false;document.getElementById('traceToolbar').classList.remove('active');showToast('Trazado cancelado','error');}
+function traceDone(){if(traceWaypoints.length<2){showToast('Marca al menos 2 puntos','error');return;}traceMode=false;document.getElementById('traceToolbar').classList.remove('active');selectedLat=traceWaypoints[0].lat;selectedLng=traceWaypoints[0].lng;document.getElementById('rutaModal').classList.add('open');const distKm=calcWaypointsDistance(traceWaypoints);if(distKm!==null){const sel=document.getElementById('ruta-distancia');if(distKm<2) sel.value='Corta (< 2 km)';else if(distKm<=5) sel.value='Media (2-5 km)';else sel.value='Larga (> 5 km)';}setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Zona desconocida";document.getElementById('ruta-nombre').placeholder=lugar+' — nombre de la ruta';}).catch(()=>{});},100);}
+
+// AVISTAMIENTOS
 async function loadAvistamientos(){
-  try{
-    const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});
-    if(!res.ok){document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando avistamientos.</p>';return;}
-    let data=await res.json();
-    data=data.filter(a=>{if(!a.created_at) return true;const days=(Date.now()-new Date(a.created_at).getTime())/86400000;if(days<=7) return true;if(a.last_confirmed_at){if((Date.now()-new Date(a.last_confirmed_at).getTime())/86400000<=7) return true;}return false;});
-
-    // Cache for route crosscheck
-    cachedAvistamientos=data;
-
-    const reporterIds=[...new Set(data.map(a=>a.reporter_id).filter(Boolean))];
-    await loadNamesCache(reporterIds);
-    const reportCounts={};
-    data.forEach(a=>{if(a.reporter_id){reportCounts[a.reporter_id]=(reportCounts[a.reporter_id]||0)+1;}});
-    if(userLat&&userLng){data=data.map(a=>({...a,distance:(a.lat&&a.lng)?getDistance(userLat,userLng,parseFloat(a.lat),parseFloat(a.lng)):null}));data.sort((a,b)=>{if(a.distance===null) return 1;if(b.distance===null) return -1;return a.distance-b.distance;});}
-
-    if(currentMapMode==='avistamientos'){
-      markersLayer.clearLayers();
-      data.forEach(a=>{const lat=parseFloat(a.lat),lng=parseFloat(a.lng);if(isNaN(lat)||isNaN(lng)) return;const color=colorForRisk(a);const icon=createRiskIcon(color,isHistorico(a.created_at));L.marker([lat,lng],{icon}).addTo(markersLayer).bindPopup(`<div style="font-size:13px">🌲 <b>${escapeHtml(a.ubicacion||'Sin ubicación')}</b><br><span style="color:#666;font-size:11px">${timeAgo(a.created_at)}</span><br>${escapeHtml(a.riesgo||'')}</div>`);});
-    }
-
-    const container=document.getElementById('avist-container');
-    if(data.length===0){container.innerHTML='<p style="color:#555;font-size:13px">Aún no hay avistamientos reportados. ¡Sé el primero!</p>';return;}
-    container.innerHTML=data.map(a=>{
-      const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';
-      return `<div class="avist-item ${hist?'historico':''}"><div class="avist-icon">🌲</div><div class="avist-info"><h4>${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4>${a.foto?`<img src="${a.foto}" alt="Avistamiento" onclick="openImage('${a.foto}')" class="avist-img">`:''}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="openImage('${nameInfo.foto}')" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px;cursor:pointer">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div></div></div>`;
-    }).join('');
-    checkHotZone();
-  }catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
+  try{const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando avistamientos.</p>';return;}let data=await res.json();data=data.filter(a=>{if(!a.created_at) return true;const days=(Date.now()-new Date(a.created_at).getTime())/86400000;if(days<=7) return true;if(a.last_confirmed_at){if((Date.now()-new Date(a.last_confirmed_at).getTime())/86400000<=7) return true;}return false;});cachedAvistamientos=data;const reporterIds=[...new Set(data.map(a=>a.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);const reportCounts={};data.forEach(a=>{if(a.reporter_id){reportCounts[a.reporter_id]=(reportCounts[a.reporter_id]||0)+1;}});if(userLat&&userLng){data=data.map(a=>({...a,distance:(a.lat&&a.lng)?getDistance(userLat,userLng,parseFloat(a.lat),parseFloat(a.lng)):null}));data.sort((a,b)=>{if(a.distance===null) return 1;if(b.distance===null) return -1;return a.distance-b.distance;});}
+  if(currentMapMode==='avistamientos'){markersLayer.clearLayers();data.forEach(a=>{const lat=parseFloat(a.lat),lng=parseFloat(a.lng);if(isNaN(lat)||isNaN(lng)) return;const color=colorForRisk(a);const icon=createRiskIcon(color,isHistorico(a.created_at));L.marker([lat,lng],{icon}).addTo(markersLayer).bindPopup(`<div style="font-size:13px">🌲 <b>${escapeHtml(a.ubicacion||'Sin ubicación')}</b><br><span style="color:#666;font-size:11px">${timeAgo(a.created_at)}</span><br>${escapeHtml(a.riesgo||'')}</div>`);});}
+  const container=document.getElementById('avist-container');if(data.length===0){container.innerHTML='<p style="color:#555;font-size:13px">Aún no hay avistamientos reportados. ¡Sé el primero!</p>';return;}
+  container.innerHTML=data.map(a=>{const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';return `<div class="avist-item ${hist?'historico':''}"><div class="avist-icon">🌲</div><div class="avist-info"><h4>${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4>${a.foto?`<img src="${a.foto}" alt="Avistamiento" onclick="openImage('${a.foto}')" class="avist-img">`:''}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="openImage('${nameInfo.foto}')" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px;cursor:pointer">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div></div></div>`;}).join('');checkHotZone();}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
 }
 
-// ===== RUTAS =====
+// RUTAS
 let allRutas=[];
+async function loadRutas(){try{const res=await fetch(SUPA_URL+"/rest/v1/rutas?select=*&status=eq.activo&order=verificada.desc,created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('rutas-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando rutas.</p>';return;}allRutas=await res.json();if(cachedAvistamientos.length===0){try{const ar=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=lat,lng,ubicacion,riesgo,created_at&status=eq.activo&order=created_at.desc",{headers:HEADERS});cachedAvistamientos=await ar.json();}catch(e){}}const reporterIds=[...new Set(allRutas.map(r=>r.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);renderRutasList(allRutas);renderRutasOnMap(allRutas);}catch(err){console.error("Error rutas:",err);document.getElementById('rutas-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}}
 
-async function loadRutas(){
-  try{
-    const res=await fetch(SUPA_URL+"/rest/v1/rutas?select=*&status=eq.activo&order=verificada.desc,created_at.desc",{headers:HEADERS});
-    if(!res.ok){document.getElementById('rutas-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando rutas.</p>';return;}
-    allRutas=await res.json();
+function getNearbyAlerts(lat,lng,radiusKm,waypoints){if(!lat||!lng) return [];radiusKm=radiusKm||1.5;const recentAlerts=cachedAvistamientos.filter(a=>{if(!a.created_at) return true;return(Date.now()-new Date(a.created_at).getTime())/86400000<=14;});if(waypoints&&waypoints.length>=2){return recentAlerts.filter(a=>{if(!a.lat||!a.lng) return false;const aLat=parseFloat(a.lat),aLng=parseFloat(a.lng);for(const wp of waypoints){if(getDistance(wp.lat,wp.lng,aLat,aLng)<=radiusKm) return true;}return false;});}return recentAlerts.filter(a=>{if(!a.lat||!a.lng) return false;return getDistance(parseFloat(lat),parseFloat(lng),parseFloat(a.lat),parseFloat(a.lng))<=radiusKm;});}
 
-    // Also load avistamientos for crosscheck if not cached
-    if(cachedAvistamientos.length===0){
-      try{
-        const ar=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=lat,lng,ubicacion,riesgo,created_at&status=eq.activo&order=created_at.desc",{headers:HEADERS});
-        cachedAvistamientos=await ar.json();
-      }catch(e){}
-    }
+function renderRutasOnMap(rutas){rutasLayer.clearLayers();cachedAvistamientos.forEach(a=>{const lat=parseFloat(a.lat),lng=parseFloat(a.lng);if(isNaN(lat)||isNaN(lng)) return;const icon=createRiskIcon(colorForRisk(a),true);L.marker([lat,lng],{icon}).addTo(rutasLayer).bindPopup(`<div style="font-size:12px">⚠️ <b>Alerta procesionaria</b><br>${escapeHtml(a.ubicacion||'')}<br><span style="color:#888;font-size:11px">${timeAgo(a.created_at)}</span></div>`);});rutas.forEach(r=>{const wps=r.waypoints;const isVer=!!r.verificada;const lineColor=isVer?'#27ae60':'#b7950b';if(wps&&wps.length>=2){const latlngs=wps.map(w=>[w.lat,w.lng]);const polyOpts={color:lineColor,weight:isVer?4:3,opacity:isVer?0.85:0.6};if(!isVer) polyOpts.dashArray='8,6';L.polyline(latlngs,polyOpts).addTo(rutasLayer);L.marker([wps[0].lat,wps[0].lng],{icon:L.divIcon({html:'<div class="wp-start">A</div>',iconSize:[22,22],iconAnchor:[11,11],className:''})}).addTo(rutasLayer).bindPopup(`<div style="font-size:13px">${isVer?'✅':'🐕'} <b>${escapeHtml(r.nombre)}</b><br><span style="color:#27ae60;font-size:11px">INICIO</span>${isVer?'<br><span style="color:#27ae60;font-size:11px;font-weight:700">VERIFICADA</span>':''}</div>`);const lastWp=wps[wps.length-1];L.marker([lastWp.lat,lastWp.lng],{icon:L.divIcon({html:'<div class="wp-end">B</div>',iconSize:[22,22],iconAnchor:[11,11],className:''})}).addTo(rutasLayer).bindPopup(`<div style="font-size:13px">${isVer?'✅':'🐕'} <b>${escapeHtml(r.nombre)}</b><br><span style="color:#c0392b;font-size:11px">FINAL</span></div>`);}else{const lat=parseFloat(r.lat),lng=parseFloat(r.lng);if(isNaN(lat)||isNaN(lng)) return;L.marker([lat,lng],{icon:createRutaIcon(isVer)}).addTo(rutasLayer).bindPopup(`<div style="font-size:13px">${isVer?'✅':'🐕'} <b>${escapeHtml(r.nombre)}</b><br><span style="color:#888;font-size:11px">${escapeHtml(r.distancia||'')} · ${escapeHtml(r.dificultad||'')}</span>${isVer?'<br><span style="color:#27ae60;font-size:11px;font-weight:700">VERIFICADA</span>':''}</div>`);}});}
 
-    const reporterIds=[...new Set(allRutas.map(r=>r.reporter_id).filter(Boolean))];
-    await loadNamesCache(reporterIds);
+function renderRutasList(rutas){const container=document.getElementById('rutas-container');if(rutas.length===0){container.innerHTML='<p style="color:#555;font-size:13px">Aún no hay rutas sugeridas. ¡Sé el primero en compartir tu ruta favorita!</p>';return;}
+container.innerHTML=rutas.map(r=>{const nearby=getNearbyAlerts(r.lat,r.lng,1.5,r.waypoints);const nameInfo=r.reporter_id?namesCache[r.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const mapsUrl=r.waypoints&&r.waypoints.length>=2?`https://www.google.com/maps/dir/${r.waypoints.map(w=>w.lat+','+w.lng).join('/')}`:`https://maps.google.com/?q=${r.lat},${r.lng}`;const wpDist=calcWaypointsDistance(r.waypoints);let distHtml='';if(wpDist!==null){distHtml=`<div class="ruta-distance-calc">📐 Distancia real: <strong>${wpDist<1?Math.round(wpDist*1000)+' m':wpDist.toFixed(1)+' km'}</strong> · ${r.waypoints.length} puntos</div>`;}let tags='';if(r.distancia) tags+=`<span class="ruta-tag tag-distancia">📏 ${escapeHtml(r.distancia)}</span>`;if(r.dificultad) tags+=`<span class="ruta-tag tag-dificultad">⛰️ ${escapeHtml(r.dificultad)}</span>`;if(r.suelo) tags+=`<span class="ruta-tag tag-suelo">👣 ${escapeHtml(r.suelo)}</span>`;if(r.sombra) tags+=`<span class="ruta-tag tag-sombra">🌿 Sombra: ${escapeHtml(r.sombra)}</span>`;if(r.agua&&r.agua!=='No') tags+=`<span class="ruta-tag tag-agua">💧 ${escapeHtml(r.agua)}</span>`;if(r.tipo_perro&&r.tipo_perro!=='Todos') tags+=`<span class="ruta-tag tag-perro">🐕 ${escapeHtml(r.tipo_perro)}</span>`;let alertasHtml='';if(nearby.length>0){alertasHtml=`<div class="ruta-alertas"><div class="ruta-alertas-title">⚠️ ${nearby.length} alerta${nearby.length>1?'s':''} de procesionaria cerca</div>${nearby.slice(0,3).map(a=>`<div class="ruta-alerta-item">🌲 ${escapeHtml(a.ubicacion||'Zona cercana')} — ${escapeHtml(a.riesgo||'')} · ${timeAgo(a.created_at)}</div>`).join('')}${nearby.length>3?`<div class="ruta-alerta-item" style="color:#888">...y ${nearby.length-3} más</div>`:''}</div>`;}else{alertasHtml='<div class="ruta-safe">✅ Sin alertas de procesionaria recientes en esta zona</div>';}let notasHtml='';if(r.notas_carlos){notasHtml=`<div class="ruta-notas-carlos"><div class="ruta-notas-carlos-title">🐾 Nota de Perros de la Isla</div><p>${escapeHtml(r.notas_carlos)}</p></div>`;}const sello=r.verificada?`<span class="sello-verificada"><svg viewBox="0 0 24 24"><path d="M12 2L13.09 8.26L20 9L14.14 13.14L15.82 20L12 16.27L8.18 20L9.86 13.14L4 9L10.91 8.26L12 2Z"/></svg>Verificada</span>`:`<span class="sello-pendiente">⏳ Pendiente</span>`;return `<div class="ruta-card ${r.verificada?'verificada':''}">${r.foto?`<img src="${r.foto}" alt="${escapeHtml(r.nombre)}" class="ruta-card-img" onclick="openImage('${r.foto}')">`:''}<div class="ruta-card-body"><div class="ruta-card-header"><h4>${escapeHtml(r.nombre)}</h4>${sello}</div><p class="ruta-desc">${escapeHtml(r.descripcion||'Sin descripción')}</p>${distHtml}<div class="ruta-tags">${tags}</div>${alertasHtml}${notasHtml}<div class="ruta-meta"><span>🕒 ${timeAgo(r.created_at)}</span>${reporterName?`<span class="dot-sep">·</span><span>Sugerida por ${escapeHtml(reporterName)}</span>`:''}</div><div class="ruta-actions"><button class="btn-ruta-nav" onclick="window.open('${mapsUrl}')">🧭 Cómo llegar</button></div></div></div>`;}).join('');}
 
-    renderRutasList(allRutas);
-    renderRutasOnMap(allRutas);
-  }catch(err){console.error("Error rutas:",err);document.getElementById('rutas-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
-}
+function filterRutas(filter,btn){document.querySelectorAll('.rutas-filtro').forEach(b=>b.classList.remove('active'));btn.classList.add('active');let filtered=allRutas;if(filter==='verificada') filtered=allRutas.filter(r=>r.verificada);else if(filter==='corta') filtered=allRutas.filter(r=>r.distancia&&r.distancia.toLowerCase().includes('corta'));else if(filter==='media') filtered=allRutas.filter(r=>r.distancia&&r.distancia.toLowerCase().includes('media'));else if(filter==='larga') filtered=allRutas.filter(r=>r.distancia&&r.distancia.toLowerCase().includes('larga'));else if(filter==='facil') filtered=allRutas.filter(r=>r.dificultad&&r.dificultad.toLowerCase().includes('fácil'));renderRutasList(filtered);renderRutasOnMap(filtered);}
 
-function getNearbyAlerts(lat,lng,radiusKm,waypoints){
-  if(!lat||!lng) return [];
-  radiusKm=radiusKm||1.5;
-  const recentAlerts=cachedAvistamientos.filter(a=>{
-    if(!a.created_at) return true;
-    return(Date.now()-new Date(a.created_at).getTime())/86400000<=14;
-  });
-  // If route has waypoints, check proximity to ANY point along the route
-  if(waypoints&&waypoints.length>=2){
-    return recentAlerts.filter(a=>{
-      if(!a.lat||!a.lng) return false;
-      const aLat=parseFloat(a.lat),aLng=parseFloat(a.lng);
-      for(const wp of waypoints){
-        if(getDistance(wp.lat,wp.lng,aLat,aLng)<=radiusKm) return true;
-      }
-      return false;
-    });
-  }
-  // Fallback: single point check
-  return recentAlerts.filter(a=>{
-    if(!a.lat||!a.lng) return false;
-    const d=getDistance(parseFloat(lat),parseFloat(lng),parseFloat(a.lat),parseFloat(a.lng));
-    return d<=radiusKm;
-  });
-}
+// RUTA MODAL
+function openRutaModal(){if(!window.map){showToast('Abre primero el mapa','error');return;}if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}reportMode=false;traceMode=true;traceWaypoints=[];traceMarkers.forEach(mk=>window.map.removeLayer(mk));traceMarkers=[];if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}updateTraceUI();document.getElementById('traceToolbar').classList.add('active');showToast('Toca el mapa para ir trazando la ruta','success');}
 
-function renderRutasOnMap(rutas){
-  rutasLayer.clearLayers();
-  // Also show avistamientos as small danger dots in rutas mode
-  cachedAvistamientos.forEach(a=>{
-    const lat=parseFloat(a.lat),lng=parseFloat(a.lng);
-    if(isNaN(lat)||isNaN(lng)) return;
-    const color=colorForRisk(a);
-    const icon=createRiskIcon(color,true);
-    L.marker([lat,lng],{icon}).addTo(rutasLayer).bindPopup(`<div style="font-size:12px">⚠️ <b>Alerta procesionaria</b><br>${escapeHtml(a.ubicacion||'')}<br><span style="color:#888;font-size:11px">${timeAgo(a.created_at)}</span></div>`);
-  });
-  rutas.forEach(r=>{
-    const wps=r.waypoints;
-    const isVer=!!r.verificada;
-    const lineColor=isVer?'#27ae60':'#b7950b';
+function closeRutaModal(){document.getElementById('rutaModal').classList.remove('open');traceMarkers.forEach(mk=>window.map.removeLayer(mk));traceMarkers=[];if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}traceWaypoints=[];traceMode=false;selectedLat=null;selectedLng=null;document.getElementById('traceToolbar').classList.remove('active');document.getElementById('ruta-nombre').value='';document.getElementById('ruta-descripcion').value='';document.getElementById('ruta-foto').value='';document.getElementById('rutaPreviewWrap').style.display='none';document.getElementById('rutaPreviewImg').src='';}
 
-    if(wps&&wps.length>=2){
-      // Draw polyline
-      const latlngs=wps.map(w=>[w.lat,w.lng]);
-      const polyOpts={color:lineColor,weight:isVer?4:3,opacity:isVer?0.85:0.6};
-      if(!isVer) polyOpts.dashArray='8,6';
-      L.polyline(latlngs,polyOpts).addTo(rutasLayer);
-
-      // Start marker
-      const startIcon=L.divIcon({html:`<div class="wp-start">A</div>`,iconSize:[22,22],iconAnchor:[11,11],className:''});
-      L.marker([wps[0].lat,wps[0].lng],{icon:startIcon}).addTo(rutasLayer).bindPopup(`<div style="font-size:13px">${isVer?'✅':'🐕'} <b>${escapeHtml(r.nombre)}</b><br><span style="color:#27ae60;font-size:11px">INICIO</span>${isVer?'<br><span style="color:#27ae60;font-size:11px;font-weight:700">VERIFICADA</span>':''}</div>`);
-
-      // End marker
-      const endIcon=L.divIcon({html:`<div class="wp-end">B</div>`,iconSize:[22,22],iconAnchor:[11,11],className:''});
-      const lastWp=wps[wps.length-1];
-      L.marker([lastWp.lat,lastWp.lng],{icon:endIcon}).addTo(rutasLayer).bindPopup(`<div style="font-size:13px">${isVer?'✅':'🐕'} <b>${escapeHtml(r.nombre)}</b><br><span style="color:#c0392b;font-size:11px">FINAL</span></div>`);
-    } else {
-      // Fallback: single marker for old routes without waypoints
-      const lat=parseFloat(r.lat),lng=parseFloat(r.lng);
-      if(isNaN(lat)||isNaN(lng)) return;
-      const icon=createRutaIcon(isVer);
-      L.marker([lat,lng],{icon}).addTo(rutasLayer).bindPopup(`<div style="font-size:13px">${isVer?'✅':'🐕'} <b>${escapeHtml(r.nombre)}</b><br><span style="color:#888;font-size:11px">${escapeHtml(r.distancia||'')} · ${escapeHtml(r.dificultad||'')}</span>${isVer?'<br><span style="color:#27ae60;font-size:11px;font-weight:700">VERIFICADA</span>':''}</div>`);
-    }
-  });
-}
-
-function renderRutasList(rutas){
-  const container=document.getElementById('rutas-container');
-  if(rutas.length===0){container.innerHTML='<p style="color:#555;font-size:13px">Aún no hay rutas sugeridas. ¡Sé el primero en compartir tu ruta favorita!</p>';return;}
-
-  container.innerHTML=rutas.map(r=>{
-    const nearby=getNearbyAlerts(r.lat,r.lng,1.5,r.waypoints);
-    const nameInfo=r.reporter_id?namesCache[r.reporter_id]:null;
-    const reporterName=nameInfo?nameInfo.name:'';
-    const mapsUrl=r.waypoints&&r.waypoints.length>=2
-      ?`https://www.google.com/maps/dir/${r.waypoints.map(w=>w.lat+','+w.lng).join('/')}`
-      :`https://maps.google.com/?q=${r.lat},${r.lng}`;
-
-    // Calculated distance from waypoints
-    const wpDist=calcWaypointsDistance(r.waypoints);
-    let distHtml='';
-    if(wpDist!==null){
-      distHtml=`<div class="ruta-distance-calc">📐 Distancia real del trazado: <strong>${wpDist<1?Math.round(wpDist*1000)+' m':wpDist.toFixed(1)+' km'}</strong> · ${r.waypoints.length} puntos</div>`;
-    }
-
-    // Tags
-    let tags='';
-    if(r.distancia) tags+=`<span class="ruta-tag tag-distancia">📏 ${escapeHtml(r.distancia)}</span>`;
-    if(r.dificultad) tags+=`<span class="ruta-tag tag-dificultad">⛰️ ${escapeHtml(r.dificultad)}</span>`;
-    if(r.suelo) tags+=`<span class="ruta-tag tag-suelo">👣 ${escapeHtml(r.suelo)}</span>`;
-    if(r.sombra) tags+=`<span class="ruta-tag tag-sombra">🌿 Sombra: ${escapeHtml(r.sombra)}</span>`;
-    if(r.agua&&r.agua!=='No') tags+=`<span class="ruta-tag tag-agua">💧 ${escapeHtml(r.agua)}</span>`;
-    if(r.tipo_perro&&r.tipo_perro!=='Todos') tags+=`<span class="ruta-tag tag-perro">🐕 ${escapeHtml(r.tipo_perro)}</span>`;
-
-    // Alertas cercanas
-    let alertasHtml='';
-    if(nearby.length>0){
-      alertasHtml=`<div class="ruta-alertas"><div class="ruta-alertas-title">⚠️ ${nearby.length} alerta${nearby.length>1?'s':''} de procesionaria cerca</div>${nearby.slice(0,3).map(a=>`<div class="ruta-alerta-item">🌲 ${escapeHtml(a.ubicacion||'Zona cercana')} — ${escapeHtml(a.riesgo||'')} · ${timeAgo(a.created_at)}</div>`).join('')}${nearby.length>3?`<div class="ruta-alerta-item" style="color:#888">...y ${nearby.length-3} más</div>`:''}</div>`;
-    } else {
-      alertasHtml='<div class="ruta-safe">✅ Sin alertas de procesionaria recientes en esta zona</div>';
-    }
-
-    // Notas de Carlos
-    let notasHtml='';
-    if(r.notas_carlos){
-      notasHtml=`<div class="ruta-notas-carlos"><div class="ruta-notas-carlos-title">🐾 Nota de Carlos (Perros de la Isla)</div><p>${escapeHtml(r.notas_carlos)}</p></div>`;
-    }
-
-    // Sello
-    const sello=r.verificada
-      ?`<span class="sello-verificada"><svg viewBox="0 0 24 24"><path d="M12 2L13.09 8.26L20 9L14.14 13.14L15.82 20L12 16.27L8.18 20L9.86 13.14L4 9L10.91 8.26L12 2Z"/></svg>Verificada</span>`
-      :`<span class="sello-pendiente">⏳ Pendiente</span>`;
-
-    return `<div class="ruta-card ${r.verificada?'verificada':''}">
-      ${r.foto?`<img src="${r.foto}" alt="${escapeHtml(r.nombre)}" class="ruta-card-img" onclick="openImage('${r.foto}')">`:''} 
-      <div class="ruta-card-body">
-        <div class="ruta-card-header"><h4>${escapeHtml(r.nombre)}</h4>${sello}</div>
-        <p class="ruta-desc">${escapeHtml(r.descripcion||'Sin descripción')}</p>
-        ${distHtml}
-        <div class="ruta-tags">${tags}</div>
-        ${alertasHtml}
-        ${notasHtml}
-        <div class="ruta-meta">
-          <span>🕒 ${timeAgo(r.created_at)}</span>
-          ${reporterName?`<span class="dot-sep">·</span><span>Sugerida por ${escapeHtml(reporterName)}</span>`:''}
-        </div>
-        <div class="ruta-actions">
-          <button class="btn-ruta-nav" onclick="window.open('${mapsUrl}')">🧭 Cómo llegar</button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function filterRutas(filter,btn){
-  document.querySelectorAll('.rutas-filtro').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  let filtered=allRutas;
-  if(filter==='verificada') filtered=allRutas.filter(r=>r.verificada);
-  else if(filter==='corta') filtered=allRutas.filter(r=>r.distancia&&r.distancia.toLowerCase().includes('corta'));
-  else if(filter==='media') filtered=allRutas.filter(r=>r.distancia&&r.distancia.toLowerCase().includes('media'));
-  else if(filter==='larga') filtered=allRutas.filter(r=>r.distancia&&r.distancia.toLowerCase().includes('larga'));
-  else if(filter==='facil') filtered=allRutas.filter(r=>r.dificultad&&r.dificultad.toLowerCase().includes('fácil'));
-  renderRutasList(filtered);
-  renderRutasOnMap(filtered);
-}
-
-// ===== TRACING FUNCTIONS =====
-function updateTraceUI(){
-  const n=traceWaypoints.length;
-  document.getElementById('traceCount').textContent=n+' punto'+(n!==1?'s':'');
-  document.getElementById('btnTraceUndo').disabled=n===0;
-  document.getElementById('btnTraceDone').disabled=n<2;
-  const hint=document.getElementById('traceHint');
-  if(n===0) hint.innerHTML='<strong>Toca el mapa</strong> para marcar el punto de inicio de tu ruta.';
-  else if(n===1) hint.innerHTML='Punto de inicio marcado. <strong>Toca el mapa</strong> para añadir el siguiente punto del recorrido.';
-  else hint.innerHTML=`Ruta con <strong>${n} puntos</strong> · ${calcTraceDistance()} · Sigue añadiendo puntos o pulsa <strong>Listo</strong>.`;
-}
-
-function calcTraceDistance(){
-  if(traceWaypoints.length<2) return '0 m';
-  let total=0;
-  for(let i=1;i<traceWaypoints.length;i++){
-    total+=getDistance(traceWaypoints[i-1].lat,traceWaypoints[i-1].lng,traceWaypoints[i].lat,traceWaypoints[i].lng);
-  }
-  if(total<1) return Math.round(total*1000)+' m';
-  return total.toFixed(1)+' km';
-}
-
-function calcWaypointsDistance(wps){
-  if(!wps||wps.length<2) return null;
-  let total=0;
-  for(let i=1;i<wps.length;i++){
-    total+=getDistance(wps[i-1].lat,wps[i-1].lng,wps[i].lat,wps[i].lng);
-  }
-  return total;
-}
-
-function traceUndo(){
-  if(traceWaypoints.length===0) return;
-  traceWaypoints.pop();
-  const mk=traceMarkers.pop();
-  if(mk) window.map.removeLayer(mk);
-  // Update polyline
-  if(traceWaypoints.length>=2){
-    tracePolyline.setLatLngs(traceWaypoints.map(w=>[w.lat,w.lng]));
-    // Update last marker to "end" style
-    const lastMk=traceMarkers[traceMarkers.length-1];
-    lastMk.setIcon(L.divIcon({html:'<div class="wp-end">B</div>',iconSize:[22,22],iconAnchor:[11,11],className:''}));
-  } else if(traceWaypoints.length===1){
-    if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}
-    // Only start marker remains
-    traceMarkers[0].setIcon(L.divIcon({html:'<div class="wp-start">A</div>',iconSize:[22,22],iconAnchor:[11,11],className:''}));
-  } else {
-    if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}
-  }
-  updateTraceUI();
-}
-
-function traceCancel(){
-  // Clean up all trace elements
-  traceMarkers.forEach(mk=>window.map.removeLayer(mk));
-  traceMarkers=[];
-  traceWaypoints=[];
-  if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}
-  traceMode=false;
-  document.getElementById('traceToolbar').classList.remove('active');
-  showToast('Trazado cancelado','error');
-}
-
-function traceDone(){
-  if(traceWaypoints.length<2){showToast('Marca al menos 2 puntos','error');return;}
-  traceMode=false;
-  document.getElementById('traceToolbar').classList.remove('active');
-  // Set selectedLat/Lng to first point for backwards compat
-  selectedLat=traceWaypoints[0].lat;
-  selectedLng=traceWaypoints[0].lng;
-  // Open the form modal
-  document.getElementById('rutaModal').classList.add('open');
-  // Auto-fill distance
-  const dist=calcTraceDistance();
-  const distKm=calcWaypointsDistance(traceWaypoints);
-  if(distKm!==null){
-    const sel=document.getElementById('ruta-distancia');
-    if(distKm<2) sel.value='Corta (< 2 km)';
-    else if(distKm<=5) sel.value='Media (2-5 km)';
-    else sel.value='Larga (> 5 km)';
-  }
-  // Reverse geocode the start point for name hint
-  setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Zona desconocida";document.getElementById('ruta-nombre').placeholder=lugar+' — nombre de la ruta';}).catch(()=>{});},100);
-}
-
-// MODAL RUTA
-function openRutaModal(){
-  if(!window.map){showToast('Abre primero el mapa','error');return;}
-  if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}
-  // Start trace mode
-  reportMode=false;
-  traceMode=true;
-  traceWaypoints=[];
-  traceMarkers.forEach(mk=>window.map.removeLayer(mk));
-  traceMarkers=[];
-  if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}
-  updateTraceUI();
-  document.getElementById('traceToolbar').classList.add('active');
-  showToast('Toca el mapa para ir trazando la ruta','success');
-}
-
-function closeRutaModal(){
-  document.getElementById('rutaModal').classList.remove('open');
-  // Clean up trace elements from map
-  traceMarkers.forEach(mk=>window.map.removeLayer(mk));
-  traceMarkers=[];
-  if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}
-  traceWaypoints=[];
-  traceMode=false;
-  selectedLat=null;selectedLng=null;
-  document.getElementById('traceToolbar').classList.remove('active');
-  document.getElementById('ruta-nombre').value='';
-  document.getElementById('ruta-descripcion').value='';
-  document.getElementById('ruta-foto').value='';
-  document.getElementById('rutaPreviewWrap').style.display='none';
-  document.getElementById('rutaPreviewImg').src='';
-}
-
-async function submitRuta(){
-  if(isSubmitting) return;isSubmitting=true;
-  const btn=document.getElementById('btn-submit-ruta');
-  const nombre=document.getElementById('ruta-nombre').value.trim();
-  const descripcion=document.getElementById('ruta-descripcion').value.trim();
-  const distancia=document.getElementById('ruta-distancia').value;
-  const dificultad=document.getElementById('ruta-dificultad').value;
-  const suelo=document.getElementById('ruta-suelo').value;
-  const sombra=document.getElementById('ruta-sombra').value;
-  const agua=document.getElementById('ruta-agua').value;
-  const tipo_perro=document.getElementById('ruta-tipo-perro').value;
-  const file=document.getElementById('ruta-foto').files[0];
-
-  if(traceWaypoints.length<2){showToast('La ruta necesita al menos 2 puntos','error');isSubmitting=false;return;}
-  if(!nombre){showToast('Escribe el nombre de la ruta','error');isSubmitting=false;return;}
-
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando...';
-
-  try{
-    let imageUrl=null;
-    if(file){
-      try{
-        const compressed=await compressImage(file);
-        const fn='ruta_'+Date.now()+'_'+Math.random().toString(36).substr(2,6)+'.jpg';
-        const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});
-        if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;
-      }catch(e){}
-    }
-
-    // lat/lng = first waypoint (for backwards compat + crosscheck)
-    const startPt=traceWaypoints[0];
-
-    const res=await fetch(SUPA_URL+"/rest/v1/rutas",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({
-      nombre,descripcion,lat:startPt.lat,lng:startPt.lng,distancia,dificultad,suelo,sombra,agua,tipo_perro,foto:imageUrl,reporter_id:USER_ID,verificada:false,status:'activo',
-      waypoints:traceWaypoints
-    })});
-
-    if(!res.ok){showToast('Error al guardar la ruta.','error');btn.disabled=false;btn.innerHTML='Enviar sugerencia';isSubmitting=false;return;}
-
-    closeRutaModal();
-    await loadRutas();
-    showToast('🐕 ¡Ruta sugerida! Carlos la verificará pronto.','success');
-  }catch(err){showToast('Error al guardar la ruta.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar sugerencia';}
-}
+async function submitRuta(){if(isSubmitting) return;isSubmitting=true;const btn=document.getElementById('btn-submit-ruta');const nombre=document.getElementById('ruta-nombre').value.trim();const descripcion=document.getElementById('ruta-descripcion').value.trim();const distancia=document.getElementById('ruta-distancia').value;const dificultad=document.getElementById('ruta-dificultad').value;const suelo=document.getElementById('ruta-suelo').value;const sombra=document.getElementById('ruta-sombra').value;const agua=document.getElementById('ruta-agua').value;const tipo_perro=document.getElementById('ruta-tipo-perro').value;const file=document.getElementById('ruta-foto').files[0];if(traceWaypoints.length<2){showToast('La ruta necesita al menos 2 puntos','error');isSubmitting=false;return;}if(!nombre){showToast('Escribe el nombre de la ruta','error');isSubmitting=false;return;}btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando...';try{let imageUrl=null;if(file){try{const compressed=await compressImage(file);const fn='ruta_'+Date.now()+'_'+Math.random().toString(36).substr(2,6)+'.jpg';const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}const startPt=traceWaypoints[0];const res=await fetch(SUPA_URL+"/rest/v1/rutas",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({nombre,descripcion,lat:startPt.lat,lng:startPt.lng,distancia,dificultad,suelo,sombra,agua,tipo_perro,foto:imageUrl,reporter_id:USER_ID,verificada:false,status:'activo',waypoints:traceWaypoints})});if(!res.ok){showToast('Error al guardar la ruta.','error');btn.disabled=false;btn.innerHTML='Enviar sugerencia';isSubmitting=false;return;}closeRutaModal();await loadRutas();showToast('🐕 ¡Ruta sugerida! Perros de la Isla la verificará pronto.','success');}catch(err){showToast('Error al guardar la ruta.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar sugerencia';}}
 
 // AVISTAMIENTOS ACTIONS
-async function confirmSighting(id,isConfirm){
-  if(localStorage.getItem('pdi_conf_'+id)){showToast('Ya has votado en este avistamiento','error');return;}
-  try{const r=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${id}&select=confirmations,denials`,{headers:HEADERS});const[c]=await r.json();if(!c) return;const nc=isConfirm?(c.confirmations||0)+1:c.confirmations||0;const nd=!isConfirm?(c.denials||0)+1:c.denials||0;const up={confirmations:nc,denials:nd};if(isConfirm) up.last_confirmed_at=new Date().toISOString();if(nd>=3) up.status='archivado';const res=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${id}`,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify(up)});if(res.ok){localStorage.setItem('pdi_conf_'+id,isConfirm?'confirm':'deny');showToast(isConfirm?'✅ Gracias por confirmar':'🚫 Gracias por avisar','success');loadAvistamientos();}else showToast('Error al votar','error');}catch(e){showToast('Error de conexión','error');}
-}
+async function confirmSighting(id,isConfirm){if(localStorage.getItem('pdi_conf_'+id)){showToast('Ya has votado en este avistamiento','error');return;}try{const r=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${id}&select=confirmations,denials`,{headers:HEADERS});const[c]=await r.json();if(!c) return;const nc=isConfirm?(c.confirmations||0)+1:c.confirmations||0;const nd=!isConfirm?(c.denials||0)+1:c.denials||0;const up={confirmations:nc,denials:nd};if(isConfirm) up.last_confirmed_at=new Date().toISOString();if(nd>=3) up.status='archivado';const res=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${id}`,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify(up)});if(res.ok){localStorage.setItem('pdi_conf_'+id,isConfirm?'confirm':'deny');showToast(isConfirm?'✅ Gracias por confirmar':'🚫 Gracias por avisar','success');loadAvistamientos();}else showToast('Error al votar','error');}catch(e){showToast('Error de conexión','error');}}
 
 function activateReportMode(){if(!window.map){showToast('Abre primero el mapa','error');return;}if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}reportMode=true;traceMode=false;selectedLat=null;selectedLng=null;if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}showToast('Toca el mapa para marcar la ubicación','success');}
 function openModal(){if(!selectedLat||!selectedLng){showToast('Primero toca el mapa o usa tu ubicación','error');return;}document.getElementById('modal').classList.add('open');}
@@ -1211,18 +694,7 @@ function closeModal(){document.getElementById('modal').classList.remove('open');
 
 async function compressImage(file,maxW,q){maxW=maxW||1200;q=q||0.75;return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');let w=img.width,h=img.height;if(w>maxW){h=(maxW/w)*h;w=maxW;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>res(b),'image/jpeg',q);};img.onerror=rej;img.src=e.target.result;};r.onerror=rej;r.readAsDataURL(file);});}
 
-async function submitReport(){
-  if(isSubmitting) return;isSubmitting=true;const btn=document.getElementById('btn-submit');
-  const ubicacion=document.getElementById('inp-ubicacion').value.trim();const riesgo=document.getElementById('inp-riesgo').value;const descripcion=document.getElementById('inp-descripcion').value.trim();const file=document.getElementById('foto').files[0];
-  if(!selectedLat||!selectedLng){showToast('Toca el mapa para marcar la ubicación exacta','error');isSubmitting=false;return;}
-  if(!ubicacion){showToast('Escribe la ubicación','error');isSubmitting=false;return;}
-  try{const oneH=new Date(Date.now()-3600000).toISOString();const cr=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&created_at=gte.${oneH}&select=id`,{headers:HEADERS});const recent=await cr.json();if(recent.length>=5){showToast('Has reportado mucho en la última hora.','error');isSubmitting=false;return;}const sixH=new Date(Date.now()-21600000).toISOString();const nr=await fetch(SUPA_URL+`/rest/v1/avistamientos?created_at=gte.${sixH}&select=lat,lng`,{headers:HEADERS});const nearby=await nr.json();for(const r of nearby){if(!r.lat||!r.lng) continue;if(getDistance(selectedLat,selectedLng,parseFloat(r.lat),parseFloat(r.lng))<=0.08){showToast('Ya existe un reporte reciente muy cerca.','error');isSubmitting=false;return;}}}catch(e){}
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando...';
-  try{let imageUrl=null;if(file){try{const compressed=await compressImage(file);const fn=Date.now()+"_"+Math.random().toString(36).substr(2,6)+".jpg";const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}
-  const res=await fetch(SUPA_URL+"/rest/v1/avistamientos",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({ubicacion,descripcion,riesgo,lat:selectedLat,lng:selectedLng,foto:imageUrl,reporter_id:USER_ID})});
-  if(!res.ok){showToast('Error al guardar.','error');btn.disabled=false;btn.innerHTML='Enviar alerta';isSubmitting=false;return;}
-  userLat=selectedLat;userLng=selectedLng;closeModal();await loadAvistamientos();showToast('✅ Avistamiento reportado. ¡Gracias!','success');}catch(err){showToast('Error al guardar.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar alerta';}
-}
+async function submitReport(){if(isSubmitting) return;isSubmitting=true;const btn=document.getElementById('btn-submit');const ubicacion=document.getElementById('inp-ubicacion').value.trim();const riesgo=document.getElementById('inp-riesgo').value;const descripcion=document.getElementById('inp-descripcion').value.trim();const file=document.getElementById('foto').files[0];if(!selectedLat||!selectedLng){showToast('Toca el mapa para marcar la ubicación exacta','error');isSubmitting=false;return;}if(!ubicacion){showToast('Escribe la ubicación','error');isSubmitting=false;return;}try{const oneH=new Date(Date.now()-3600000).toISOString();const cr=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&created_at=gte.${oneH}&select=id`,{headers:HEADERS});const recent=await cr.json();if(recent.length>=5){showToast('Has reportado mucho en la última hora.','error');isSubmitting=false;return;}const sixH=new Date(Date.now()-21600000).toISOString();const nr=await fetch(SUPA_URL+`/rest/v1/avistamientos?created_at=gte.${sixH}&select=lat,lng`,{headers:HEADERS});const nearby=await nr.json();for(const r of nearby){if(!r.lat||!r.lng) continue;if(getDistance(selectedLat,selectedLng,parseFloat(r.lat),parseFloat(r.lng))<=0.08){showToast('Ya existe un reporte reciente muy cerca.','error');isSubmitting=false;return;}}}catch(e){}btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando...';try{let imageUrl=null;if(file){try{const compressed=await compressImage(file);const fn=Date.now()+"_"+Math.random().toString(36).substr(2,6)+".jpg";const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}const res=await fetch(SUPA_URL+"/rest/v1/avistamientos",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({ubicacion,descripcion,riesgo,lat:selectedLat,lng:selectedLng,foto:imageUrl,reporter_id:USER_ID})});if(!res.ok){showToast('Error al guardar.','error');btn.disabled=false;btn.innerHTML='Enviar alerta';isSubmitting=false;return;}userLat=selectedLat;userLng=selectedLng;closeModal();await loadAvistamientos();showToast('✅ Avistamiento reportado. ¡Gracias!','success');}catch(err){showToast('Error al guardar.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar alerta';}}
 
 function goToUserLocation(){if(!navigator.geolocation){showToast('Tu dispositivo no soporta geolocalización','error');return;}navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude,lng=pos.coords.longitude;window.map.setView([lat,lng],15);if(userMarker) window.map.removeLayer(userMarker);userMarker=L.marker([lat,lng],{icon:L.divIcon({html:'<div style="background:#3498db;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.6)"></div>',className:''})}).addTo(window.map).bindPopup("📍 Estás aquí").openPopup();selectedLat=lat;selectedLng=lng;userLat=lat;userLng=lng;if(currentMapMode==='avistamientos') loadAvistamientos(); else loadRutas();checkHotZone();setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Ubicación actual";document.getElementById('inp-ubicacion').value=lugar+" ("+lat.toFixed(5)+", "+lng.toFixed(5)+")";}).catch(()=>{});},100);},err=>{if(err.code===1) showToast('Permiso de ubicación bloqueado','error');else if(err.code===2) showToast('No se pudo detectar tu ubicación','error');else if(err.code===3) showToast('La ubicación tardó demasiado','error');else showToast('Error al obtener ubicación','error');},{enableHighAccuracy:false,timeout:5000,maximumAge:60000});}
 function toggleMapFull(e){if(e){e.stopPropagation();e.preventDefault();}const m=document.getElementById('map'),b=document.getElementById('exitFullBtn');const f=m.classList.toggle('fullscreen');b.style.display=f?'block':'none';setTimeout(()=>{if(window.map) window.map.invalidateSize();},200);}

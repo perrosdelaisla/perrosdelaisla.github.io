@@ -55,6 +55,8 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .zonas p{font-size:13px;color:#aaa;line-height:2}
 #map{height:270px;border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #2a2a2a;position:relative}
 #map.fullscreen{position:fixed;inset:0;height:100vh !important;width:100vw !important;z-index:2000;border-radius:0;margin:0}
+.map-layer-btn{position:absolute;top:10px;left:10px;z-index:999;background:#1a1a1a;border:1px solid #333;color:#fff;padding:7px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,0.5);transition:all .2s;letter-spacing:.3px}
+.map-layer-btn:active{background:#333}
 .leyenda{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap}
 .leyenda-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#777}
 .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
@@ -382,7 +384,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
       <button class="toggle-avistamientos active" onclick="switchMapMode('avistamientos',this)"><span>⚠️</span> Avistamientos</button>
       <button class="toggle-rutas" onclick="switchMapMode('rutas',this)"><span>🐕</span> Rutas seguras</button>
     </div>
-    <div id="map"><button id="exitFullBtn" onclick="toggleMapFull(event)">❌ Salir</button></div>
+    <div id="map"><button id="exitFullBtn" onclick="toggleMapFull(event)">❌ Salir</button><button class="map-layer-btn" id="layerToggleBtn" onclick="toggleMapLayer(event)">🗺️ Senderos</button></div>
     <div id="hotZoneBox" style="display:none;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:12px;font-size:13px;color:#f0f0f0">🔥 <strong id="hotZoneText"></strong></div>
 
     <div class="avistamientos-content active" id="avistamientos-content">
@@ -624,7 +626,14 @@ function initMap(){
   markersLayer=L.layerGroup();rutasLayer=L.layerGroup();
   window.map=L.map('map',{zoomControl:false}).setView([39.65,2.95],9);
   markersLayer.addTo(window.map);rutasLayer.addTo(window.map);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB'}).addTo(window.map);
+
+  // Map layers
+  window.topoLayer=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{attribution:'© OpenTopoMap',maxZoom:17});
+  window.darkLayer=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB'});
+  window.currentLayer='topo';
+  window.topoLayer.addTo(window.map);
+  document.getElementById('layerToggleBtn').innerHTML='🌑 Vista oscura';
+
   window.rIcon=createRiskIcon('#c0392b');
   const bIcon=L.divIcon({html:'<div style="background:#2980b9;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>',iconSize:[13,13],iconAnchor:[6,6],className:''});
 
@@ -706,6 +715,7 @@ async function compressImage(file,maxW,q){maxW=maxW||1200;q=q||0.75;return new P
 async function submitReport(){if(isSubmitting) return;isSubmitting=true;const btn=document.getElementById('btn-submit');const tipo_peligro=document.getElementById('inp-tipo').value;const otro_peligro=tipo_peligro==='Otro'?document.getElementById('inp-otro-peligro').value.trim():null;const ubicacion=document.getElementById('inp-ubicacion').value.trim();const riesgo=document.getElementById('inp-riesgo').value;const descripcion=document.getElementById('inp-descripcion').value.trim();const file=document.getElementById('foto').files[0];if(!selectedLat||!selectedLng){showToast('Toca el mapa para marcar la ubicación exacta','error');isSubmitting=false;return;}if(!ubicacion){showToast('Escribe la ubicación','error');isSubmitting=false;return;}if(tipo_peligro==='Otro'&&!otro_peligro){showToast('Describe el tipo de peligro','error');isSubmitting=false;return;}try{const oneH=new Date(Date.now()-3600000).toISOString();const cr=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&created_at=gte.${oneH}&select=id`,{headers:HEADERS});const recent=await cr.json();if(recent.length>=5){showToast('Has reportado mucho en la última hora.','error');isSubmitting=false;return;}const sixH=new Date(Date.now()-21600000).toISOString();const nr=await fetch(SUPA_URL+`/rest/v1/avistamientos?created_at=gte.${sixH}&select=lat,lng`,{headers:HEADERS});const nearby=await nr.json();for(const r of nearby){if(!r.lat||!r.lng) continue;if(getDistance(selectedLat,selectedLng,parseFloat(r.lat),parseFloat(r.lng))<=0.08){showToast('Ya existe un reporte reciente muy cerca.','error');isSubmitting=false;return;}}}catch(e){}btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando...';try{let imageUrl=null;if(file){try{const compressed=await compressImage(file);const fn=Date.now()+"_"+Math.random().toString(36).substr(2,6)+".jpg";const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}const res=await fetch(SUPA_URL+"/rest/v1/avistamientos",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({ubicacion,descripcion,riesgo,lat:selectedLat,lng:selectedLng,foto:imageUrl,reporter_id:USER_ID,tipo_peligro,otro_peligro})});if(!res.ok){showToast('Error al guardar.','error');btn.disabled=false;btn.innerHTML='Enviar alerta';isSubmitting=false;return;}userLat=selectedLat;userLng=selectedLng;closeModal();await loadAvistamientos();showToast('✅ Avistamiento reportado. ¡Gracias!','success');}catch(err){showToast('Error al guardar.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar alerta';}}
 
 function goToUserLocation(){if(!navigator.geolocation){showToast('Tu dispositivo no soporta geolocalización','error');return;}navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude,lng=pos.coords.longitude;window.map.setView([lat,lng],15);if(userMarker) window.map.removeLayer(userMarker);userMarker=L.marker([lat,lng],{icon:L.divIcon({html:'<div style="background:#3498db;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.6)"></div>',className:''})}).addTo(window.map).bindPopup("📍 Estás aquí").openPopup();selectedLat=lat;selectedLng=lng;userLat=lat;userLng=lng;if(currentMapMode==='avistamientos') loadAvistamientos(); else loadRutas();checkHotZone();setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Ubicación actual";document.getElementById('inp-ubicacion').value=lugar+" ("+lat.toFixed(5)+", "+lng.toFixed(5)+")";}).catch(()=>{});},100);},err=>{if(err.code===1) showToast('Permiso de ubicación bloqueado','error');else if(err.code===2) showToast('No se pudo detectar tu ubicación','error');else if(err.code===3) showToast('La ubicación tardó demasiado','error');else showToast('Error al obtener ubicación','error');},{enableHighAccuracy:false,timeout:5000,maximumAge:60000});}
+function toggleMapLayer(e){if(e){e.stopPropagation();e.preventDefault();}const btn=document.getElementById('layerToggleBtn');if(window.currentLayer==='topo'){window.map.removeLayer(window.topoLayer);window.darkLayer.addTo(window.map);window.currentLayer='dark';btn.innerHTML='🗺️ Senderos';}else{window.map.removeLayer(window.darkLayer);window.topoLayer.addTo(window.map);window.currentLayer='topo';btn.innerHTML='🌑 Vista oscura';}}
 function toggleMapFull(e){if(e){e.stopPropagation();e.preventDefault();}const m=document.getElementById('map'),b=document.getElementById('exitFullBtn');const f=m.classList.toggle('fullscreen');b.style.display=f?'block':'none';setTimeout(()=>{if(window.map) window.map.invalidateSize();},200);}
 function openImage(src){document.getElementById('imgModalContent').src=src;document.getElementById('imgModal').style.display='flex';}
 

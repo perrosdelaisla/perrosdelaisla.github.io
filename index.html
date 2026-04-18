@@ -303,6 +303,46 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .wp-start{width:22px;height:22px;border-radius:50%;background:#27ae60;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
 .wp-end{width:22px;height:22px;border-radius:50%;background:#c0392b;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
 .wp-mid{width:14px;height:14px;border-radius:50%;background:#2980b9;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+
+/* RANKING MODAL */
+.ranking-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:4000;align-items:center;justify-content:center;padding:20px}
+.ranking-modal.open{display:flex}
+.ranking-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;width:100%;max-width:400px;padding:20px;max-height:90vh;overflow-y:auto}
+.ranking-header{text-align:center;margin-bottom:16px}
+.ranking-header h2{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:1px}
+.ranking-header p{font-size:12px;color:#888;margin-top:4px}
+.ranking-list{display:flex;flex-direction:column;gap:6px}
+.ranking-item{display:flex;align-items:center;gap:10px;background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:10px 12px;transition:all .2s}
+.ranking-item.is-me{border-color:#9cb64b;background:#111a0a}
+.ranking-pos{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#555;width:28px;text-align:center;flex-shrink:0}
+.ranking-item:nth-child(1) .ranking-pos{color:#f9ca24;font-size:26px}
+.ranking-item:nth-child(2) .ranking-pos{color:#bdc3c7;font-size:24px}
+.ranking-item:nth-child(3) .ranking-pos{color:#cd7f32;font-size:24px}
+.ranking-avatar{width:36px;height:36px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;font-family:'Bebas Neue',sans-serif}
+.ranking-avatar img{width:100%;height:100%;object-fit:cover}
+.ranking-info{flex:1;min-width:0}
+.ranking-name{font-size:13px;font-weight:700;color:#f0f0f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ranking-dog{font-size:11px;color:#888}
+.ranking-score{text-align:right;flex-shrink:0}
+.ranking-pts{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#9cb64b}
+.ranking-label{font-size:9px;color:#666;text-transform:uppercase;letter-spacing:.5px}
+.ranking-close{width:100%;padding:10px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:14px;font-family:'Inter',sans-serif}
+.btn-ranking{width:100%;padding:10px;background:#111;color:#f9ca24;border:1px solid #333;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-ranking:active{background:#222}
+
+/* GPS RECORDING */
+.gps-toolbar{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:1600;background:#1a0a0a;border:1px solid #c0392b;border-radius:14px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+.gps-toolbar.active{display:block;animation:toastSlide .3s ease-out}
+.gps-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.gps-header h4{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#e74c3c;letter-spacing:.5px}
+.gps-stats{display:flex;gap:12px;font-size:12px;color:#cc8888}
+.gps-stats strong{color:#fff}
+.gps-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e74c3c;margin-right:4px;animation:gpsPulse 1.5s infinite}
+@keyframes gpsPulse{0%,100%{opacity:1}50%{opacity:.3}}
+.gps-actions{display:flex;gap:8px;margin-top:8px}
+.gps-actions button{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-gps-stop{background:#c0392b;color:#fff}
+.btn-gps-cancel{background:#222;color:#888;border:1px solid #333}
 </style>
 </head>
 <body>
@@ -388,6 +428,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <div id="hotZoneBox" style="display:none;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:12px;font-size:13px;color:#f0f0f0">🔥 <strong id="hotZoneText"></strong></div>
 
     <div class="avistamientos-content active" id="avistamientos-content">
+      <button class="btn-ranking" onclick="openRanking()">🏆 Ranking de la comunidad</button>
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
       <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#8e44ad"></div>Garrapatas</div><div class="leyenda-item"><div class="dot" style="background:#e67e22"></div>Cristales</div><div class="leyenda-item"><div class="dot" style="background:#2c3e50"></div>Veneno</div><div class="leyenda-item"><div class="dot" style="background:#7f8c8d"></div>Otro</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
@@ -396,12 +437,16 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     </div>
 
     <div class="rutas-content" id="rutas-content">
+      <button class="btn-ranking" onclick="openRanking()">🏆 Ranking de la comunidad</button>
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
       <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#27ae60"></div>Ruta verificada</div><div class="leyenda-item"><div class="dot" style="background:#b7950b"></div>Sugerencia pendiente</div><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Alerta procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
       <div class="rutas-filtros"><button class="rutas-filtro active" onclick="filterRutas('all',this)">Todas</button><button class="rutas-filtro" onclick="filterRutas('verificada',this)">✅ Verificadas</button><button class="rutas-filtro" onclick="filterRutas('corta',this)">Corta</button><button class="rutas-filtro" onclick="filterRutas('media',this)">Media</button><button class="rutas-filtro" onclick="filterRutas('larga',this)">Larga</button><button class="rutas-filtro" onclick="filterRutas('facil',this)">Fácil</button></div>
       <div class="avist-list"><h3>Rutas de paseo</h3><div id="rutas-container"><p style="color:#555;font-size:13px">Cargando rutas...</p></div></div>
-      <button class="reportar-ruta-btn" onclick="openRutaModal()">🐕 Sugerir ruta de paseo</button>
+      <div style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:1500;display:flex;gap:8px">
+        <button onclick="openRutaModal()" style="flex:1;padding:14px;background:#2980b9;color:#fff;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.4)">🐕 Trazar ruta</button>
+        <button onclick="startGpsRecording()" style="flex:1;padding:14px;background:#27ae60;color:#fff;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.4)">📡 Grabar paseo</button>
+      </div>
     </div>
     <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
   </div>
@@ -422,6 +467,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
       <div class="srv-card"><div class="srv-name">Educación Canina Básica y Avanzada</div><div class="srv-text">Obediencia, modales en casa, paseo correcto, llamada y convivencia diaria.</div><a class="wa-btn" href="#" onclick="return openWhatsApp('educacion')">💬 Consultar por WhatsApp</a></div>
       <div class="srv-card"><div class="srv-name">Control de Reactividad e Impulsividad</div><div class="srv-text">Para perros que reaccionan ante otros perros, personas o estímulos del entorno.</div><a class="wa-btn" href="#" onclick="return openWhatsApp('reactividad')">💬 Consultar por WhatsApp</a></div>
       <div class="srv-card"><div class="srv-name">Educación Temprana para Cachorros</div><div class="srv-text">Socialización, higiene, autocontrol y bases sólidas desde el principio.</div><a class="wa-btn" href="#" onclick="return openWhatsApp('cachorros')">💬 Consultar por WhatsApp</a></div>
+      <div class="srv-card"><div class="srv-name">Gestión de Ansiedad y Miedos</div><div class="srv-text">Para perros con ansiedad por separación, miedos a ruidos, tormentas, entornos nuevos o inseguridades que afectan su bienestar emocional.</div><a class="wa-btn" href="#" onclick="return openWhatsApp('ansiedad')">💬 Consultar por WhatsApp</a></div>
       <div class="adi-title">Actividades en Grupo</div>
       <div class="group-card"><div class="badge-season">🌿 Actividad Estacional</div><div class="srv-name">Expediciones Caninas</div><div class="srv-text">Paseos grupales educativos y socialización en naturaleza. Fechas anunciadas en Instagram.</div><a class="ig-btn" href="https://instagram.com/perrosdelaisla" target="_blank" rel="noopener">📣 Ver anuncios en Instagram</a></div>
       <a href="https://instagram.com/perrosdelaisla" target="_blank" rel="noopener" class="ig-card"><div class="ig-logo">📷</div><div><div class="ig-user">@perrosdelaisla</div><div class="ig-sub">Sígueme para novedades, consejos y actividades</div></div></a>
@@ -466,6 +512,25 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
   </div>
 </div>
 
+<!-- RANKING MODAL -->
+<div class="ranking-modal" id="rankingModal">
+  <div class="ranking-card">
+    <div class="ranking-header"><h2>🏆 Ranking de la Comunidad</h2><p>Los más activos protegiendo los paseos en Mallorca</p></div>
+    <div class="ranking-list" id="ranking-list"><p style="color:#555;font-size:13px;text-align:center">Cargando ranking...</p></div>
+    <button class="ranking-close" onclick="closeRanking()">Cerrar</button>
+  </div>
+</div>
+
+<!-- GPS RECORDING TOOLBAR -->
+<div class="gps-toolbar" id="gpsToolbar">
+  <div class="gps-header"><h4><span class="gps-dot"></span> Grabando paseo</h4></div>
+  <div class="gps-stats"><span>📍 <strong id="gpsPoints">0</strong> puntos</span><span>📏 <strong id="gpsDist">0 m</strong></span><span>⏱️ <strong id="gpsTime">0:00</strong></span></div>
+  <div class="gps-actions">
+    <button class="btn-gps-cancel" onclick="cancelGpsRecording()">✕ Cancelar</button>
+    <button class="btn-gps-stop" onclick="stopGpsRecording()">✓ Terminar y guardar</button>
+  </div>
+</div>
+
 <!-- BARRA DE TRAZADO DE RUTA -->
 <div class="trace-toolbar" id="traceToolbar">
   <div class="trace-header"><h4>🐕 Trazando ruta</h4><span class="trace-count" id="traceCount">0 puntos</span></div>
@@ -486,7 +551,7 @@ const SUPA_URL="https://vqpdrncugaipfpcmpout.supabase.co";
 const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxcGRybmN1Z2FpcGZwY21wb3V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwODcxNTUsImV4cCI6MjA5MTY2MzE1NX0.5EZ026A8BvsbPuffe9dyg-Qo7yL3vXvOqxEwb35KY_E";
 const HEADERS={"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
 const WA="34622922173";
-const WA_MSG={educacion:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Educación canina básica y avanzada.",reactividad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Control de reactividad e impulsividad.",cachorros:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el programa de Educación temprana para cachorros.",general:"Hola, te escribo desde la app de Perros de la Isla. Me gustaría consultarte sobre vuestros servicios de adiestramiento."};
+const WA_MSG={educacion:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Educación canina básica y avanzada.",reactividad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Control de reactividad e impulsividad.",cachorros:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el programa de Educación temprana para cachorros.",ansiedad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Gestión de ansiedad y miedos.",general:"Hola, te escribo desde la app de Perros de la Isla. Me gustaría consultarte sobre vuestros servicios de adiestramiento."};
 function openWhatsApp(s){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(WA_MSG[s]||WA_MSG.general),"_blank");return false;}
 
 function previewPhoto(event){const file=event.target.files[0];const wrap=document.getElementById('previewWrap');const img=document.getElementById('previewImg');if(!file){wrap.style.display='none';img.src='';return;}const reader=new FileReader();reader.onload=function(e){img.src=e.target.result;wrap.style.display='block';};reader.readAsDataURL(file);}
@@ -718,6 +783,121 @@ function goToUserLocation(){if(!navigator.geolocation){showToast('Tu dispositivo
 function toggleMapLayer(e){if(e){e.stopPropagation();e.preventDefault();}const btn=document.getElementById('layerToggleBtn');if(window.currentLayer==='topo'){window.map.removeLayer(window.topoLayer);window.darkLayer.addTo(window.map);window.currentLayer='dark';btn.innerHTML='🗺️ Senderos';}else{window.map.removeLayer(window.darkLayer);window.topoLayer.addTo(window.map);window.currentLayer='topo';btn.innerHTML='🌑 Vista oscura';}}
 function toggleMapFull(e){if(e){e.stopPropagation();e.preventDefault();}const m=document.getElementById('map'),b=document.getElementById('exitFullBtn');const f=m.classList.toggle('fullscreen');b.style.display=f?'block':'none';setTimeout(()=>{if(window.map) window.map.invalidateSize();},200);}
 function openImage(src){document.getElementById('imgModalContent').src=src;document.getElementById('imgModal').style.display='flex';}
+
+// ===== RANKING =====
+async function openRanking(){
+  document.getElementById('rankingModal').classList.add('open');
+  const container=document.getElementById('ranking-list');
+  container.innerHTML='<p style="color:#555;font-size:13px;text-align:center">Cargando ranking...</p>';
+  try{
+    // Fetch all users
+    const ur=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto',{headers:HEADERS});
+    const users=await ur.json();
+    // Fetch report counts per user
+    const ar=await fetch(SUPA_URL+'/rest/v1/avistamientos?select=reporter_id&status=eq.activo',{headers:HEADERS});
+    const alertas=await ar.json();
+    // Fetch route counts per user
+    const rr=await fetch(SUPA_URL+'/rest/v1/rutas?select=reporter_id,verificada&status=eq.activo',{headers:HEADERS});
+    const rutas=await rr.json();
+    // Calculate scores
+    const scores={};
+    alertas.forEach(a=>{if(a.reporter_id){scores[a.reporter_id]=(scores[a.reporter_id]||0)+10;}});
+    rutas.forEach(r=>{if(r.reporter_id){scores[r.reporter_id]=(scores[r.reporter_id]||0)+15;if(r.verificada) scores[r.reporter_id]+=25;}});
+    // Build ranking
+    const ranking=users.map(u=>({...u,score:scores[u.id]||0})).filter(u=>u.score>0).sort((a,b)=>b.score-a.score).slice(0,15);
+    if(ranking.length===0){container.innerHTML='<p style="color:#555;font-size:13px;text-align:center">Aún no hay actividad. ¡Sé el primero en reportar o compartir una ruta!</p>';return;}
+    container.innerHTML=ranking.map((u,i)=>{
+      const isMe=u.id===USER_ID;
+      const displayName=u.visible?u.nombre:'Un vecino de '+u.zona;
+      const displayDog=u.visible&&u.nombre_perro?' y '+u.nombre_perro+' 🐕':'';
+      const avatarHtml=u.foto&&u.visible?`<img src="${u.foto}" alt="">`:(u.visible?u.nombre.charAt(0).toUpperCase():'?');
+      return `<div class="ranking-item ${isMe?'is-me':''}"><div class="ranking-pos">${i+1}</div><div class="ranking-avatar">${avatarHtml}</div><div class="ranking-info"><div class="ranking-name">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div><div class="ranking-dog">${escapeHtml(u.zona)}</div></div><div class="ranking-score"><div class="ranking-pts">${u.score}</div><div class="ranking-label">puntos</div></div></div>`;
+    }).join('');
+  }catch(e){container.innerHTML='<p style="color:#c0392b;font-size:13px;text-align:center">Error cargando ranking.</p>';}
+}
+function closeRanking(){document.getElementById('rankingModal').classList.remove('open');}
+
+// ===== GPS RECORDING =====
+let gpsWatchId=null,gpsWaypoints=[],gpsMarkers=[],gpsPolyline=null,gpsStartTime=null,gpsTimerInterval=null;
+
+function startGpsRecording(){
+  if(!window.map){showToast('Abre primero el mapa','error');return;}
+  if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}
+  if(!navigator.geolocation){showToast('Tu dispositivo no soporta geolocalización','error');return;}
+  // Clean up
+  gpsWaypoints=[];gpsMarkers.forEach(m=>window.map.removeLayer(m));gpsMarkers=[];
+  if(gpsPolyline){window.map.removeLayer(gpsPolyline);gpsPolyline=null;}
+  reportMode=false;traceMode=false;
+  document.getElementById('gpsToolbar').classList.add('active');
+  gpsStartTime=Date.now();
+  updateGpsUI();
+  gpsTimerInterval=setInterval(updateGpsTimer,1000);
+  showToast('📡 Grabando tu paseo... ¡Camina!','success');
+  gpsWatchId=navigator.geolocation.watchPosition(pos=>{
+    const pt={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    // Skip if too close to last point (< 5m)
+    if(gpsWaypoints.length>0){const last=gpsWaypoints[gpsWaypoints.length-1];if(getDistance(last.lat,last.lng,pt.lat,pt.lng)<0.005) return;}
+    gpsWaypoints.push(pt);
+    // Add marker for first point
+    if(gpsWaypoints.length===1){
+      const mk=L.marker([pt.lat,pt.lng],{icon:L.divIcon({html:'<div class="wp-start">A</div>',iconSize:[22,22],iconAnchor:[11,11],className:''})}).addTo(window.map);
+      gpsMarkers.push(mk);
+      window.map.setView([pt.lat,pt.lng],16);
+    }
+    // Draw/update polyline
+    const latlngs=gpsWaypoints.map(w=>[w.lat,w.lng]);
+    if(gpsPolyline){gpsPolyline.setLatLngs(latlngs);}
+    else{gpsPolyline=L.polyline(latlngs,{color:'#e74c3c',weight:4,opacity:0.9}).addTo(window.map);}
+    window.map.panTo([pt.lat,pt.lng]);
+    updateGpsUI();
+  },err=>{showToast('Error de GPS: '+err.message,'error');},{enableHighAccuracy:true,timeout:10000,maximumAge:3000});
+}
+
+function updateGpsUI(){
+  document.getElementById('gpsPoints').textContent=gpsWaypoints.length;
+  const dist=calcWaypointsDistance(gpsWaypoints);
+  document.getElementById('gpsDist').textContent=dist===null?'0 m':(dist<1?Math.round(dist*1000)+' m':dist.toFixed(1)+' km');
+}
+
+function updateGpsTimer(){
+  if(!gpsStartTime) return;
+  const s=Math.floor((Date.now()-gpsStartTime)/1000);
+  const m=Math.floor(s/60);const ss=s%60;
+  document.getElementById('gpsTime').textContent=m+':'+(ss<10?'0':'')+ss;
+}
+
+function cancelGpsRecording(){
+  if(gpsWatchId!==null){navigator.geolocation.clearWatch(gpsWatchId);gpsWatchId=null;}
+  clearInterval(gpsTimerInterval);gpsTimerInterval=null;gpsStartTime=null;
+  gpsMarkers.forEach(m=>window.map.removeLayer(m));gpsMarkers=[];
+  if(gpsPolyline){window.map.removeLayer(gpsPolyline);gpsPolyline=null;}
+  gpsWaypoints=[];
+  document.getElementById('gpsToolbar').classList.remove('active');
+  showToast('Grabación cancelada','error');
+}
+
+function stopGpsRecording(){
+  if(gpsWatchId!==null){navigator.geolocation.clearWatch(gpsWatchId);gpsWatchId=null;}
+  clearInterval(gpsTimerInterval);gpsTimerInterval=null;gpsStartTime=null;
+  document.getElementById('gpsToolbar').classList.remove('active');
+  if(gpsWaypoints.length<2){showToast('Necesitas caminar un poco más para grabar la ruta','error');cancelGpsRecording();return;}
+  // Add end marker
+  const lastPt=gpsWaypoints[gpsWaypoints.length-1];
+  const mk=L.marker([lastPt.lat,lastPt.lng],{icon:L.divIcon({html:'<div class="wp-end">B</div>',iconSize:[22,22],iconAnchor:[11,11],className:''})}).addTo(window.map);
+  gpsMarkers.push(mk);
+  // Transfer to trace system and open form
+  traceWaypoints=gpsWaypoints.slice();
+  traceMarkers=gpsMarkers.slice();
+  tracePolyline=gpsPolyline;
+  gpsWaypoints=[];gpsMarkers=[];gpsPolyline=null;
+  selectedLat=traceWaypoints[0].lat;selectedLng=traceWaypoints[0].lng;
+  // Auto-fill distance
+  const distKm=calcWaypointsDistance(traceWaypoints);
+  if(distKm!==null){const sel=document.getElementById('ruta-distancia');if(distKm<2) sel.value='Corta (< 2 km)';else if(distKm<=5) sel.value='Media (2-5 km)';else sel.value='Larga (> 5 km)';}
+  document.getElementById('rutaModal').classList.add('open');
+  setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Zona desconocida";document.getElementById('ruta-nombre').placeholder=lugar+' — nombre de la ruta';}).catch(()=>{});},100);
+  showToast(`📡 Ruta grabada: ${traceWaypoints.length} puntos`,'success');
+}
 
 let deferredPrompt;function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;}
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(!isStandalone()&&!localStorage.getItem('bannerClosed')) document.getElementById('installBanner').style.display='block';});

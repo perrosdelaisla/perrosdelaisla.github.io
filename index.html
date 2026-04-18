@@ -537,6 +537,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <div class="form-group"><label>Categoría</label><select id="inter-cat"><option value="Juguetes">🧸 Juguetes</option><option value="Correas">🦮 Correas / Arneses</option><option value="Ropa">🧥 Ropa / Abrigos</option><option value="Camas">🛏️ Camas / Transportines</option><option value="Comederos">🍽️ Comederos / Bebederos</option><option value="Otro">📦 Otro</option></select></div>
     <div class="form-group"><label>Estado del artículo</label><select id="inter-estado"><option value="Nuevo">Nuevo / Sin usar</option><option value="Como nuevo">Como nuevo</option><option value="Usado">Usado — Buen estado</option><option value="Usado regular">Usado — Estado regular</option></select></div>
     <div class="form-group"><label>Descripción</label><textarea id="inter-desc" placeholder="Describe el artículo, talla, color, motivo..."></textarea></div>
+    <div class="form-group"><label>Tu WhatsApp (para que te contacten)</label><input type="tel" id="inter-whatsapp" placeholder="Ej: 612345678" style="width:100%;padding:10px 12px;border:1px solid #333;border-radius:8px;font-size:14px;color:#f0f0f0;background:#111;font-family:'Inter',sans-serif"><p style="font-size:11px;color:#666;margin-top:4px">Solo se usa para abrir el chat. No se muestra visible en el anuncio.</p></div>
     <div class="form-group"><label>Foto (opcional pero recomendada)</label><input type="file" id="inter-foto" accept="image/*" onchange="previewInterPhoto(event)" style="display:none"><div style="display:flex;gap:8px;margin-top:8px"><button type="button" onclick="document.getElementById('inter-foto').setAttribute('capture','environment');document.getElementById('inter-foto').click()" style="flex:1;padding:10px;background:#e67e22;color:#fff;border:none;border-radius:8px;cursor:pointer">📷 Cámara</button><button type="button" onclick="document.getElementById('inter-foto').removeAttribute('capture');document.getElementById('inter-foto').click()" style="flex:1;padding:10px;background:#222;color:#fff;border:1px solid #444;border-radius:8px;cursor:pointer">🖼️ Galería</button></div><div id="interPreviewWrap" style="display:none;margin-top:10px"><img id="interPreviewImg" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;border:1px solid #333"></div></div>
     <div class="modal-actions"><button class="btn-cancel" onclick="closeInterModal()">Cancelar</button><button class="btn-submit" id="btn-submit-inter" onclick="submitInter()" style="background:#e67e22">Publicar</button></div>
   </div>
@@ -1039,13 +1040,13 @@ function renderInterList(items){
           <span class="dot-sep">·</span>
           <span style="color:${daysLeft<=3?'#e17055':'#666'}">${daysLeft} día${daysLeft!==1?'s':''} restante${daysLeft!==1?'s':''}</span>
         </div>
-        ${i.reporter_id!==USER_ID?`<button class="inter-contact" onclick="contactInter('${escapeHtml(i.titulo)}')">💬 Contactar por WhatsApp</button>`:'<p style="font-size:11px;color:#9cb64b;margin-top:8px;text-align:center">📌 Tu anuncio</p>'}
+        ${i.reporter_id!==USER_ID&&i.whatsapp?`<button class="inter-contact" onclick="contactInter('${escapeHtml(i.titulo)}','${escapeHtml(i.whatsapp)}')">💬 Contactar por WhatsApp</button>`:i.reporter_id!==USER_ID?'<p style="font-size:11px;color:#888;margin-top:8px;text-align:center">Este usuario no dejó WhatsApp</p>':'<p style="font-size:11px;color:#9cb64b;margin-top:8px;text-align:center">📌 Tu anuncio</p>'}
       </div>
     </div>`;
   }).join('');
 }
 
-function contactInter(titulo){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent("Hola, te escribo desde la app de Perros de la Isla. Me interesa el anuncio: "+titulo),"_blank");}
+function contactInter(titulo,wa){if(!wa){showToast('Este usuario no dejó WhatsApp','error');return;}const num=wa.replace(/\D/g,'');const fullNum=num.startsWith('34')?num:'34'+num;window.open("https://wa.me/"+fullNum+"?text="+encodeURIComponent("Hola, te escribo desde la app de Perros de la Isla. Me interesa tu anuncio: "+titulo),"_blank");}
 
 function filterInter(filter,btn){
   document.querySelectorAll('.inter-filtro').forEach(b=>b.classList.remove('active'));
@@ -1063,6 +1064,7 @@ function closeInterModal(){
   document.getElementById('interModal').classList.remove('open');
   document.getElementById('inter-titulo').value='';
   document.getElementById('inter-desc').value='';
+  document.getElementById('inter-whatsapp').value='';
   document.getElementById('inter-foto').value='';
   document.getElementById('interPreviewWrap').style.display='none';
   document.getElementById('interPreviewImg').src='';
@@ -1077,15 +1079,17 @@ async function submitInter(){
   const categoria=document.getElementById('inter-cat').value;
   const estado_articulo=document.getElementById('inter-estado').value;
   const file=document.getElementById('inter-foto').files[0];
+  const whatsapp=document.getElementById('inter-whatsapp').value.trim();
   const profile=getProfile();
 
   if(!titulo){showToast('Escribe un título para el anuncio','error');isSubmitting=false;return;}
+  if(!whatsapp){showToast('Añade tu WhatsApp para que puedan contactarte','error');isSubmitting=false;return;}
 
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Publicando...';
   try{
     let imageUrl=null;
     if(file){try{const compressed=await compressImage(file);const fn='inter_'+Date.now()+'_'+Math.random().toString(36).substr(2,6)+'.jpg';const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}
-    const res=await fetch(SUPA_URL+"/rest/v1/intercambios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({titulo,descripcion,tipo,categoria,estado_articulo,foto:imageUrl,reporter_id:USER_ID,zona:profile?.zona||'Mallorca',status:'activo'})});
+    const res=await fetch(SUPA_URL+"/rest/v1/intercambios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({titulo,descripcion,tipo,categoria,estado_articulo,foto:imageUrl,reporter_id:USER_ID,zona:profile?.zona||'Mallorca',status:'activo',whatsapp})});
     if(!res.ok){showToast('Error al publicar.','error');btn.disabled=false;btn.innerHTML='Publicar';isSubmitting=false;return;}
     closeInterModal();await loadIntercambios();showToast('🎁 ¡Anuncio publicado!','success');
   }catch(e){showToast('Error al publicar.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Publicar';}

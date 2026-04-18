@@ -188,6 +188,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .badge-item{background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:10px 8px;text-align:center;transition:all .3s}
 .badge-item.unlocked{border-color:#9cb64b;background:#111a0a}
 .badge-item.unlocked-ruta{border-color:#2980b9;background:#0a1520}
+.badge-item.unlocked-inter{border-color:#e67e22;background:#1a1400}
 .badge-item.locked{opacity:.35}
 .badge-emoji{font-size:24px;display:block;margin-bottom:4px}
 .badge-name{font-size:11px;font-weight:700;color:#fff;line-height:1.2}
@@ -343,6 +344,33 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .gps-actions button{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
 .btn-gps-stop{background:#c0392b;color:#fff}
 .btn-gps-cancel{background:#222;color:#888;border:1px solid #333}
+
+/* INTERCAMBIOS / COMUNIDAD */
+.nav button.nav-comunidad.active{color:#e67e22;border-bottom-color:#e67e22}
+.inter-banner{background:#1a1400;border:1px solid #3a2a00;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:#d4a017;line-height:1.6}
+.inter-banner strong{color:#f9ca24}
+.inter-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;overflow:hidden;margin-bottom:12px}
+.inter-card-img{width:100%;height:160px;object-fit:cover;display:block;background:#111;cursor:pointer}
+.inter-card-body{padding:14px}
+.inter-card-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.inter-card-header h4{flex:1;font-size:15px;font-weight:700;color:#f0f0f0;line-height:1.3}
+.inter-tipo{display:inline-flex;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;flex-shrink:0}
+.inter-tipo.regalo{background:#0a2a15;color:#27ae60;border:1px solid #1a5a3a}
+.inter-tipo.trueque{background:#1a1a0a;color:#f9ca24;border:1px solid #3a3a1a}
+.inter-tipo.busco{background:#0a1520;color:#5dade2;border:1px solid #1a3555}
+.inter-desc{font-size:13px;color:#999;line-height:1.55;margin-bottom:8px}
+.inter-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.inter-tag{padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;background:#111;border:1px solid #2a2a2a;color:#aaa}
+.inter-meta{font-size:11px;color:#666;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.inter-contact{width:100%;padding:10px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:6px}
+.inter-contact:active{background:#1fb757}
+.inter-filtros{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
+.inter-filtros::-webkit-scrollbar{display:none}
+.inter-filtro{padding:6px 14px;border-radius:20px;border:1px solid #333;background:#1a1a1a;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#666;cursor:pointer;white-space:nowrap;transition:all .2s}
+.inter-filtro.active{background:#e67e22;color:#fff;border-color:#e67e22}
+.inter-empty{text-align:center;padding:30px 16px;color:#555;font-size:13px;line-height:1.6}
+.btn-publicar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;padding:14px;background:#e67e22;color:#fff;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;z-index:1500;box-shadow:0 8px 20px rgba(0,0,0,0.4)}
+.btn-publicar:active{background:#d35400}
 </style>
 </head>
 <body>
@@ -382,11 +410,14 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
       <div class="stat-box"><div class="stat-num" id="prof-reports">0</div><div class="stat-label">Alertas</div></div>
       <div class="stat-box"><div class="stat-num" id="prof-confirms">0</div><div class="stat-label">Votos</div></div>
       <div class="stat-box"><div class="stat-num" id="prof-rutas">0</div><div class="stat-label">Rutas</div></div>
+      <div class="stat-box"><div class="stat-num" id="prof-inter">0</div><div class="stat-label">Trueques</div></div>
     </div>
     <div class="badges-title">⚠️ Insignias de alerta</div>
     <div class="badges-grid" id="badges-grid-alertas"></div>
     <div class="badges-title" style="color:#5dade2">🗺️ Insignias de rutas</div>
     <div class="badges-grid" id="badges-grid-rutas"></div>
+    <div class="badges-title" style="color:#e67e22">🎁 Insignias de trueque</div>
+    <div class="badges-grid" id="badges-grid-inter"></div>
     <div class="profile-actions">
       <button class="btn-profile-edit" onclick="editProfile()">✏️ Editar perfil</button>
       <button class="btn-profile-close" onclick="closeProfile()">Cerrar</button>
@@ -405,7 +436,8 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <button class="active" onclick="showTab('info',this)"><span>⚠️</span>Alerta</button>
     <button onclick="showTab('mapa',this)"><span>🗺️</span>Mapa</button>
     <button onclick="showTab('vets',this)"><span>🏥</span>Urgencias</button>
-    <button class="nav-training" onclick="showTab('adiestramiento',this)"><span>🐾</span>Adiestramiento</button>
+    <button class="nav-training" onclick="showTab('adiestramiento',this)"><span>🐾</span>Servicios</button>
+    <button class="nav-comunidad" onclick="showTab('intercambios',this)"><span>🎁</span>Trueque</button>
   </nav>
 
   <div id="info" class="section active">
@@ -476,6 +508,37 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
       <div class="final-msg">TU PERRO MERECE<br>SER FELIZ, HOY.</div>
       <div class="final-sub">Perros de la Isla · Palma de Mallorca</div>
     </div>
+  </div>
+
+  <!-- INTERCAMBIOS / TRUEQUE -->
+  <div id="intercambios" class="section">
+    <div class="inter-banner">🐾 <strong>Consejos para intercambios seguros</strong><br>Queda siempre en un lugar público y concurrido. No compartas tu dirección personal. Revisa el artículo antes de aceptarlo. Si algo no te da buena espina, confía en tu instinto.<br><span style="color:#996600;font-size:11px;margin-top:4px;display:block">Perros de la Isla facilita el contacto pero no se responsabiliza de los intercambios entre usuarios.</span></div>
+    <div class="inter-filtros">
+      <button class="inter-filtro active" onclick="filterInter('all',this)">Todos</button>
+      <button class="inter-filtro" onclick="filterInter('Regalo',this)">🎁 Regalos</button>
+      <button class="inter-filtro" onclick="filterInter('Trueque',this)">🔄 Trueque</button>
+      <button class="inter-filtro" onclick="filterInter('Busco',this)">🔍 Busco</button>
+      <button class="inter-filtro" onclick="filterInter('Juguetes',this)">🧸 Juguetes</button>
+      <button class="inter-filtro" onclick="filterInter('Correas',this)">🦮 Correas</button>
+      <button class="inter-filtro" onclick="filterInter('Ropa',this)">🧥 Ropa</button>
+    </div>
+    <div id="inter-container"><p style="color:#555;font-size:13px;text-align:center">Cargando anuncios...</p></div>
+    <button class="btn-publicar" onclick="openInterModal()">🎁 Publicar anuncio</button>
+    <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Comunidad canina de Mallorca · @perrosdelaisla</p></div>
+  </div>
+</div>
+
+<!-- MODAL PUBLICAR INTERCAMBIO -->
+<div class="modal" id="interModal">
+  <div class="modal-box">
+    <h2>🎁 Publicar anuncio</h2>
+    <div class="form-group"><label>¿Qué quieres hacer?</label><select id="inter-tipo"><option value="Regalo">🎁 Regalar algo</option><option value="Trueque">🔄 Intercambiar / Trueque</option><option value="Busco">🔍 Busco algo</option></select></div>
+    <div class="form-group"><label>Título</label><input type="text" id="inter-titulo" placeholder="Ej: Arnés talla M, Pelota Kong, Abrigo pequeño..."></div>
+    <div class="form-group"><label>Categoría</label><select id="inter-cat"><option value="Juguetes">🧸 Juguetes</option><option value="Correas">🦮 Correas / Arneses</option><option value="Ropa">🧥 Ropa / Abrigos</option><option value="Camas">🛏️ Camas / Transportines</option><option value="Comederos">🍽️ Comederos / Bebederos</option><option value="Otro">📦 Otro</option></select></div>
+    <div class="form-group"><label>Estado del artículo</label><select id="inter-estado"><option value="Nuevo">Nuevo / Sin usar</option><option value="Como nuevo">Como nuevo</option><option value="Usado">Usado — Buen estado</option><option value="Usado regular">Usado — Estado regular</option></select></div>
+    <div class="form-group"><label>Descripción</label><textarea id="inter-desc" placeholder="Describe el artículo, talla, color, motivo..."></textarea></div>
+    <div class="form-group"><label>Foto (opcional pero recomendada)</label><input type="file" id="inter-foto" accept="image/*" onchange="previewInterPhoto(event)" style="display:none"><div style="display:flex;gap:8px;margin-top:8px"><button type="button" onclick="document.getElementById('inter-foto').setAttribute('capture','environment');document.getElementById('inter-foto').click()" style="flex:1;padding:10px;background:#e67e22;color:#fff;border:none;border-radius:8px;cursor:pointer">📷 Cámara</button><button type="button" onclick="document.getElementById('inter-foto').removeAttribute('capture');document.getElementById('inter-foto').click()" style="flex:1;padding:10px;background:#222;color:#fff;border:1px solid #444;border-radius:8px;cursor:pointer">🖼️ Galería</button></div><div id="interPreviewWrap" style="display:none;margin-top:10px"><img id="interPreviewImg" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;border:1px solid #333"></div></div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeInterModal()">Cancelar</button><button class="btn-submit" id="btn-submit-inter" onclick="submitInter()" style="background:#e67e22">Publicar</button></div>
   </div>
 </div>
 
@@ -593,11 +656,23 @@ const BADGES_RUTAS=[
 
 function getHighestBadge(r,v){const u=BADGES_ALERTAS.filter(b=>b.check(r,v));return u.length>0?u[u.length-1]:null;}
 
-function renderAllBadges(reports,votes,rutasTotal,rutasVerificadas,hasDetailedRoute){
+// ===== INSIGNIAS DE TRUEQUE =====
+const BADGES_INTER=[
+  {id:'buen_vecino',emoji:'🤝',name:'Buen Vecino',desc:'Publicar tu primer anuncio',check:(total,regalos)=>total>=1},
+  {id:'corazon_perruno',emoji:'💛',name:'Corazón Perruno',desc:'Regalar 3 artículos',check:(total,regalos)=>regalos>=3},
+  {id:'reciclador',emoji:'♻️',name:'Reciclador Canino',desc:'5 anuncios publicados',check:(total,regalos)=>total>=5},
+  {id:'alma_generosa',emoji:'🌟',name:'Alma Generosa',desc:'Regalar 10 artículos',check:(total,regalos)=>regalos>=10},
+  {id:'mercadillo_pro',emoji:'🏪',name:'Mercadillo Pro',desc:'15 anuncios publicados',check:(total,regalos)=>total>=15},
+  {id:'santa_paws',emoji:'🎅',name:'Santa Paws',desc:'20 regalos a la comunidad',check:(total,regalos)=>regalos>=20}
+];
+
+function renderAllBadges(reports,votes,rutasTotal,rutasVerificadas,hasDetailedRoute,interTotal,interRegalos){
   // Alertas
   document.getElementById('badges-grid-alertas').innerHTML=BADGES_ALERTAS.map(b=>{const u=b.check(reports,votes);return `<div class="badge-item ${u?'unlocked':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
   // Rutas
   document.getElementById('badges-grid-rutas').innerHTML=BADGES_RUTAS.map(b=>{const u=b.check(rutasTotal,rutasVerificadas,hasDetailedRoute);return `<div class="badge-item ${u?'unlocked-ruta':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
+  // Trueque
+  document.getElementById('badges-grid-inter').innerHTML=BADGES_INTER.map(b=>{const u=b.check(interTotal||0,interRegalos||0);return `<div class="badge-item ${u?'unlocked-inter':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
 }
 
 // PERFIL
@@ -642,7 +717,17 @@ async function openProfile(){
   }catch(e){}
   document.getElementById('prof-rutas').textContent=rutasTotal;
 
-  renderAllBadges(reportCount,voteCount,rutasTotal,rutasVerificadas,hasDetailedRoute);
+  // Fetch intercambios stats
+  let interTotal=0,interRegalos=0;
+  try{
+    const ir=await fetch(SUPA_URL+`/rest/v1/intercambios?reporter_id=eq.${USER_ID}&select=id,tipo`,{headers:HEADERS});
+    const interData=await ir.json();
+    interTotal=interData.length||0;
+    interRegalos=interData.filter(i=>i.tipo==='Regalo').length;
+  }catch(e){}
+  document.getElementById('prof-inter').textContent=interTotal;
+
+  renderAllBadges(reportCount,voteCount,rutasTotal,rutasVerificadas,hasDetailedRoute,interTotal,interRegalos);
   document.getElementById('profileModal').classList.add('open');
 }
 
@@ -799,10 +884,14 @@ async function openRanking(){
     // Fetch route counts per user
     const rr=await fetch(SUPA_URL+'/rest/v1/rutas?select=reporter_id,verificada&status=eq.activo',{headers:HEADERS});
     const rutas=await rr.json();
+    // Fetch intercambios per user
+    const ii=await fetch(SUPA_URL+'/rest/v1/intercambios?select=reporter_id,tipo&status=eq.activo',{headers:HEADERS});
+    const intercambios=await ii.json();
     // Calculate scores
     const scores={};
     alertas.forEach(a=>{if(a.reporter_id){scores[a.reporter_id]=(scores[a.reporter_id]||0)+10;}});
     rutas.forEach(r=>{if(r.reporter_id){scores[r.reporter_id]=(scores[r.reporter_id]||0)+15;if(r.verificada) scores[r.reporter_id]+=25;}});
+    intercambios.forEach(i=>{if(i.reporter_id){scores[i.reporter_id]=(scores[i.reporter_id]||0)+(i.tipo==='Regalo'?20:10);}});
     // Build ranking
     const ranking=users.map(u=>({...u,score:scores[u.id]||0})).filter(u=>u.score>0).sort((a,b)=>b.score-a.score).slice(0,15);
     if(ranking.length===0){container.innerHTML='<p style="color:#555;font-size:13px;text-align:center">Aún no hay actividad. ¡Sé el primero en reportar o compartir una ruta!</p>';return;}
@@ -832,7 +921,11 @@ function startGpsRecording(){
   gpsStartTime=Date.now();
   updateGpsUI();
   gpsTimerInterval=setInterval(updateGpsTimer,1000);
-  showToast('📡 Grabando tu paseo... ¡Camina!','success');
+  showToast('📡 Grabando... ¡No bloquees la pantalla!','success');
+  // Try wake lock to keep screen on
+  if('wakeLock' in navigator){try{navigator.wakeLock.request('screen').then(wl=>{window._wakeLock=wl;}).catch(()=>{});}catch(e){}}
+  // Show persistent warning
+  setTimeout(()=>{showToast('⚠️ Mantén la pantalla encendida mientras grabas','error');},4000);
   gpsWatchId=navigator.geolocation.watchPosition(pos=>{
     const pt={lat:pos.coords.latitude,lng:pos.coords.longitude};
     // Skip if too close to last point (< 5m)
@@ -869,6 +962,7 @@ function updateGpsTimer(){
 function cancelGpsRecording(){
   if(gpsWatchId!==null){navigator.geolocation.clearWatch(gpsWatchId);gpsWatchId=null;}
   clearInterval(gpsTimerInterval);gpsTimerInterval=null;gpsStartTime=null;
+  if(window._wakeLock){try{window._wakeLock.release();window._wakeLock=null;}catch(e){}}
   gpsMarkers.forEach(m=>window.map.removeLayer(m));gpsMarkers=[];
   if(gpsPolyline){window.map.removeLayer(gpsPolyline);gpsPolyline=null;}
   gpsWaypoints=[];
@@ -879,6 +973,7 @@ function cancelGpsRecording(){
 function stopGpsRecording(){
   if(gpsWatchId!==null){navigator.geolocation.clearWatch(gpsWatchId);gpsWatchId=null;}
   clearInterval(gpsTimerInterval);gpsTimerInterval=null;gpsStartTime=null;
+  if(window._wakeLock){try{window._wakeLock.release();window._wakeLock=null;}catch(e){}}
   document.getElementById('gpsToolbar').classList.remove('active');
   if(gpsWaypoints.length<2){showToast('Necesitas caminar un poco más para grabar la ruta','error');cancelGpsRecording();return;}
   // Add end marker
@@ -898,6 +993,107 @@ function stopGpsRecording(){
   setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Zona desconocida";document.getElementById('ruta-nombre').placeholder=lugar+' — nombre de la ruta';}).catch(()=>{});},100);
   showToast(`📡 Ruta grabada: ${traceWaypoints.length} puntos`,'success');
 }
+
+// ===== INTERCAMBIOS =====
+let allInter=[];
+
+function previewInterPhoto(event){const file=event.target.files[0];const wrap=document.getElementById('interPreviewWrap');const img=document.getElementById('interPreviewImg');if(!file){wrap.style.display='none';img.src='';return;}const reader=new FileReader();reader.onload=function(e){img.src=e.target.result;wrap.style.display='block';};reader.readAsDataURL(file);}
+
+async function loadIntercambios(){
+  try{
+    const res=await fetch(SUPA_URL+"/rest/v1/intercambios?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});
+    if(!res.ok){document.getElementById('inter-container').innerHTML='<p style="color:#c0392b;font-size:13px;text-align:center">Error cargando anuncios.</p>';return;}
+    allInter=await res.json();
+    // Filter out expired (>15 days)
+    allInter=allInter.filter(i=>{if(!i.created_at) return true;return(Date.now()-new Date(i.created_at).getTime())/86400000<=15;});
+    const reporterIds=[...new Set(allInter.map(i=>i.reporter_id).filter(Boolean))];
+    await loadNamesCache(reporterIds);
+    renderInterList(allInter);
+  }catch(e){document.getElementById('inter-container').innerHTML='<p style="color:#c0392b;font-size:13px;text-align:center">Error de conexión.</p>';}
+}
+
+function renderInterList(items){
+  const container=document.getElementById('inter-container');
+  if(items.length===0){container.innerHTML='<div class="inter-empty">🐕 Aún no hay anuncios publicados.<br>¡Sé el primero en compartir algo con la comunidad!</div>';return;}
+  container.innerHTML=items.map(i=>{
+    const nameInfo=i.reporter_id?namesCache[i.reporter_id]:null;
+    const reporterName=nameInfo?nameInfo.name:'Un vecino de Mallorca';
+    const tipoClass=i.tipo==='Regalo'?'regalo':i.tipo==='Trueque'?'trueque':'busco';
+    const tipoIcon=i.tipo==='Regalo'?'🎁':i.tipo==='Trueque'?'🔄':'🔍';
+    const catIcons={Juguetes:'🧸',Correas:'🦮',Ropa:'🧥',Camas:'🛏️',Comederos:'🍽️',Otro:'📦'};
+    const daysLeft=Math.max(0,15-Math.floor((Date.now()-new Date(i.created_at).getTime())/86400000));
+    return `<div class="inter-card">
+      ${i.foto?`<img src="${i.foto}" alt="${escapeHtml(i.titulo)}" class="inter-card-img" onclick="openImage('${i.foto}')">`:''} 
+      <div class="inter-card-body">
+        <div class="inter-card-header"><h4>${escapeHtml(i.titulo)}</h4><span class="inter-tipo ${tipoClass}">${tipoIcon} ${i.tipo}</span></div>
+        <p class="inter-desc">${escapeHtml(i.descripcion||'Sin descripción')}</p>
+        <div class="inter-tags">
+          <span class="inter-tag">${catIcons[i.categoria]||'📦'} ${escapeHtml(i.categoria)}</span>
+          ${i.estado_articulo?`<span class="inter-tag">📋 ${escapeHtml(i.estado_articulo)}</span>`:''}
+          ${i.zona?`<span class="inter-tag">📍 ${escapeHtml(i.zona)}</span>`:''}
+        </div>
+        <div class="inter-meta">
+          <span>🕒 ${timeAgo(i.created_at)}</span>
+          <span class="dot-sep">·</span>
+          <span>${escapeHtml(reporterName)}</span>
+          <span class="dot-sep">·</span>
+          <span style="color:${daysLeft<=3?'#e17055':'#666'}">${daysLeft} día${daysLeft!==1?'s':''} restante${daysLeft!==1?'s':''}</span>
+        </div>
+        ${i.reporter_id!==USER_ID?`<button class="inter-contact" onclick="contactInter('${escapeHtml(i.titulo)}')">💬 Contactar por WhatsApp</button>`:'<p style="font-size:11px;color:#9cb64b;margin-top:8px;text-align:center">📌 Tu anuncio</p>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function contactInter(titulo){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent("Hola, te escribo desde la app de Perros de la Isla. Me interesa el anuncio: "+titulo),"_blank");}
+
+function filterInter(filter,btn){
+  document.querySelectorAll('.inter-filtro').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(filter==='all') renderInterList(allInter);
+  else if(['Regalo','Trueque','Busco'].includes(filter)) renderInterList(allInter.filter(i=>i.tipo===filter));
+  else renderInterList(allInter.filter(i=>i.categoria===filter));
+}
+
+function openInterModal(){
+  if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}
+  document.getElementById('interModal').classList.add('open');
+}
+function closeInterModal(){
+  document.getElementById('interModal').classList.remove('open');
+  document.getElementById('inter-titulo').value='';
+  document.getElementById('inter-desc').value='';
+  document.getElementById('inter-foto').value='';
+  document.getElementById('interPreviewWrap').style.display='none';
+  document.getElementById('interPreviewImg').src='';
+}
+
+async function submitInter(){
+  if(isSubmitting) return;isSubmitting=true;
+  const btn=document.getElementById('btn-submit-inter');
+  const titulo=document.getElementById('inter-titulo').value.trim();
+  const descripcion=document.getElementById('inter-desc').value.trim();
+  const tipo=document.getElementById('inter-tipo').value;
+  const categoria=document.getElementById('inter-cat').value;
+  const estado_articulo=document.getElementById('inter-estado').value;
+  const file=document.getElementById('inter-foto').files[0];
+  const profile=getProfile();
+
+  if(!titulo){showToast('Escribe un título para el anuncio','error');isSubmitting=false;return;}
+
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Publicando...';
+  try{
+    let imageUrl=null;
+    if(file){try{const compressed=await compressImage(file);const fn='inter_'+Date.now()+'_'+Math.random().toString(36).substr(2,6)+'.jpg';const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}
+    const res=await fetch(SUPA_URL+"/rest/v1/intercambios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({titulo,descripcion,tipo,categoria,estado_articulo,foto:imageUrl,reporter_id:USER_ID,zona:profile?.zona||'Mallorca',status:'activo'})});
+    if(!res.ok){showToast('Error al publicar.','error');btn.disabled=false;btn.innerHTML='Publicar';isSubmitting=false;return;}
+    closeInterModal();await loadIntercambios();showToast('🎁 ¡Anuncio publicado!','success');
+  }catch(e){showToast('Error al publicar.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Publicar';}
+}
+
+// Load intercambios when tab is shown
+const origShowTab=showTab;
+showTab=function(id,btn){origShowTab(id,btn);if(id==='intercambios') loadIntercambios();};
 
 let deferredPrompt;function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;}
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(!isStandalone()&&!localStorage.getItem('bannerClosed')) document.getElementById('installBanner').style.display='block';});

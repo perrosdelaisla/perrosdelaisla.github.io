@@ -956,7 +956,7 @@ function updateRetoBanner(){
     banner.innerHTML=`
       <div class="reto-gift">🎁</div>
       <div class="reto-title">Reto: ¡Comparte y Gana!</div>
-      <div class="reto-desc">Quien más comparta la app se lleva un <strong style="color:#f9ca24">arnés + juguete</strong> para su perro</div>
+      <div class="reto-desc">Quien más comparta la app se lleva un <strong style="color:#f9ca24">arnés + juguete + premio sorpresa 🎁</strong> para su perro</div>
       <div class="reto-countdown">
         <div class="reto-time-box"><div class="reto-time-num">${d}</div><div class="reto-time-label">Días</div></div>
         <div class="reto-time-box"><div class="reto-time-num">${h}</div><div class="reto-time-label">Horas</div></div>
@@ -999,7 +999,7 @@ async function loadRetoWinner(){
       <div class="reto-gift-open">🎉</div>
       <div class="reto-title">${isMe?'¡¡GANASTE!!':'¡Tenemos ganador!'}</div>
       <div class="reto-winner-name">${escapeHtml(name)}</div>
-      <div class="reto-winner-sub">${isMe?`¡Felicidades! Tú y ${escapeHtml(dog)} os lleváis el arnés + juguete 🐕`:`${escapeHtml(name)} y ${escapeHtml(dog)} se llevan el premio 🐕`}<br>Compartió ${winner.shares} veces · ¡Gracias por mover la comunidad!</div>
+      <div class="reto-winner-sub">${isMe?`¡Felicidades! Tú y ${escapeHtml(dog)} os lleváis el arnés + juguete + premio sorpresa 🎁`:`${escapeHtml(name)} y ${escapeHtml(dog)} se llevan el premio 🐕`}<br>Compartió ${winner.shares} veces · ¡Gracias por mover la comunidad!</div>
       <div class="reto-prize" style="margin-top:12px">🏆 Toca para ver el ranking completo</div>`;
   }catch(e){
     banner.innerHTML=`<div class="reto-gift-open">🎉</div><div class="reto-title">¡El reto ha terminado!</div><div class="reto-winner-sub">Toca para ver quién ganó</div>`;

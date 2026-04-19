@@ -188,6 +188,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .badge-item{background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:10px 8px;text-align:center;transition:all .3s}
 .badge-item.unlocked{border-color:#9cb64b;background:#111a0a}
 .badge-item.unlocked-ruta{border-color:#2980b9;background:#0a1520}
+.badge-item.unlocked-share{border-color:#9cb64b;background:#141a0a}
 .badge-item.locked{opacity:.35}
 .badge-emoji{font-size:24px;display:block;margin-bottom:4px}
 .badge-name{font-size:11px;font-weight:700;color:#fff;line-height:1.2}
@@ -414,6 +415,8 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <div class="badges-grid" id="badges-grid-alertas"></div>
     <div class="badges-title" style="color:#5dade2">🗺️ Insignias de rutas</div>
     <div class="badges-grid" id="badges-grid-rutas"></div>
+    <div class="badges-title" style="color:#9cb64b">📢 Insignias de difusión</div>
+    <div class="badges-grid" id="badges-grid-shares"></div>
     <div class="profile-actions">
       <button class="btn-profile-edit" onclick="editProfile()">✏️ Editar perfil</button>
       <button class="btn-profile-close" onclick="closeProfile()">Cerrar</button>
@@ -446,6 +449,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <div class="info-card card-urgente"><h3>Protocolo de emergencia</h3><div class="protocolo"><div class="paso"><div class="paso-num">1</div><p><strong>No toques</strong> la zona afectada sin guantes</p></div><div class="paso"><div class="paso-num">2</div><p>Lava con <strong>agua fría abundante</strong> durante 5–10 minutos</p></div><div class="paso"><div class="paso-num">3</div><p><strong>Ve al veterinario de urgencias de inmediato</strong></p></div><div class="paso"><div class="paso-num">4</div><p>Usa la pestaña <strong>Urgencias</strong> para encontrar la clínica más cercana</p></div></div></div>
     <div class="info-card zonas"><h3>Zonas de mayor riesgo en Mallorca</h3><p>🌲 Serra de Tramuntana — Sóller, Valldemossa, Deià<br>🌲 Bosques de Calvià y Andratx<br>🌲 Pinares de Llucmajor y Campos<br>🌲 Zona norte — Alcúdia, Pollença, Formentor<br>🌲 Cualquier pinar en toda la isla</p></div>
     <button class="btn-share" onclick="shareApp()">📢 Compartir app con amigos perrunos <span class="share-count" id="share-count-info"></span></button>
+    <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;margin-bottom:14px">Toca una vez por cada contacto para sumar puntos 🐾</p>
     <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
   </div>
 
@@ -460,6 +464,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <div class="avistamientos-content active" id="avistamientos-content">
       <button class="btn-ranking" onclick="openRanking()">🏆 Ranking de la comunidad</button>
       <button class="btn-share" onclick="shareApp()">📢 Compartir app <span class="share-count" id="share-count-avist"></span></button>
+      <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;margin-bottom:10px">Toca una vez por cada contacto para sumar puntos</p>
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
       <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#8e44ad"></div>Garrapatas</div><div class="leyenda-item"><div class="dot" style="background:#e67e22"></div>Cristales</div><div class="leyenda-item"><div class="dot" style="background:#2c3e50"></div>Veneno</div><div class="leyenda-item"><div class="dot" style="background:#7f8c8d"></div>Otro</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
@@ -470,6 +475,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
     <div class="rutas-content" id="rutas-content">
       <button class="btn-ranking" onclick="openRanking()">🏆 Ranking de la comunidad</button>
       <button class="btn-share" onclick="shareApp()">📢 Compartir app <span class="share-count" id="share-count-rutas"></span></button>
+      <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;margin-bottom:10px">Toca una vez por cada contacto para sumar puntos</p>
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
       <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#27ae60"></div>Ruta verificada</div><div class="leyenda-item"><div class="dot" style="background:#b7950b"></div>Sugerencia pendiente</div><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Alerta procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
@@ -625,9 +631,18 @@ const BADGES_RUTAS=[
 
 function getHighestBadge(r,v){const u=BADGES_ALERTAS.filter(b=>b.check(r,v));return u.length>0?u[u.length-1]:null;}
 
-function renderAllBadges(reports,votes,rutasTotal,rutasVerificadas,hasDetailedRoute){
+// ===== INSIGNIAS DE DIFUSIÓN =====
+const BADGES_SHARES=[
+  {id:'altavoz_perruno',emoji:'📢',name:'Altavoz Perruno',desc:'Compartir la app 1 vez',check:(s)=>s>=1},
+  {id:'megafono_manada',emoji:'📣',name:'Megáfono de la Manada',desc:'Compartir 5 veces',check:(s)=>s>=5},
+  {id:'embajador_canino',emoji:'🔊',name:'Embajador Canino',desc:'Compartir 15 veces',check:(s)=>s>=15},
+  {id:'viral_isla',emoji:'👑',name:'Viral de la Isla',desc:'Compartir 30 veces',check:(s)=>s>=30}
+];
+
+function renderAllBadges(reports,votes,rutasTotal,rutasVerificadas,hasDetailedRoute,sharesCount){
   document.getElementById('badges-grid-alertas').innerHTML=BADGES_ALERTAS.map(b=>{const u=b.check(reports,votes);return `<div class="badge-item ${u?'unlocked':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
   document.getElementById('badges-grid-rutas').innerHTML=BADGES_RUTAS.map(b=>{const u=b.check(rutasTotal,rutasVerificadas,hasDetailedRoute);return `<div class="badge-item ${u?'unlocked-ruta':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
+  document.getElementById('badges-grid-shares').innerHTML=BADGES_SHARES.map(b=>{const u=b.check(sharesCount||0);return `<div class="badge-item ${u?'unlocked-share':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
 }
 
 // PERFIL
@@ -672,7 +687,15 @@ async function openProfile(){
   }catch(e){}
   document.getElementById('prof-rutas').textContent=rutasTotal;
 
-  renderAllBadges(reportCount,voteCount,rutasTotal,rutasVerificadas,hasDetailedRoute);
+  // Fetch shares count
+  let sharesCount=0;
+  try{
+    const sr=await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=shares`,{headers:HEADERS});
+    const[su]=await sr.json();
+    sharesCount=su?.shares||0;
+  }catch(e){}
+
+  renderAllBadges(reportCount,voteCount,rutasTotal,rutasVerificadas,hasDetailedRoute,sharesCount);
   document.getElementById('profileModal').classList.add('open');
 }
 
@@ -1017,31 +1040,22 @@ const SHARE_TEXT='🐾 Paseos seguros para perros en Mallorca. Reporta peligros,
 
 async function shareApp(){
   if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}
-  let shared=false;
-  // Try native share API (mobile)
+  // Always count first, then share
+  let newCount=0;
+  try{
+    const r=await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=shares`,{headers:HEADERS});
+    const[u]=await r.json();
+    newCount=(u?.shares||0)+1;
+    await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}`,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify({shares:newCount})});
+    updateShareCounts(newCount);
+  }catch(e){}
+  // Now open share dialog
   if(navigator.share){
-    try{
-      await navigator.share({title:'Perros de la Isla — Paseos Seguros',text:SHARE_TEXT,url:SHARE_URL});
-      shared=true;
-    }catch(e){if(e.name!=='AbortError') shared=false;}
+    try{await navigator.share({title:'Perros de la Isla — Paseos Seguros',text:SHARE_TEXT,url:SHARE_URL});}catch(e){}
+  } else {
+    window.open('https://wa.me/?text='+encodeURIComponent(SHARE_TEXT+' '+SHARE_URL),'_blank');
   }
-  // Fallback: copy to clipboard + open WhatsApp
-  if(!shared){
-    const waUrl='https://wa.me/?text='+encodeURIComponent(SHARE_TEXT+' '+SHARE_URL);
-    window.open(waUrl,'_blank');
-    shared=true;
-  }
-  if(shared){
-    // Update shares count in Supabase
-    try{
-      const r=await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=shares`,{headers:HEADERS});
-      const[u]=await r.json();
-      const newCount=(u?.shares||0)+1;
-      await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}`,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify({shares:newCount})});
-      updateShareCounts(newCount);
-      showToast(`📢 ¡Compartido! Llevas ${newCount} · +5 puntos`,'success');
-    }catch(e){showToast('📢 ¡Compartido!','success');}
-  }
+  showToast(`📢 ¡+5 puntos! Llevas ${newCount} compartidas`,'success');
 }
 
 async function loadShareCount(){

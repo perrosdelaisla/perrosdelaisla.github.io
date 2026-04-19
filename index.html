@@ -410,6 +410,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
       <div class="stat-box"><div class="stat-num" id="prof-reports">0</div><div class="stat-label">Alertas</div></div>
       <div class="stat-box"><div class="stat-num" id="prof-confirms">0</div><div class="stat-label">Votos</div></div>
       <div class="stat-box"><div class="stat-num" id="prof-rutas">0</div><div class="stat-label">Rutas</div></div>
+      <div class="stat-box"><div class="stat-num" id="prof-shares">0</div><div class="stat-label">Shares</div></div>
     </div>
     <div class="badges-title">⚠️ Insignias de alerta</div>
     <div class="badges-grid" id="badges-grid-alertas"></div>
@@ -694,6 +695,7 @@ async function openProfile(){
     const[su]=await sr.json();
     sharesCount=su?.shares||0;
   }catch(e){}
+  document.getElementById('prof-shares').textContent=sharesCount;
 
   renderAllBadges(reportCount,voteCount,rutasTotal,rutasVerificadas,hasDetailedRoute,sharesCount);
   document.getElementById('profileModal').classList.add('open');

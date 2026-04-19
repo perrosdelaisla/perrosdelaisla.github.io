@@ -335,6 +335,28 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .btn-share:active{background:linear-gradient(135deg,#7a9a2a,#5a7a1a)}
 .btn-share .share-count{background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:12px;font-size:11px}
 
+/* COUNTDOWN RETO */
+.reto-banner{background:linear-gradient(135deg,#1a0a2a,#0a1a2a);border:1px solid #6c3483;border-radius:14px;padding:16px;margin-bottom:14px;text-align:center;cursor:pointer;overflow:hidden;position:relative}
+.reto-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 40%,rgba(155,89,182,0.08) 50%,transparent 60%);animation:retoShine 3s infinite}
+@keyframes retoShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.reto-gift{font-size:48px;display:inline-block;animation:giftShake 2s infinite;margin-bottom:8px}
+@keyframes giftShake{0%,100%{transform:rotate(0)}10%{transform:rotate(-8deg)}20%{transform:rotate(8deg)}30%{transform:rotate(-5deg)}40%{transform:rotate(5deg)}50%,100%{transform:rotate(0)}}
+.reto-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f9ca24;letter-spacing:1px;margin-bottom:4px}
+.reto-desc{font-size:12px;color:#bb99dd;line-height:1.5;margin-bottom:12px}
+.reto-countdown{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
+.reto-time-box{background:#111;border:1px solid #3a2a5a;border-radius:8px;padding:8px 12px;min-width:55px;text-align:center}
+.reto-time-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;line-height:1}
+.reto-time-label{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.reto-prize{font-size:11px;color:#9cb64b;font-weight:600;margin-top:6px}
+/* Winner reveal */
+.reto-banner.revealed{border-color:#f9ca24;background:linear-gradient(135deg,#1a1a00,#0a1a0a)}
+.reto-gift-open{font-size:56px;display:inline-block;animation:giftPop .6s ease-out;margin-bottom:8px}
+@keyframes giftPop{0%{transform:scale(0.3) rotate(-20deg);opacity:0}50%{transform:scale(1.3) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.reto-winner-name{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#f9ca24;letter-spacing:1px;margin:8px 0 4px}
+.reto-winner-sub{font-size:13px;color:#9cb64b;line-height:1.5}
+.confetti{position:absolute;width:6px;height:6px;border-radius:50%;animation:confettiFall 3s infinite}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(200px) rotate(720deg);opacity:0}}
+
 /* GPS RECORDING */
 .gps-toolbar{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:1600;background:#1a0a0a;border:1px solid #c0392b;border-radius:14px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
 .gps-toolbar.active{display:block;animation:toastSlide .3s ease-out}
@@ -414,6 +436,8 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
   </nav>
 
   <div id="info" class="section active">
+    <!-- RETO COUNTDOWN -->
+    <div class="reto-banner" id="retoBanner" onclick="openRanking()"></div>
     <div class="alerta-banner"><div class="icon">🚨</div><div><h3>Temporada de alto riesgo activa</h3><p>Enero – Abril: máxima precaución en pinares de Mallorca</p></div></div>
     <div class="season-card"><h3>Riesgo por meses</h3><div class="months"><div class="month risk">E</div><div class="month high-risk">F</div><div class="month high-risk">M</div><div class="month high-risk">A</div><div class="month risk">M</div><div class="month safe">J</div><div class="month safe">J</div><div class="month safe">A</div><div class="month safe">S</div><div class="month safe">O</div><div class="month risk">N</div><div class="month risk">D</div></div><p style="font-size:11px;color:#555;margin-top:9px">🔴 Alto riesgo · 🟡 Riesgo moderado · 🟢 Bajo riesgo</p></div>
     <div class="info-card"><h3>¿Qué es la procesionaria?</h3><p>La procesionaria del pino (<em>Thaumetopoea pityocampa</em>) es una oruga muy común en los pinares de Mallorca. Sus pelos urticantes son <strong>extremadamente peligrosos</strong> para los perros: pueden causar necrosis en la lengua e incluso la muerte si no se actúa rápido.</p></div>
@@ -912,6 +936,80 @@ function stopGpsRecording(){
   setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Zona desconocida";document.getElementById('ruta-nombre').placeholder=lugar+' — nombre de la ruta';}).catch(()=>{});},100);
   showToast(`📡 Ruta grabada: ${traceWaypoints.length} puntos`,'success');
 }
+
+// ===== RETO COUNTDOWN =====
+const RETO_END=new Date('2026-04-26T23:59:59').getTime(); // 7 días desde hoy 19 abril
+
+function updateRetoBanner(){
+  const banner=document.getElementById('retoBanner');
+  if(!banner) return;
+  const now=Date.now();
+  const diff=RETO_END-now;
+
+  if(diff>0){
+    // Countdown active
+    const d=Math.floor(diff/86400000);
+    const h=Math.floor((diff%86400000)/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    banner.className='reto-banner';
+    banner.innerHTML=`
+      <div class="reto-gift">🎁</div>
+      <div class="reto-title">Reto: ¡Comparte y Gana!</div>
+      <div class="reto-desc">Quien más comparta la app se lleva un <strong style="color:#f9ca24">arnés + juguete</strong> para su perro</div>
+      <div class="reto-countdown">
+        <div class="reto-time-box"><div class="reto-time-num">${d}</div><div class="reto-time-label">Días</div></div>
+        <div class="reto-time-box"><div class="reto-time-num">${h}</div><div class="reto-time-label">Horas</div></div>
+        <div class="reto-time-box"><div class="reto-time-num">${m}</div><div class="reto-time-label">Min</div></div>
+        <div class="reto-time-box"><div class="reto-time-num">${s}</div><div class="reto-time-label">Seg</div></div>
+      </div>
+      <div class="reto-prize">🏆 Toca aquí para ver el ranking</div>`;
+  } else {
+    // Time's up — show winner
+    loadRetoWinner();
+  }
+}
+
+async function loadRetoWinner(){
+  const banner=document.getElementById('retoBanner');
+  if(!banner) return;
+  try{
+    const r=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto,shares&order=shares.desc&limit=1',{headers:HEADERS});
+    const[winner]=await r.json();
+    if(!winner||!winner.shares||winner.shares===0){
+      banner.innerHTML=`<div class="reto-gift-open">📦</div><div class="reto-title">El reto ha terminado</div><div class="reto-winner-sub">No hubo participantes esta vez. ¡Pronto lanzaremos un nuevo reto!</div>`;
+      banner.className='reto-banner revealed';
+      return;
+    }
+    const name=winner.visible?winner.nombre:'Un vecino de '+winner.zona;
+    const dog=winner.visible&&winner.nombre_perro?winner.nombre_perro:'su perro';
+    const isMe=winner.id===USER_ID;
+    // Confetti
+    let confetti='';
+    const colors=['#f9ca24','#e74c3c','#27ae60','#3498db','#9b59b6','#e67e22'];
+    for(let i=0;i<20;i++){
+      const c=colors[i%colors.length];
+      const left=Math.random()*100;
+      const delay=Math.random()*2;
+      const size=4+Math.random()*4;
+      confetti+=`<div class="confetti" style="background:${c};left:${left}%;animation-delay:${delay}s;width:${size}px;height:${size}px"></div>`;
+    }
+    banner.className='reto-banner revealed';
+    banner.innerHTML=`${confetti}
+      <div class="reto-gift-open">🎉</div>
+      <div class="reto-title">${isMe?'¡¡GANASTE!!':'¡Tenemos ganador!'}</div>
+      <div class="reto-winner-name">${escapeHtml(name)}</div>
+      <div class="reto-winner-sub">${isMe?`¡Felicidades! Tú y ${escapeHtml(dog)} os lleváis el arnés + juguete 🐕`:`${escapeHtml(name)} y ${escapeHtml(dog)} se llevan el premio 🐕`}<br>Compartió ${winner.shares} veces · ¡Gracias por mover la comunidad!</div>
+      <div class="reto-prize" style="margin-top:12px">🏆 Toca para ver el ranking completo</div>`;
+  }catch(e){
+    banner.innerHTML=`<div class="reto-gift-open">🎉</div><div class="reto-title">¡El reto ha terminado!</div><div class="reto-winner-sub">Toca para ver quién ganó</div>`;
+    banner.className='reto-banner revealed';
+  }
+}
+
+// Update countdown every second
+setInterval(updateRetoBanner,1000);
+document.addEventListener('DOMContentLoaded',()=>{setTimeout(updateRetoBanner,500);});
 
 // ===== SHARE APP =====
 const SHARE_URL='https://perrosdelaisla.github.io';

@@ -844,7 +844,7 @@ async function openRanking(){
   container.innerHTML='<p style="color:#555;font-size:13px;text-align:center">Cargando ranking...</p>';
   try{
     // Fetch all users
-    const ur=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto',{headers:HEADERS});
+    const ur=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto,shares',{headers:HEADERS});
     const users=await ur.json();
     // Fetch report counts per user
     const ar=await fetch(SUPA_URL+'/rest/v1/avistamientos?select=reporter_id&status=eq.activo',{headers:HEADERS});

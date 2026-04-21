@@ -7,7 +7,8 @@ function openWhatsApp(s){window.open("https://wa.me/"+WA+"?text="+encodeURICompo
 
 function previewPhotos(event){
   const files=Array.from(event.target.files||[]);
-  const slots=4-selectedPhotos.length;
+  const currentTotal=(editMode?existingPhotos.length:0)+selectedPhotos.length;
+  const slots=4-currentTotal;
   if(slots<=0){showToast('Máximo 4 fotos','error');return;}
   const toAdd=files.slice(0,slots);
   if(files.length>slots) showToast(`Solo se añaden ${slots} foto${slots>1?'s':''}`,'error');
@@ -21,10 +22,21 @@ function renderPhotoPreviews(){
   const wrap=document.getElementById('previewWrap');
   const counter=document.getElementById('photoCount');
   if(!list||!wrap||!counter) return;
-  counter.textContent=selectedPhotos.length;
-  if(selectedPhotos.length===0){wrap.style.display='none';list.innerHTML='';return;}
+  const totalCount=(editMode?existingPhotos.length:0)+selectedPhotos.length;
+  counter.textContent=totalCount;
+  if(totalCount===0){wrap.style.display='none';list.innerHTML='';return;}
   wrap.style.display='block';
   list.innerHTML='';
+  // Fotos ya subidas (solo en modo edición)
+  if(editMode){
+    existingPhotos.forEach((url,idx)=>{
+      const div=document.createElement('div');
+      div.className='preview-thumb';
+      div.innerHTML=`<img src="${url}" class="clickable-img" onclick="openImage('${url}')"><button class="remove" onclick="removeExistingPhoto(${idx})" type="button">✕</button>`;
+      list.appendChild(div);
+    });
+  }
+  // Fotos nuevas (File objects)
   selectedPhotos.forEach((file,idx)=>{
     const reader=new FileReader();
     reader.onload=function(e){
@@ -41,9 +53,26 @@ function removePhoto(idx){
   selectedPhotos.splice(idx,1);
   renderPhotoPreviews();
 }
+
+function removeExistingPhoto(idx){
+  existingPhotos.splice(idx,1);
+  renderPhotoPreviews();
+}
 function abrirCamara(){const input=document.getElementById('foto');input.setAttribute('capture','environment');input.click();}
 function abrirGaleria(){const input=document.getElementById('foto');input.removeAttribute('capture');input.click();}
-function previewRutaPhoto(event){const file=event.target.files[0];const wrap=document.getElementById('rutaPreviewWrap');const img=document.getElementById('rutaPreviewImg');if(!file){wrap.style.display='none';img.src='';return;}const reader=new FileReader();reader.onload=function(e){img.src=e.target.result;img.onclick=function(){openImage(e.target.result);};wrap.style.display='block';};reader.readAsDataURL(file);}
+function previewRutaPhoto(event){
+  const file=event.target.files[0];
+  const wrap=document.getElementById('rutaPreviewWrap');
+  const img=document.getElementById('rutaPreviewImg');
+  if(!file){wrap.style.display='none';img.src='';img.onclick=null;return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    img.src=e.target.result;
+    img.onclick=()=>openImage(e.target.result);
+    wrap.style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
 
 // TIPO DE PELIGRO
 const PELIGRO_ICONS={Procesionaria:'🐛',Garrapatas:'🕷️',Cristales:'🔪',Veneno:'☠️',Otro:'⚠️'};
@@ -54,6 +83,11 @@ function updateRiesgoOptions(){const tipo=document.getElementById('inp-tipo').va
 
 let profilePhotoFile=null;
 let selectedPhotos=[]; // Array de File objects para el reporte actual (máx 4)
+let editMode=false;
+let editingId=null;
+let editingOriginalLat=null;
+let editingOriginalLng=null;
+let existingPhotos=[]; // URLs de fotos ya subidas que se mantienen al editar
 function previewProfilePhoto(event){const file=event.target.files[0];if(!file) return;profilePhotoFile=file;const reader=new FileReader();reader.onload=function(e){document.getElementById('onb-foto-preview').innerHTML=`<img src="${e.target.result}" alt="Tu foto">`;};reader.readAsDataURL(file);}
 
 // ===== INSIGNIAS DE ALERTA =====
@@ -274,12 +308,23 @@ function initMap(){
       if(tracePolyline){tracePolyline.setLatLngs(latlngs);}else{tracePolyline=L.polyline(latlngs,{color:'#2980b9',weight:4,opacity:0.8,dashArray:'8,6'}).addTo(window.map);}
       return;
     }
-    if(!reportMode) return;
+    if(!reportMode && !editMode) return;
     selectedLat=e.latlng.lat;selectedLng=e.latlng.lng;checkHotZone();
     if(tempMarker) window.map.removeLayer(tempMarker);
-    tempMarker=L.marker([selectedLat,selectedLng],{icon:window.rIcon}).addTo(window.map).bindPopup("📍 Ubicación seleccionada").openPopup();
-    openModal();reportMode=false;
+    const draggable=editMode;
+    tempMarker=L.marker([selectedLat,selectedLng],{icon:window.rIcon,draggable}).addTo(window.map);
+    if(draggable){
+      tempMarker.on('dragend',ev=>{const ll=ev.target.getLatLng();selectedLat=ll.lat;selectedLng=ll.lng;});
+    } else {
+      tempMarker.bindPopup("📍 Ubicación seleccionada").openPopup();
+    }
+    // Actualizar input de ubicación con reverse geocoding
     setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Zona desconocida";document.getElementById('inp-ubicacion').value=lugar+" ("+selectedLat.toFixed(5)+", "+selectedLng.toFixed(5)+")";}).catch(()=>{});},100);
+    // Solo en modo reportar, abrir modal (en modo edición ya está abierto)
+    if(reportMode && !editMode){
+      openModal();
+      reportMode=false;
+    }
   });
 
   vets.forEach(v=>{L.marker([v.lat,v.lng],{icon:bIcon}).addTo(window.map).bindPopup(`<div style="font-size:13px">🏥 <b>${v.name}</b><br><small>${v.addr}</small><br><br><a href="tel:${v.phone}" style="display:block;margin-bottom:6px;background:#c0392b;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none">📞 Llamar</a><a href="${v.maps}" target="_blank" style="display:block;background:#3498db;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none">🧭 Cómo llegar</a></div>`);});
@@ -316,7 +361,7 @@ async function loadAvistamientos(){
   try{const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando avistamientos.</p>';return;}let data=await res.json();data=data.filter(a=>{if(!a.created_at) return true;const days=(Date.now()-new Date(a.created_at).getTime())/86400000;if(days<=7) return true;if(a.last_confirmed_at){if((Date.now()-new Date(a.last_confirmed_at).getTime())/86400000<=7) return true;}return false;});cachedAvistamientos=data;const reporterIds=[...new Set(data.map(a=>a.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);const reportCounts={};data.forEach(a=>{if(a.reporter_id){reportCounts[a.reporter_id]=(reportCounts[a.reporter_id]||0)+1;}});if(userLat&&userLng){data=data.map(a=>({...a,distance:(a.lat&&a.lng)?getDistance(userLat,userLng,parseFloat(a.lat),parseFloat(a.lng)):null}));data.sort((a,b)=>{if(a.distance===null) return 1;if(b.distance===null) return -1;return a.distance-b.distance;});}
   if(currentMapMode==='avistamientos'){markersLayer.clearLayers();data.forEach(a=>{const lat=parseFloat(a.lat),lng=parseFloat(a.lng);if(isNaN(lat)||isNaN(lng)) return;const color=getPeligroColor(a.tipo_peligro||'Procesionaria');const icon=createRiskIcon(color,isHistorico(a.created_at));const tipo=a.tipo_peligro||'Procesionaria';L.marker([lat,lng],{icon}).addTo(markersLayer).bindPopup(`<div style="font-size:13px">${getPeligroIcon(tipo)} <b>${escapeHtml(a.ubicacion||'Sin ubicación')}</b><br><span style="color:#666;font-size:11px">${timeAgo(a.created_at)}</span><br>${escapeHtml(tipo)} · ${escapeHtml(a.riesgo||'')}</div>`);});}
   const container=document.getElementById('avist-container');if(data.length===0){container.innerHTML='<p style="color:#555;font-size:13px">Aún no hay alertas reportadas. ¡Sé el primero!</p>';return;}
-  container.innerHTML=data.map(a=>{const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';const tipo=a.tipo_peligro||'Procesionaria';const tipoIcon=getPeligroIcon(tipo);const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;return `<div class="avist-item ${hist?'historico':''}"><div class="avist-icon">${tipoIcon}</div><div class="avist-info"><h4>${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4><div style="font-size:11px;font-weight:700;color:${getPeligroColor(tipo)};margin:3px 0;text-transform:uppercase;letter-spacing:.5px">${tipoIcon} ${escapeHtml(tipoLabel)}</div>${(()=>{const arr=(a.fotos&&Array.isArray(a.fotos)&&a.fotos.length>0)?a.fotos:(a.foto?[a.foto]:[]);if(arr.length===0) return '';if(arr.length===1) return `<img src="${arr[0]}" alt="Alerta" onclick="openImage('${arr[0]}')" class="avist-img">`;return `<div class="gallery-scroll">${arr.map(u=>`<img src="${u}" onclick="openImage('${u}')" class="gallery-img">`).join('')}</div><div class="gallery-dots">${arr.length} fotos · desliza →</div>`;})()}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="event.stopPropagation();openImage('${nameInfo.foto}')" class="clickable-img" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div></div></div>`;}).join('');checkHotZone();}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
+  container.innerHTML=data.map(a=>{const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';const tipo=a.tipo_peligro||'Procesionaria';const tipoIcon=getPeligroIcon(tipo);const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;return `<div class="avist-item ${hist?'historico':''}"><div class="avist-icon">${tipoIcon}</div><div class="avist-info"><h4>${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4><div style="font-size:11px;font-weight:700;color:${getPeligroColor(tipo)};margin:3px 0;text-transform:uppercase;letter-spacing:.5px">${tipoIcon} ${escapeHtml(tipoLabel)}</div>${(()=>{const arr=(a.fotos&&Array.isArray(a.fotos)&&a.fotos.length>0)?a.fotos:(a.foto?[a.foto]:[]);if(arr.length===0) return '';if(arr.length===1) return `<img src="${arr[0]}" alt="Alerta" onclick="openImage('${arr[0]}')" class="avist-img">`;return `<div class="gallery-scroll">${arr.map(u=>`<img src="${u}" onclick="openImage('${u}')" class="gallery-img">`).join('')}</div><div class="gallery-dots">${arr.length} fotos · desliza →</div>`;})()}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.edited_at?'<span class="edited-mark">(editado)</span>':''}${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="event.stopPropagation();openImage('${nameInfo.foto}')" class="clickable-img" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div>${a.reporter_id===USER_ID?`<button class="btn-edit-own" onclick='openEditModal(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>✏️ Editar mi reporte</button>`:''}</div></div>`;}).join('');checkHotZone();}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
 }
 
 // RUTAS
@@ -345,6 +390,7 @@ async function confirmSighting(id,isConfirm){if(localStorage.getItem('pdi_conf_'
 function activateReportMode(){if(!window.map){showToast('Abre primero el mapa','error');return;}if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}reportMode=true;traceMode=false;selectedLat=null;selectedLng=null;if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}showToast('Toca el mapa para marcar la ubicación','success');}
 function openModal(){if(!selectedLat||!selectedLng){showToast('Primero toca el mapa o usa tu ubicación','error');return;}document.getElementById('modal').classList.add('open');}
 function closeModal(){
+  if(editMode){closeEditModal();return;}
   document.getElementById('modal').classList.remove('open');
   if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}
   selectedLat=null;selectedLng=null;reportMode=false;
@@ -364,7 +410,65 @@ function closeModal(){
   if(counter) counter.textContent='0';
 }
 
+function openEditModal(a){
+  if(!a||a.reporter_id!==USER_ID){showToast('Solo puedes editar tus reportes','error');return;}
+  if(a.status!=='activo'){showToast('Este reporte ya no se puede editar','error');return;}
+  if(!window.map){showToast('Abre primero el mapa','error');return;}
+  editMode=true;
+  editingId=a.id;
+  editingOriginalLat=parseFloat(a.lat);
+  editingOriginalLng=parseFloat(a.lng);
+  selectedLat=editingOriginalLat;
+  selectedLng=editingOriginalLng;
+  existingPhotos=(a.fotos&&Array.isArray(a.fotos)&&a.fotos.length>0)?[...a.fotos]:(a.foto?[a.foto]:[]);
+  selectedPhotos=[];
+  document.getElementById('inp-tipo').value=a.tipo_peligro||'Procesionaria';
+  document.getElementById('inp-otro-peligro').value=a.otro_peligro||'';
+  updateRiesgoOptions();
+  document.getElementById('inp-ubicacion').value=a.ubicacion||'';
+  document.getElementById('inp-riesgo').value=a.riesgo||'Alto';
+  document.getElementById('inp-descripcion').value=a.descripcion||'';
+  document.querySelector('#modal .modal-box h2').textContent='✏️ Editar reporte';
+  document.getElementById('btn-submit').textContent='Guardar cambios';
+  if(tempMarker) window.map.removeLayer(tempMarker);
+  tempMarker=L.marker([selectedLat,selectedLng],{icon:window.rIcon,draggable:true}).addTo(window.map);
+  tempMarker.on('dragend',ev=>{const ll=ev.target.getLatLng();selectedLat=ll.lat;selectedLng=ll.lng;});
+  window.map.setView([selectedLat,selectedLng],16);
+  renderPhotoPreviews();
+  document.getElementById('modal').classList.add('open');
+  showToast('Toca el mapa o arrastra el marcador para mover la ubicación','success');
+}
+
+function closeEditModal(){
+  document.getElementById('modal').classList.remove('open');
+  if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}
+  selectedLat=null;selectedLng=null;
+  reportMode=false;editMode=false;editingId=null;
+  editingOriginalLat=null;editingOriginalLng=null;
+  existingPhotos=[];selectedPhotos=[];
+  const title=document.querySelector('#modal .modal-box h2');
+  if(title) title.textContent='📍 Reportar peligro';
+  document.getElementById('btn-submit').textContent='Enviar alerta';
+  document.getElementById('inp-tipo').value='Procesionaria';
+  document.getElementById('inp-otro-peligro').value='';
+  document.getElementById('otro-peligro-group').style.display='none';
+  document.getElementById('inp-ubicacion').value='';
+  document.getElementById('inp-descripcion').value='';
+  document.getElementById('foto').value='';
+  const wrap=document.getElementById('previewWrap');
+  if(wrap) wrap.style.display='none';
+  const list=document.getElementById('previewList');
+  if(list) list.innerHTML='';
+  const counter=document.getElementById('photoCount');
+  if(counter) counter.textContent='0';
+}
+
 async function compressImage(file,maxW,q){maxW=maxW||1200;q=q||0.75;return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');let w=img.width,h=img.height;if(w>maxW){h=(maxW/w)*h;w=maxW;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>res(b),'image/jpeg',q);};img.onerror=rej;img.src=e.target.result;};r.onerror=rej;r.readAsDataURL(file);});}
+
+function dispatchSubmit(){
+  if(editMode) submitEdit();
+  else submitReport();
+}
 
 async function submitReport(){
   if(isSubmitting) return;
@@ -415,6 +519,64 @@ async function submitReport(){
     showToast('✅ Avistamiento reportado. ¡Gracias!','success');
   }catch(err){showToast('Error al guardar.','error');}
   finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar alerta';}
+}
+
+async function submitEdit(){
+  if(isSubmitting) return;
+  const btn=document.getElementById('btn-submit');
+  const tipo_peligro=document.getElementById('inp-tipo').value;
+  const otro_peligro=tipo_peligro==='Otro'?document.getElementById('inp-otro-peligro').value.trim():null;
+  const ubicacion=document.getElementById('inp-ubicacion').value.trim();
+  const riesgo=document.getElementById('inp-riesgo').value;
+  const descripcion=document.getElementById('inp-descripcion').value.trim();
+  if(!ubicacion){showToast('Escribe la ubicación','error');return;}
+  if(tipo_peligro==='Otro'&&!otro_peligro){showToast('Describe el tipo de peligro','error');return;}
+  const distMovedKm=getDistance(editingOriginalLat,editingOriginalLng,selectedLat,selectedLng);
+  const distMovedM=distMovedKm*1000;
+  const bigMove=distMovedM>=50;
+  if(bigMove){
+    const ok=confirm('Has movido la ubicación más de 50 metros. Esto reiniciará las confirmaciones porque el reporte ya no corresponde al punto original.\n\n¿Quieres continuar?');
+    if(!ok) return;
+  }
+  isSubmitting=true;
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Guardando...';
+  try{
+    const newUrls=[];
+    for(const file of selectedPhotos){
+      try{
+        const compressed=await compressImage(file);
+        const fn=Date.now()+"_"+Math.random().toString(36).substr(2,6)+".jpg";
+        const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});
+        if(ur.ok) newUrls.push(SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn);
+      }catch(e){}
+    }
+    const finalPhotos=[...existingPhotos,...newUrls];
+    const update={
+      tipo_peligro,otro_peligro,
+      ubicacion,riesgo,descripcion,
+      lat:selectedLat,lng:selectedLng,
+      foto:finalPhotos[0]||null,
+      fotos:finalPhotos,
+      edited_at:new Date().toISOString()
+    };
+    if(bigMove){
+      update.confirmations=0;
+      update.denials=0;
+      update.last_confirmed_at=null;
+    }
+    const res=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${editingId}`,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify(update)});
+    if(!res.ok){showToast('Error al guardar los cambios','error');btn.disabled=false;btn.innerHTML='Guardar cambios';isSubmitting=false;return;}
+    closeEditModal();
+    await loadAvistamientos();
+    showToast(bigMove?'✅ Reporte actualizado (votos reiniciados)':'✅ Reporte actualizado','success');
+  }catch(err){
+    showToast('Error al guardar','error');
+  }finally{
+    isSubmitting=false;
+    btn.disabled=false;
+    btn.innerHTML='Guardar cambios';
+  }
 }
 
 function goToUserLocation(){if(!navigator.geolocation){showToast('Tu dispositivo no soporta geolocalización','error');return;}navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude,lng=pos.coords.longitude;window.map.setView([lat,lng],15);if(userMarker) window.map.removeLayer(userMarker);userMarker=L.marker([lat,lng],{icon:L.divIcon({html:'<div style="background:#3498db;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.6)"></div>',className:''})}).addTo(window.map).bindPopup("📍 Estás aquí").openPopup();selectedLat=lat;selectedLng=lng;userLat=lat;userLng=lng;if(currentMapMode==='avistamientos') loadAvistamientos(); else loadRutas();checkHotZone();setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Ubicación actual";document.getElementById('inp-ubicacion').value=lugar+" ("+lat.toFixed(5)+", "+lng.toFixed(5)+")";}).catch(()=>{});},100);},err=>{if(err.code===1) showToast('Permiso de ubicación bloqueado','error');else if(err.code===2) showToast('No se pudo detectar tu ubicación','error');else if(err.code===3) showToast('La ubicación tardó demasiado','error');else showToast('Error al obtener ubicación','error');},{enableHighAccuracy:false,timeout:5000,maximumAge:60000});}

@@ -5,7 +5,42 @@ const WA="34622922173";
 const WA_MSG={educacion:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Educación canina básica y avanzada.",reactividad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Control de reactividad e impulsividad.",cachorros:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el programa de Educación temprana para cachorros.",ansiedad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Gestión de ansiedad y miedos.",general:"Hola, te escribo desde la app de Perros de la Isla. Me gustaría consultarte sobre vuestros servicios de adiestramiento."};
 function openWhatsApp(s){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(WA_MSG[s]||WA_MSG.general),"_blank");return false;}
 
-function previewPhoto(event){const file=event.target.files[0];const wrap=document.getElementById('previewWrap');const img=document.getElementById('previewImg');if(!file){wrap.style.display='none';img.src='';return;}const reader=new FileReader();reader.onload=function(e){img.src=e.target.result;img.onclick=function(){openImage(e.target.result);};wrap.style.display='block';};reader.readAsDataURL(file);}
+function previewPhotos(event){
+  const files=Array.from(event.target.files||[]);
+  const slots=4-selectedPhotos.length;
+  if(slots<=0){showToast('Máximo 4 fotos','error');return;}
+  const toAdd=files.slice(0,slots);
+  if(files.length>slots) showToast(`Solo se añaden ${slots} foto${slots>1?'s':''}`,'error');
+  selectedPhotos.push(...toAdd);
+  renderPhotoPreviews();
+  event.target.value='';
+}
+
+function renderPhotoPreviews(){
+  const list=document.getElementById('previewList');
+  const wrap=document.getElementById('previewWrap');
+  const counter=document.getElementById('photoCount');
+  if(!list||!wrap||!counter) return;
+  counter.textContent=selectedPhotos.length;
+  if(selectedPhotos.length===0){wrap.style.display='none';list.innerHTML='';return;}
+  wrap.style.display='block';
+  list.innerHTML='';
+  selectedPhotos.forEach((file,idx)=>{
+    const reader=new FileReader();
+    reader.onload=function(e){
+      const div=document.createElement('div');
+      div.className='preview-thumb';
+      div.innerHTML=`<img src="${e.target.result}" class="clickable-img" onclick="openImage('${e.target.result}')"><button class="remove" onclick="removePhoto(${idx})" type="button">✕</button>`;
+      list.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function removePhoto(idx){
+  selectedPhotos.splice(idx,1);
+  renderPhotoPreviews();
+}
 function abrirCamara(){const input=document.getElementById('foto');input.setAttribute('capture','environment');input.click();}
 function abrirGaleria(){const input=document.getElementById('foto');input.removeAttribute('capture');input.click();}
 function previewRutaPhoto(event){const file=event.target.files[0];const wrap=document.getElementById('rutaPreviewWrap');const img=document.getElementById('rutaPreviewImg');if(!file){wrap.style.display='none';img.src='';return;}const reader=new FileReader();reader.onload=function(e){img.src=e.target.result;img.onclick=function(){openImage(e.target.result);};wrap.style.display='block';};reader.readAsDataURL(file);}
@@ -18,6 +53,7 @@ function getPeligroColor(tipo){return PELIGRO_COLORS[tipo]||'#c0392b';}
 function updateRiesgoOptions(){const tipo=document.getElementById('inp-tipo').value;const otroGroup=document.getElementById('otro-peligro-group');otroGroup.style.display=tipo==='Otro'?'block':'none';}
 
 let profilePhotoFile=null;
+let selectedPhotos=[]; // Array de File objects para el reporte actual (máx 4)
 function previewProfilePhoto(event){const file=event.target.files[0];if(!file) return;profilePhotoFile=file;const reader=new FileReader();reader.onload=function(e){document.getElementById('onb-foto-preview').innerHTML=`<img src="${e.target.result}" alt="Tu foto">`;};reader.readAsDataURL(file);}
 
 // ===== INSIGNIAS DE ALERTA =====
@@ -280,7 +316,7 @@ async function loadAvistamientos(){
   try{const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando avistamientos.</p>';return;}let data=await res.json();data=data.filter(a=>{if(!a.created_at) return true;const days=(Date.now()-new Date(a.created_at).getTime())/86400000;if(days<=7) return true;if(a.last_confirmed_at){if((Date.now()-new Date(a.last_confirmed_at).getTime())/86400000<=7) return true;}return false;});cachedAvistamientos=data;const reporterIds=[...new Set(data.map(a=>a.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);const reportCounts={};data.forEach(a=>{if(a.reporter_id){reportCounts[a.reporter_id]=(reportCounts[a.reporter_id]||0)+1;}});if(userLat&&userLng){data=data.map(a=>({...a,distance:(a.lat&&a.lng)?getDistance(userLat,userLng,parseFloat(a.lat),parseFloat(a.lng)):null}));data.sort((a,b)=>{if(a.distance===null) return 1;if(b.distance===null) return -1;return a.distance-b.distance;});}
   if(currentMapMode==='avistamientos'){markersLayer.clearLayers();data.forEach(a=>{const lat=parseFloat(a.lat),lng=parseFloat(a.lng);if(isNaN(lat)||isNaN(lng)) return;const color=getPeligroColor(a.tipo_peligro||'Procesionaria');const icon=createRiskIcon(color,isHistorico(a.created_at));const tipo=a.tipo_peligro||'Procesionaria';L.marker([lat,lng],{icon}).addTo(markersLayer).bindPopup(`<div style="font-size:13px">${getPeligroIcon(tipo)} <b>${escapeHtml(a.ubicacion||'Sin ubicación')}</b><br><span style="color:#666;font-size:11px">${timeAgo(a.created_at)}</span><br>${escapeHtml(tipo)} · ${escapeHtml(a.riesgo||'')}</div>`);});}
   const container=document.getElementById('avist-container');if(data.length===0){container.innerHTML='<p style="color:#555;font-size:13px">Aún no hay alertas reportadas. ¡Sé el primero!</p>';return;}
-  container.innerHTML=data.map(a=>{const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';const tipo=a.tipo_peligro||'Procesionaria';const tipoIcon=getPeligroIcon(tipo);const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;return `<div class="avist-item ${hist?'historico':''}"><div class="avist-icon">${tipoIcon}</div><div class="avist-info"><h4>${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4><div style="font-size:11px;font-weight:700;color:${getPeligroColor(tipo)};margin:3px 0;text-transform:uppercase;letter-spacing:.5px">${tipoIcon} ${escapeHtml(tipoLabel)}</div>${a.foto?`<img src="${a.foto}" alt="Alerta" onclick="openImage('${a.foto}')" class="avist-img">`:''}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="event.stopPropagation();openImage('${nameInfo.foto}')" class="clickable-img" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div></div></div>`;}).join('');checkHotZone();}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
+  container.innerHTML=data.map(a=>{const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';const tipo=a.tipo_peligro||'Procesionaria';const tipoIcon=getPeligroIcon(tipo);const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;return `<div class="avist-item ${hist?'historico':''}"><div class="avist-icon">${tipoIcon}</div><div class="avist-info"><h4>${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4><div style="font-size:11px;font-weight:700;color:${getPeligroColor(tipo)};margin:3px 0;text-transform:uppercase;letter-spacing:.5px">${tipoIcon} ${escapeHtml(tipoLabel)}</div>${(()=>{const arr=(a.fotos&&Array.isArray(a.fotos)&&a.fotos.length>0)?a.fotos:(a.foto?[a.foto]:[]);if(arr.length===0) return '';if(arr.length===1) return `<img src="${arr[0]}" alt="Alerta" onclick="openImage('${arr[0]}')" class="avist-img">`;return `<div class="gallery-scroll">${arr.map(u=>`<img src="${u}" onclick="openImage('${u}')" class="gallery-img">`).join('')}</div><div class="gallery-dots">${arr.length} fotos · desliza →</div>`;})()}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="event.stopPropagation();openImage('${nameInfo.foto}')" class="clickable-img" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div></div></div>`;}).join('');checkHotZone();}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
 }
 
 // RUTAS
@@ -308,11 +344,78 @@ async function confirmSighting(id,isConfirm){if(localStorage.getItem('pdi_conf_'
 
 function activateReportMode(){if(!window.map){showToast('Abre primero el mapa','error');return;}if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}reportMode=true;traceMode=false;selectedLat=null;selectedLng=null;if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}showToast('Toca el mapa para marcar la ubicación','success');}
 function openModal(){if(!selectedLat||!selectedLng){showToast('Primero toca el mapa o usa tu ubicación','error');return;}document.getElementById('modal').classList.add('open');}
-function closeModal(){document.getElementById('modal').classList.remove('open');if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}selectedLat=null;selectedLng=null;reportMode=false;document.getElementById('inp-tipo').value='Procesionaria';document.getElementById('inp-otro-peligro').value='';document.getElementById('otro-peligro-group').style.display='none';document.getElementById('inp-ubicacion').value='';document.getElementById('inp-descripcion').value='';document.getElementById('foto').value='';document.getElementById('previewWrap').style.display='none';document.getElementById('previewImg').src='';}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}
+  selectedLat=null;selectedLng=null;reportMode=false;
+  document.getElementById('inp-tipo').value='Procesionaria';
+  document.getElementById('inp-otro-peligro').value='';
+  document.getElementById('otro-peligro-group').style.display='none';
+  document.getElementById('inp-ubicacion').value='';
+  document.getElementById('inp-descripcion').value='';
+  document.getElementById('foto').value='';
+  // Limpiar fotos múltiples (Cambio 2)
+  selectedPhotos=[];
+  const wrap=document.getElementById('previewWrap');
+  if(wrap) wrap.style.display='none';
+  const list=document.getElementById('previewList');
+  if(list) list.innerHTML='';
+  const counter=document.getElementById('photoCount');
+  if(counter) counter.textContent='0';
+}
 
 async function compressImage(file,maxW,q){maxW=maxW||1200;q=q||0.75;return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');let w=img.width,h=img.height;if(w>maxW){h=(maxW/w)*h;w=maxW;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>res(b),'image/jpeg',q);};img.onerror=rej;img.src=e.target.result;};r.onerror=rej;r.readAsDataURL(file);});}
 
-async function submitReport(){if(isSubmitting) return;isSubmitting=true;const btn=document.getElementById('btn-submit');const tipo_peligro=document.getElementById('inp-tipo').value;const otro_peligro=tipo_peligro==='Otro'?document.getElementById('inp-otro-peligro').value.trim():null;const ubicacion=document.getElementById('inp-ubicacion').value.trim();const riesgo=document.getElementById('inp-riesgo').value;const descripcion=document.getElementById('inp-descripcion').value.trim();const file=document.getElementById('foto').files[0];if(!selectedLat||!selectedLng){showToast('Toca el mapa para marcar la ubicación exacta','error');isSubmitting=false;return;}if(!ubicacion){showToast('Escribe la ubicación','error');isSubmitting=false;return;}if(tipo_peligro==='Otro'&&!otro_peligro){showToast('Describe el tipo de peligro','error');isSubmitting=false;return;}try{const oneH=new Date(Date.now()-3600000).toISOString();const cr=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&created_at=gte.${oneH}&select=id`,{headers:HEADERS});const recent=await cr.json();if(recent.length>=5){showToast('Has reportado mucho en la última hora.','error');isSubmitting=false;return;}const sixH=new Date(Date.now()-21600000).toISOString();const nr=await fetch(SUPA_URL+`/rest/v1/avistamientos?created_at=gte.${sixH}&select=lat,lng`,{headers:HEADERS});const nearby=await nr.json();for(const r of nearby){if(!r.lat||!r.lng) continue;if(getDistance(selectedLat,selectedLng,parseFloat(r.lat),parseFloat(r.lng))<=0.08){showToast('Ya existe un reporte reciente muy cerca.','error');isSubmitting=false;return;}}}catch(e){}btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando...';try{let imageUrl=null;if(file){try{const compressed=await compressImage(file);const fn=Date.now()+"_"+Math.random().toString(36).substr(2,6)+".jpg";const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}const res=await fetch(SUPA_URL+"/rest/v1/avistamientos",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({ubicacion,descripcion,riesgo,lat:selectedLat,lng:selectedLng,foto:imageUrl,reporter_id:USER_ID,tipo_peligro,otro_peligro})});if(!res.ok){showToast('Error al guardar.','error');btn.disabled=false;btn.innerHTML='Enviar alerta';isSubmitting=false;return;}userLat=selectedLat;userLng=selectedLng;closeModal();await loadAvistamientos();showToast('✅ Avistamiento reportado. ¡Gracias!','success');}catch(err){showToast('Error al guardar.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar alerta';}}
+async function submitReport(){
+  if(isSubmitting) return;
+  isSubmitting=true;
+  const btn=document.getElementById('btn-submit');
+  const tipo_peligro=document.getElementById('inp-tipo').value;
+  const otro_peligro=tipo_peligro==='Otro'?document.getElementById('inp-otro-peligro').value.trim():null;
+  const ubicacion=document.getElementById('inp-ubicacion').value.trim();
+  const riesgo=document.getElementById('inp-riesgo').value;
+  const descripcion=document.getElementById('inp-descripcion').value.trim();
+  if(!selectedLat||!selectedLng){showToast('Toca el mapa para marcar la ubicación exacta','error');isSubmitting=false;return;}
+  if(!ubicacion){showToast('Escribe la ubicación','error');isSubmitting=false;return;}
+  if(tipo_peligro==='Otro'&&!otro_peligro){showToast('Describe el tipo de peligro','error');isSubmitting=false;return;}
+  try{
+    const oneH=new Date(Date.now()-3600000).toISOString();
+    const cr=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&created_at=gte.${oneH}&select=id`,{headers:HEADERS});
+    const recent=await cr.json();
+    if(recent.length>=5){showToast('Has reportado mucho en la última hora.','error');isSubmitting=false;return;}
+    const sixH=new Date(Date.now()-21600000).toISOString();
+    const nr=await fetch(SUPA_URL+`/rest/v1/avistamientos?created_at=gte.${sixH}&select=lat,lng`,{headers:HEADERS});
+    const nearby=await nr.json();
+    for(const r of nearby){if(!r.lat||!r.lng) continue;if(getDistance(selectedLat,selectedLng,parseFloat(r.lat),parseFloat(r.lng))<=0.08){showToast('Ya existe un reporte reciente muy cerca.','error');isSubmitting=false;return;}}
+  }catch(e){}
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Enviando...';
+  try{
+    // Subir todas las fotos seleccionadas (Cambio 2)
+    const imageUrls=[];
+    for(const file of selectedPhotos){
+      try{
+        const compressed=await compressImage(file);
+        const fn=Date.now()+"_"+Math.random().toString(36).substr(2,6)+".jpg";
+        const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});
+        if(ur.ok) imageUrls.push(SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn);
+      }catch(e){}
+    }
+    const res=await fetch(SUPA_URL+"/rest/v1/avistamientos",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({
+      ubicacion,descripcion,riesgo,
+      lat:selectedLat,lng:selectedLng,
+      foto:imageUrls[0]||null,
+      fotos:imageUrls,
+      reporter_id:USER_ID,tipo_peligro,otro_peligro
+    })});
+    if(!res.ok){showToast('Error al guardar.','error');btn.disabled=false;btn.innerHTML='Enviar alerta';isSubmitting=false;return;}
+    userLat=selectedLat;userLng=selectedLng;
+    closeModal();
+    await loadAvistamientos();
+    showToast('✅ Avistamiento reportado. ¡Gracias!','success');
+  }catch(err){showToast('Error al guardar.','error');}
+  finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar alerta';}
+}
 
 function goToUserLocation(){if(!navigator.geolocation){showToast('Tu dispositivo no soporta geolocalización','error');return;}navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude,lng=pos.coords.longitude;window.map.setView([lat,lng],15);if(userMarker) window.map.removeLayer(userMarker);userMarker=L.marker([lat,lng],{icon:L.divIcon({html:'<div style="background:#3498db;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.6)"></div>',className:''})}).addTo(window.map).bindPopup("📍 Estás aquí").openPopup();selectedLat=lat;selectedLng=lng;userLat=lat;userLng=lng;if(currentMapMode==='avistamientos') loadAvistamientos(); else loadRutas();checkHotZone();setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Ubicación actual";document.getElementById('inp-ubicacion').value=lugar+" ("+lat.toFixed(5)+", "+lng.toFixed(5)+")";}).catch(()=>{});},100);},err=>{if(err.code===1) showToast('Permiso de ubicación bloqueado','error');else if(err.code===2) showToast('No se pudo detectar tu ubicación','error');else if(err.code===3) showToast('La ubicación tardó demasiado','error');else showToast('Error al obtener ubicación','error');},{enableHighAccuracy:false,timeout:5000,maximumAge:60000});}
 

@@ -96,26 +96,28 @@
       <button class="toggle-avistamientos active" onclick="switchMapMode('avistamientos',this)"><span>⚠️</span> Avistamientos</button>
       <button class="toggle-rutas" onclick="switchMapMode('rutas',this)"><span>🐕</span> Rutas seguras</button>
     </div>
-    <div id="map"><button id="exitFullBtn" onclick="toggleMapFull(event)">❌ Salir</button><button class="map-layer-btn" id="layerToggleBtn" onclick="toggleMapLayer(event)">🗺️ Senderos</button></div>
+    <div id="map"><button id="exitFullBtn" onclick="toggleMapFull(event)">❌ Salir</button><button class="map-layer-btn" id="layerToggleBtn" onclick="toggleMapLayer(event)">🗺️ Callejero</button></div>
     <div id="hotZoneBox" style="display:none;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:12px;font-size:13px;color:#f0f0f0">🔥 <strong id="hotZoneText"></strong></div>
 
+    <!-- BUG 2 FIX: nuevo orden — Pantalla completa → Ubicación → Ranking → Compartir → texto → leyenda -->
     <div class="avistamientos-content active" id="avistamientos-content">
-      <button class="btn-ranking" onclick="openRanking()">🏆 Ranking de la comunidad</button>
-      <button class="btn-share" onclick="shareApp()">📢 Compartir app <span class="share-count" id="share-count-avist"></span></button>
-      <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;margin-bottom:10px">Toca una vez por cada contacto para sumar puntos</p>
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
+      <button class="btn-ranking" onclick="openRanking()">🏆 Ranking de la comunidad</button>
+      <button class="btn-share" onclick="shareApp()">📢 Compartir app <span class="share-count" id="share-count-avist"></span></button>
+      <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;margin-bottom:10px">Toca una vez por cada contacto para sumar puntos 🐾</p>
       <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#8e44ad"></div>Garrapatas</div><div class="leyenda-item"><div class="dot" style="background:#e67e22"></div>Cristales</div><div class="leyenda-item"><div class="dot" style="background:#2c3e50"></div>Veneno</div><div class="leyenda-item"><div class="dot" style="background:#7f8c8d"></div>Otro</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
       <div class="avist-list"><h3>Alertas recientes</h3><div id="avist-container"><p style="color:#555;font-size:13px">Cargando alertas...</p></div></div>
       <button class="reportar-btn" onclick="activateReportMode()">📍 Reportar peligro</button>
     </div>
 
+    <!-- BUG 2 FIX: mismo orden en rutas -->
     <div class="rutas-content" id="rutas-content">
-      <button class="btn-ranking" onclick="openRanking()">🏆 Ranking de la comunidad</button>
-      <button class="btn-share" onclick="shareApp()">📢 Compartir app <span class="share-count" id="share-count-rutas"></span></button>
-      <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;margin-bottom:10px">Toca una vez por cada contacto para sumar puntos</p>
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
+      <button class="btn-ranking" onclick="openRanking()">🏆 Ranking de la comunidad</button>
+      <button class="btn-share" onclick="shareApp()">📢 Compartir app <span class="share-count" id="share-count-rutas"></span></button>
+      <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;margin-bottom:10px">Toca una vez por cada contacto para sumar puntos 🐾</p>
       <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#27ae60"></div>Ruta verificada</div><div class="leyenda-item"><div class="dot" style="background:#b7950b"></div>Sugerencia pendiente</div><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Alerta procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
       <div class="rutas-filtros"><button class="rutas-filtro active" onclick="filterRutas('all',this)">Todas</button><button class="rutas-filtro" onclick="filterRutas('verificada',this)">✅ Verificadas</button><button class="rutas-filtro" onclick="filterRutas('corta',this)">Corta</button><button class="rutas-filtro" onclick="filterRutas('media',this)">Media</button><button class="rutas-filtro" onclick="filterRutas('larga',this)">Larga</button><button class="rutas-filtro" onclick="filterRutas('facil',this)">Fácil</button></div>
       <div class="avist-list"><h3>Rutas de paseo</h3><div id="rutas-container"><p style="color:#555;font-size:13px">Cargando rutas...</p></div></div>
@@ -225,7 +227,7 @@
 <button onclick="installApp()" id="installBtn" style="width:100%;padding:12px;background:#c0392b;border:none;color:#fff;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer">Instalar ahora</button>
 </div>
 
-<!-- ===== CAMBIO 1: MODAL DE IMAGEN MEJORADO ===== -->
+<!-- MODAL DE IMAGEN -->
 <div id="imgModal">
   <button class="img-close" onclick="closeImage()" aria-label="Cerrar imagen">✕</button>
   <div class="img-wrap" id="imgModalWrap">

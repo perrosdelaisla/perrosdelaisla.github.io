@@ -163,7 +163,31 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 async function uploadProfilePhoto(file){try{const compressed=await compressImage(file,400,0.8);const fn='profile_'+USER_ID+'_'+Date.now()+'.jpg';const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) return SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){console.error('Error subiendo foto perfil:',e);}return null;}
 
-async function saveProfile(){const nombre=document.getElementById('onb-nombre').value.trim();const perro=document.getElementById('onb-perro').value.trim();const zona=document.getElementById('onb-zona').value;const visible=document.getElementById('onb-visible').checked;if(!nombre){showToast('Escribe tu nombre','error');return;}if(!perro){showToast('Escribe el nombre de tu perro','error');return;}let fotoUrl=getProfile()?.foto||null;if(profilePhotoFile){showToast('Subiendo foto...','success');fotoUrl=await uploadProfilePhoto(profilePhotoFile);profilePhotoFile=null;}const profile={nombre,nombre_perro:perro,zona,visible,foto:fotoUrl,created_at:getProfile()?.created_at||new Date().toISOString()};localStorage.setItem('pdi_profile',JSON.stringify(profile));fetch(SUPA_URL+"/rest/v1/usuarios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal,resolution=merge-duplicates"},body:JSON.stringify({id:USER_ID,nombre,nombre_perro:perro,zona,visible,foto:fotoUrl})}).catch(()=>{});document.getElementById('onboarding').classList.add('hidden');updateProfileBtn();showToast(`¡Bienvenido/a ${nombre}! 🐾`,'success');}
+// Anti-abuso: validar que un nombre tenga 2+ letras reales (no solo puntos/números)
+function validateName(name){
+  if(!name) return false;
+  const trimmed = name.trim();
+  if(trimmed.length < 2) return false;
+  const letterMatches = trimmed.match(/[a-záéíóúñüA-ZÁÉÍÓÚÑÜ]/g);
+  return letterMatches !== null && letterMatches.length >= 2;
+}
+
+async function saveProfile(){
+  const nombre=document.getElementById('onb-nombre').value.trim();
+  const perro=document.getElementById('onb-perro').value.trim();
+  const zona=document.getElementById('onb-zona').value;
+  const visible=document.getElementById('onb-visible').checked;
+  if(!validateName(nombre)){showToast('Escribe tu nombre real (al menos 2 letras)','error');return;}
+  if(!validateName(perro)){showToast('Escribe el nombre de tu perro (al menos 2 letras)','error');return;}
+  let fotoUrl=getProfile()?.foto||null;
+  if(profilePhotoFile){showToast('Subiendo foto...','success');fotoUrl=await uploadProfilePhoto(profilePhotoFile);profilePhotoFile=null;}
+  const profile={nombre,nombre_perro:perro,zona,visible,foto:fotoUrl,created_at:getProfile()?.created_at||new Date().toISOString()};
+  localStorage.setItem('pdi_profile',JSON.stringify(profile));
+  fetch(SUPA_URL+"/rest/v1/usuarios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal,resolution=merge-duplicates"},body:JSON.stringify({id:USER_ID,nombre,nombre_perro:perro,zona,visible,foto:fotoUrl})}).catch(()=>{});
+  document.getElementById('onboarding').classList.add('hidden');
+  updateProfileBtn();
+  showToast(`¡Bienvenido/a ${nombre}! 🐾`,'success');
+}
 
 function updateProfileBtn(){
   const btn=document.getElementById('headerProfileBtn');
@@ -864,22 +888,88 @@ document.addEventListener('DOMContentLoaded',()=>{setTimeout(updateRetoBanner,50
 const SHARE_URL='https://perrosdelaisla.github.io';
 const SHARE_TEXT='🐾 Paseos seguros para perros en Mallorca. Reporta peligros, comparte rutas y protege a la comunidad perruna. ¡Descarga la app de Perros de la Isla!';
 
+// Límites anti-abuso
+const SHARE_COOLDOWN_MS = 30 * 1000; // 30 segundos entre shares
+const SHARE_MAX_PER_DAY = 10;        // 10 shares máximo por día
+
 async function shareApp(){
   if(!getProfile()){document.getElementById('onboarding').classList.remove('hidden');return;}
-  let newCount=0;
+
+  // CAPA 1: obtener estado actual del usuario
+  let currentShares = 0;
+  let lastShareAt = null;
+  let sharesToday = 0;
+  let sharesTodayDate = null;
   try{
-    const r=await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=shares`,{headers:HEADERS});
-    const[u]=await r.json();
-    newCount=(u?.shares||0)+1;
-    await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}`,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify({shares:newCount})});
-    updateShareCounts(newCount);
-  }catch(e){}
+    const r = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=shares,last_share_at,shares_today,shares_today_date`,{headers:HEADERS});
+    const[u] = await r.json();
+    if(u){
+      currentShares = u.shares || 0;
+      lastShareAt = u.last_share_at ? new Date(u.last_share_at).getTime() : null;
+      sharesToday = u.shares_today || 0;
+      sharesTodayDate = u.shares_today_date || null;
+    }
+  }catch(e){
+    showToast('Error de conexión, inténtalo de nuevo','error');
+    return;
+  }
+
+  // CAPA 2: cooldown de 30 segundos entre shares
+  if(lastShareAt && (Date.now() - lastShareAt) < SHARE_COOLDOWN_MS){
+    const secLeft = Math.ceil((SHARE_COOLDOWN_MS - (Date.now() - lastShareAt)) / 1000);
+    showToast(`Espera ${secLeft}s para compartir otra vez 🐾`,'error');
+    return;
+  }
+
+  // CAPA 3: máximo diario (se resetea cada día nuevo)
+  const today = new Date().toISOString().split('T')[0];
+  const isNewDay = sharesTodayDate !== today;
+  if(!isNewDay && sharesToday >= SHARE_MAX_PER_DAY){
+    showToast(`Ya compartiste ${SHARE_MAX_PER_DAY} veces hoy, ¡gracias! Vuelve mañana 🐾`,'error');
+    return;
+  }
+
+  // CAPA 4: ejecutar share real y solo contar si NO se canceló
+  let shareSucceeded = false;
   if(navigator.share){
-    try{await navigator.share({title:'Perros de la Isla — Paseos Seguros',text:SHARE_TEXT,url:SHARE_URL});}catch(e){}
+    try{
+      await navigator.share({title:'Perros de la Isla — Paseos Seguros',text:SHARE_TEXT,url:SHARE_URL});
+      shareSucceeded = true;
+    }catch(e){
+      if(e.name !== 'AbortError'){console.error('Error al compartir:',e);}
+      shareSucceeded = false;
+    }
   } else {
     window.open('https://wa.me/?text='+encodeURIComponent(SHARE_TEXT+' '+SHARE_URL),'_blank');
+    shareSucceeded = true;
   }
-  showToast(`📢 ¡+5 puntos! Llevas ${newCount} compartidas`,'success');
+
+  if(!shareSucceeded) return;
+
+  // Todo OK: incrementar contadores
+  const newCount = currentShares + 1;
+  const newSharesToday = isNewDay ? 1 : (sharesToday + 1);
+  try{
+    await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}`,{
+      method:'PATCH',
+      headers:{...HEADERS,'Prefer':'return=minimal'},
+      body:JSON.stringify({
+        shares: newCount,
+        last_share_at: new Date().toISOString(),
+        shares_today: newSharesToday,
+        shares_today_date: today
+      })
+    });
+    updateShareCounts(newCount);
+    const remaining = SHARE_MAX_PER_DAY - newSharesToday;
+    if(remaining > 0){
+      showToast(`📢 ¡+5 puntos! Llevas ${newCount} compartidas · ${remaining} disponibles hoy`,'success');
+    } else {
+      showToast(`📢 ¡+5 puntos! Llevas ${newCount} compartidas · último de hoy`,'success');
+    }
+  }catch(e){
+    showToast('Error al guardar, inténtalo de nuevo','error');
+  }
 }
 
 async function loadShareCount(){

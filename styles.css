@@ -390,3 +390,57 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .btn-edit-own{margin-top:6px;padding:7px 14px;background:#1a1a1a;color:#9cb64b;border:1px solid #2a2a2a;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.3px;font-family:'Inter',sans-serif}
 .btn-edit-own:active{background:#222}
 .edited-mark{font-size:11px;color:#555;font-style:italic;margin-left:4px}
+
+/* CAMBIO A: mapa interactivo — indicadores de elemento clickable */
+
+/* Línea de ubicación clickable en tarjeta */
+.avist-info h4.clickable-location,
+.ruta-card-header h4.clickable-location{
+  cursor:pointer;
+  text-decoration:underline;
+  text-decoration-color:#555;
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+  transition:color .2s, text-decoration-color .2s;
+}
+.avist-info h4.clickable-location:active,
+.ruta-card-header h4.clickable-location:active{
+  color:#9cb64b;
+  text-decoration-color:#9cb64b;
+}
+
+/* Popup del marker como elemento clickable */
+.popup-clickable{
+  cursor:pointer;
+  padding:4px 2px;
+  border-radius:6px;
+  transition:background .15s;
+}
+.popup-clickable:active{
+  background:rgba(156,182,75,0.15);
+}
+.popup-clickable .popup-hint{
+  display:block;
+  margin-top:6px;
+  font-size:10px;
+  color:#9cb64b;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+/* Parpadeo verde oliva al resaltar elemento (tarjeta o marker) */
+@keyframes highlightPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(156,182,75,0)}
+  30%{box-shadow:0 0 0 4px rgba(156,182,75,0.6)}
+  60%{box-shadow:0 0 0 2px rgba(156,182,75,0.3)}
+}
+.avist-item.highlight-pulse,
+.ruta-card.highlight-pulse{
+  animation:highlightPulse 2.5s ease-out;
+  border-color:#9cb64b !important;
+}
+.leaflet-marker-icon.highlight-pulse{
+  animation:highlightPulse 2.5s ease-out;
+  border-radius:50%;
+}

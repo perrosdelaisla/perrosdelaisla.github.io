@@ -172,6 +172,9 @@ function validateName(name){
   return letterMatches !== null && letterMatches.length >= 2;
 }
 
+// Variable temporal para guardar los datos pendientes mientras se muestra el modal de recuperación
+let pendingProfileData = null;
+
 async function saveProfile(){
   const nombre=document.getElementById('onb-nombre').value.trim();
   const perro=document.getElementById('onb-perro').value.trim();
@@ -179,6 +182,32 @@ async function saveProfile(){
   const visible=document.getElementById('onb-visible').checked;
   if(!validateName(nombre)){showToast('Escribe tu nombre real (al menos 2 letras)','error');return;}
   if(!validateName(perro)){showToast('Escribe el nombre de tu perro (al menos 2 letras)','error');return;}
+
+  // ANTI-DUPLICADOS: si ya existe un perfil en localStorage, es edición — saltamos la comprobación
+  const existing = getProfile();
+  if(!existing){
+    try {
+      const nombreEnc = encodeURIComponent(nombre);
+      const perroEnc = encodeURIComponent(perro);
+      const zonaEnc = encodeURIComponent(zona);
+      const r = await fetch(SUPA_URL+`/rest/v1/usuarios?nombre=eq.${nombreEnc}&nombre_perro=eq.${perroEnc}&zona=eq.${zonaEnc}&select=*`,{headers:HEADERS});
+      const matches = await r.json();
+      if(Array.isArray(matches) && matches.length > 0){
+        pendingProfileData = {nombre, perro, zona, visible};
+        const duplicate = matches[0];
+        showRecoverModal(duplicate);
+        return;
+      }
+    } catch(e){
+      console.error('Error comprobando duplicados:', e);
+      // Si falla la comprobación, continuar normal (no bloquear al usuario)
+    }
+  }
+
+  await finalizeSaveProfile(nombre, perro, zona, visible);
+}
+
+async function finalizeSaveProfile(nombre, perro, zona, visible){
   let fotoUrl=getProfile()?.foto||null;
   if(profilePhotoFile){showToast('Subiendo foto...','success');fotoUrl=await uploadProfilePhoto(profilePhotoFile);profilePhotoFile=null;}
   const profile={nombre,nombre_perro:perro,zona,visible,foto:fotoUrl,created_at:getProfile()?.created_at||new Date().toISOString()};
@@ -187,6 +216,90 @@ async function saveProfile(){
   document.getElementById('onboarding').classList.add('hidden');
   updateProfileBtn();
   showToast(`¡Bienvenido/a ${nombre}! 🐾`,'success');
+}
+
+async function showRecoverModal(duplicate){
+  const avatar = document.getElementById('recoverAvatar');
+  if(duplicate.foto){
+    avatar.innerHTML = `<img src="${duplicate.foto}" alt="" style="width:100%;height:100%;object-fit:cover">`;
+  } else {
+    avatar.innerHTML = '';
+    avatar.textContent = duplicate.nombre.charAt(0).toUpperCase();
+  }
+  document.getElementById('recoverName').textContent = duplicate.nombre;
+  document.getElementById('recoverDog').textContent = '🐕 ' + duplicate.nombre_perro;
+  document.getElementById('recoverZone').textContent = '📍 ' + duplicate.zona;
+
+  let statsText = '';
+  try {
+    const [alertsRes, rutasRes] = await Promise.all([
+      fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${duplicate.id}&select=id`,{headers:HEADERS}),
+      fetch(SUPA_URL+`/rest/v1/rutas?reporter_id=eq.${duplicate.id}&select=id`,{headers:HEADERS})
+    ]);
+    const alerts = await alertsRes.json();
+    const rutas = await rutasRes.json();
+    const parts = [];
+    if(Array.isArray(alerts) && alerts.length > 0) parts.push(`${alerts.length} alerta${alerts.length > 1 ? 's' : ''}`);
+    if(Array.isArray(rutas) && rutas.length > 0) parts.push(`${rutas.length} ruta${rutas.length > 1 ? 's' : ''}`);
+    if(duplicate.shares > 0) parts.push(`${duplicate.shares} share${duplicate.shares > 1 ? 's' : ''}`);
+    statsText = parts.length > 0 ? '📊 ' + parts.join(' · ') : '📊 Sin actividad aún';
+  } catch(e){
+    statsText = '';
+  }
+  document.getElementById('recoverStats').textContent = statsText;
+
+  document.getElementById('recoverModal').setAttribute('data-recover-id', duplicate.id);
+  document.getElementById('recoverModal').classList.add('open');
+}
+
+async function recoverAcceptProfile(){
+  const duplicateId = document.getElementById('recoverModal').getAttribute('data-recover-id');
+  if(!duplicateId){showToast('Error al recuperar perfil','error');return;}
+
+  try {
+    const r = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${duplicateId}&select=*`,{headers:HEADERS});
+    const [profile] = await r.json();
+    if(!profile){showToast('No se encontró el perfil','error');return;}
+
+    localStorage.setItem('pdi_user_id', duplicateId);
+
+    const localProfile = {
+      nombre: profile.nombre,
+      nombre_perro: profile.nombre_perro,
+      zona: profile.zona,
+      visible: profile.visible,
+      foto: profile.foto,
+      created_at: profile.created_at
+    };
+    localStorage.setItem('pdi_profile', JSON.stringify(localProfile));
+
+    document.getElementById('recoverModal').classList.remove('open');
+    document.getElementById('onboarding').classList.add('hidden');
+    pendingProfileData = null;
+    showToast(`¡Bienvenido de vuelta, ${profile.nombre}! 🐾`,'success');
+    setTimeout(() => { location.reload(); }, 1200);
+  } catch(e){
+    console.error('Error recuperando perfil:', e);
+    showToast('Error al recuperar, inténtalo de nuevo','error');
+  }
+}
+
+async function recoverDeclineProfile(){
+  if(!pendingProfileData){showToast('Error inesperado','error');return;}
+  const {nombre, perro, zona, visible} = pendingProfileData;
+
+  let sufijo = 2;
+  try {
+    const nombreEnc = encodeURIComponent(nombre);
+    const r = await fetch(SUPA_URL+`/rest/v1/usuarios?nombre=like.${nombreEnc}*&nombre_perro=eq.${encodeURIComponent(perro)}&zona=eq.${encodeURIComponent(zona)}&select=nombre`,{headers:HEADERS});
+    const matches = await r.json();
+    if(Array.isArray(matches)) sufijo = matches.length + 1;
+  } catch(e){}
+
+  const nombreConSufijo = `${nombre} (${sufijo})`;
+  document.getElementById('recoverModal').classList.remove('open');
+  pendingProfileData = null;
+  await finalizeSaveProfile(nombreConSufijo, perro, zona, visible);
 }
 
 function updateProfileBtn(){

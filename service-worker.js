@@ -1,73 +1,71 @@
-const CACHE_NAME = 'perros-isla-v5';
-const ASSETS_TO_CACHE = [
+// Service Worker — Perros de la Isla
+// Estrategia: network-first para archivos propios (HTML/CSS/JS), cache-first para externos
+
+const CACHE_VERSION = 'pdi-v6';
+const CACHE_NAME = CACHE_VERSION;
+
+// Archivos propios: siempre intentar red primero, caché como respaldo
+const OWN_ASSETS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
-  './manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css'
+  './manifest.json'
 ];
 
-// Instalación: cachea los archivos esenciales
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
-    })
-  );
+  // Forzar activación inmediata del nuevo SW
   self.skipWaiting();
-});
-
-// Activación: limpia caches viejos
-self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-      );
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(OWN_ASSETS).catch(() => {}))
   );
-  self.clients.claim();
 });
 
-// Fetch: network-first para HTML/CSS/JS (así los usuarios reciben cambios rápido),
-// cache-first para recursos externos como Leaflet
-self.addEventListener('fetch', event => {
-  const url = event.request.url;
-  // Solo GET
-  if (event.request.method !== 'GET') return;
+self.addEventListener('activate', event => {
+  // Tomar control de las pestañas abiertas y limpiar caches antiguas
+  event.waitUntil(
+    Promise.all([
+      self.clients.claim(),
+      caches.keys().then(keys => Promise.all(
+        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+      ))
+    ])
+  );
+});
 
-  // Network-first para archivos propios de la app
-  if (url.includes('index.html') || url.endsWith('/') || url.includes('styles.css') || url.includes('app.js') || url.includes('manifest.json')) {
+self.addEventListener('fetch', event => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
+  const sameOrigin = url.origin === self.location.origin;
+
+  if (sameOrigin) {
+    // Archivos propios: network-first (siempre intenta bajar la versión nueva)
     event.respondWith(
-      fetch(event.request)
+      fetch(req)
         .then(response => {
-          // Si va bien, actualiza el cache
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
+          if (response && response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(req, clone)).catch(() => {});
+          }
           return response;
         })
-        .catch(() => caches.match(event.request))
+        .catch(() => caches.match(req).then(cached => cached || caches.match('./index.html')))
     );
-    return;
+  } else {
+    // Recursos externos (CDN Leaflet, imgBB, Supabase): cache-first para velocidad
+    event.respondWith(
+      caches.match(req).then(cached => {
+        if (cached) return cached;
+        return fetch(req).then(response => {
+          if (response && response.ok && response.type === 'basic') {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(req, clone)).catch(() => {});
+          }
+          return response;
+        }).catch(() => cached);
+      })
+    );
   }
-
-  // Cache-first para el resto (CDN, tiles del mapa, imágenes de Supabase)
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request).then(fetchResponse => {
-        // No cacheamos tiles de mapa (son muchos y cambian por zoom)
-        if (url.includes('tile.openstreetmap') || url.includes('tile.opentopomap') || url.includes('basemaps.cartocdn') || url.includes('arcgisonline')) {
-          return fetchResponse;
-        }
-        return fetchResponse;
-      });
-    }).catch(() => {
-      // Offline fallback
-      if (event.request.mode === 'navigate') {
-        return caches.match('./index.html');
-      }
-    })
-  );
 });

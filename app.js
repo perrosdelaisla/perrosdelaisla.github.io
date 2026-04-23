@@ -356,6 +356,56 @@ async function openProfile(){
   document.getElementById('prof-shares').textContent=sharesCount;
 
   renderAllBadges(reportCount,voteCount,rutasTotal,rutasVerificadas,hasDetailedRoute,sharesCount);
+
+  // POSICIÓN EN EL RANKING
+  try {
+    const [usersRes, alertasRes, rutasRes] = await Promise.all([
+      fetch(SUPA_URL+'/rest/v1/usuarios?select=id,shares',{headers:HEADERS}),
+      fetch(SUPA_URL+'/rest/v1/avistamientos?select=reporter_id&status=eq.activo',{headers:HEADERS}),
+      fetch(SUPA_URL+'/rest/v1/rutas?select=reporter_id,verificada&status=eq.activo',{headers:HEADERS})
+    ]);
+    const usersAll = await usersRes.json();
+    const alertasAll = await alertasRes.json();
+    const rutasAll = await rutasRes.json();
+
+    const scoresAll = {};
+    alertasAll.forEach(a => { if(a.reporter_id) scoresAll[a.reporter_id] = (scoresAll[a.reporter_id]||0) + 10; });
+    rutasAll.forEach(r => {
+      if(r.reporter_id){
+        scoresAll[r.reporter_id] = (scoresAll[r.reporter_id]||0) + 15;
+        if(r.verificada) scoresAll[r.reporter_id] += 25;
+      }
+    });
+    usersAll.forEach(u => { if(u.shares && u.shares > 0) scoresAll[u.id] = (scoresAll[u.id]||0) + (u.shares*5); });
+
+    const ranking = usersAll
+      .map(u => ({id: u.id, score: scoresAll[u.id]||0}))
+      .filter(u => u.score > 0)
+      .sort((a,b) => b.score - a.score);
+
+    const myScore = scoresAll[USER_ID] || 0;
+    const myPosition = ranking.findIndex(u => u.id === USER_ID) + 1;
+    const totalWithScore = ranking.length;
+
+    const banner = document.getElementById('rankBanner');
+    const posEl = document.getElementById('rankBannerPosition');
+    if(banner && posEl){
+      banner.style.display = 'flex';
+      if(myScore === 0 || myPosition === 0){
+        banner.classList.add('no-rank');
+        posEl.textContent = 'Aún sin puntos · Toca para ver ranking';
+      } else {
+        banner.classList.remove('no-rank');
+        const medalEmoji = myPosition === 1 ? '🥇 ' : myPosition === 2 ? '🥈 ' : myPosition === 3 ? '🥉 ' : '';
+        posEl.textContent = `${medalEmoji}#${myPosition} de ${totalWithScore} · ${myScore} pts`;
+      }
+    }
+  } catch(e){
+    console.error('Error calculando ranking:', e);
+    const banner = document.getElementById('rankBanner');
+    if(banner) banner.style.display = 'none';
+  }
+
   document.getElementById('profileModal').classList.add('open');
 }
 

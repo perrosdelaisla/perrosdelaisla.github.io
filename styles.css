@@ -444,3 +444,56 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
   animation:highlightPulse 2.5s ease-out;
   border-radius:50%;
 }
+
+/* Banner de posición en el ranking dentro del perfil */
+.rank-banner{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:linear-gradient(135deg,#1a1a00,#111);
+  border:1px solid #3a3a1a;
+  border-radius:12px;
+  padding:12px 14px;
+  margin:12px 0;
+  cursor:pointer;
+  transition:all .2s;
+}
+.rank-banner:active{
+  background:linear-gradient(135deg,#2a2a10,#1a1a1a);
+  transform:scale(0.98);
+}
+.rank-banner-icon{
+  font-size:28px;
+  flex-shrink:0;
+}
+.rank-banner-text{
+  flex:1;
+  min-width:0;
+  text-align:left;
+}
+.rank-banner-label{
+  font-size:11px;
+  color:#888;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  font-weight:600;
+}
+.rank-banner-position{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  color:#f9ca24;
+  letter-spacing:.5px;
+  margin-top:2px;
+  line-height:1;
+}
+.rank-banner-arrow{
+  font-size:22px;
+  color:#666;
+  flex-shrink:0;
+}
+
+/* Variante sin posición (aún sin puntos) */
+.rank-banner.no-rank .rank-banner-position{
+  color:#9cb64b;
+  font-size:16px;
+}

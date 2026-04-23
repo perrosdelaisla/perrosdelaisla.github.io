@@ -8,7 +8,7 @@
 <title>Procesionaria Mallorca · Perros de la Isla</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<link rel="stylesheet" href="styles.css?v=2">
+<link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 
@@ -43,6 +43,14 @@
     <div class="profile-dog" id="prof-dog">—</div>
     <div class="profile-zone" id="prof-zone">—</div>
     <div class="profile-since" id="prof-since">—</div>
+    <div class="rank-banner" id="rankBanner" onclick="openRanking()" style="display:none">
+      <div class="rank-banner-icon">🏆</div>
+      <div class="rank-banner-text">
+        <div class="rank-banner-label">Tu posición en el ranking</div>
+        <div class="rank-banner-position" id="rankBannerPosition">—</div>
+      </div>
+      <div class="rank-banner-arrow">›</div>
+    </div>
     <div class="profile-stats">
       <div class="stat-box"><div class="stat-num" id="prof-reports">0</div><div class="stat-label">Alertas</div></div>
       <div class="stat-box"><div class="stat-num" id="prof-confirms">0</div><div class="stat-label">Votos</div></div>
@@ -265,6 +273,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>

@@ -3,7 +3,16 @@ const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const HEADERS={"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
 const WA="34622922173";
 const WA_MSG={educacion:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Educación canina básica y avanzada.",reactividad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Control de reactividad e impulsividad.",cachorros:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el programa de Educación temprana para cachorros.",ansiedad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Gestión de ansiedad y miedos.",general:"Hola, te escribo desde la app de Perros de la Isla. Me gustaría consultarte sobre vuestros servicios de adiestramiento."};
-function openWhatsApp(s){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(WA_MSG[s]||WA_MSG.general),"_blank");return false;}
+const VICTORIA_TEMA={educacion:'basica',reactividad:'reactividad',cachorros:'cachorros',ansiedad:'ansiedad'};
+const VICTORIA_URL='https://perrosdelaisla.github.io/hola/';
+function openWhatsApp(s){
+  if(VICTORIA_TEMA[s]){
+    window.open(VICTORIA_URL+'?tema='+VICTORIA_TEMA[s]+'&origen=paseos','_blank');
+    return false;
+  }
+  window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(WA_MSG[s]||WA_MSG.general),"_blank");
+  return false;
+}
 
 function previewPhotos(event){
   const files=Array.from(event.target.files||[]);

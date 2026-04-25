@@ -3,16 +3,7 @@ const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const HEADERS={"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
 const WA="34622922173";
 const WA_MSG={educacion:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Educación canina básica y avanzada.",reactividad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Control de reactividad e impulsividad.",cachorros:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el programa de Educación temprana para cachorros.",ansiedad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Gestión de ansiedad y miedos.",general:"Hola, te escribo desde la app de Perros de la Isla. Me gustaría consultarte sobre vuestros servicios de adiestramiento."};
-const VICTORIA_TEMA={educacion:'basica',reactividad:'reactividad',cachorros:'cachorros',ansiedad:'ansiedad'};
-const VICTORIA_URL='https://perrosdelaisla.github.io/hola/';
-function openWhatsApp(s){
-  if(VICTORIA_TEMA[s]){
-    window.open(VICTORIA_URL+'?tema='+VICTORIA_TEMA[s]+'&origen=paseos','_blank');
-    return false;
-  }
-  window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(WA_MSG[s]||WA_MSG.general),"_blank");
-  return false;
-}
+function openWhatsApp(s){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(WA_MSG[s]||WA_MSG.general),"_blank");return false;}
 
 function previewPhotos(event){
   const files=Array.from(event.target.files||[]);
@@ -988,6 +979,7 @@ function stopGpsRecording(){
 
 // ===== RETO COUNTDOWN =====
 const RETO_END=new Date('2026-04-26T23:59:59').getTime();
+const RETO_ID = 'reto_bienvenida';
 
 function updateRetoBanner(){
   const banner=document.getElementById('retoBanner');
@@ -1041,15 +1033,124 @@ async function loadRetoWinner(){
       confetti+=`<div class="confetti" style="background:${c};left:${left}%;animation-delay:${delay}s;width:${size}px;height:${size}px"></div>`;
     }
     banner.className='reto-banner revealed';
+    let claimSection = '';
+    if(isMe){
+      const alreadyClaimed = await checkAlreadyClaimed();
+      if(alreadyClaimed){
+        claimSection = `<div class="claim-confirmed">✅ Datos enviados · Carlos te contactará pronto</div>`;
+      } else {
+        claimSection = `<button class="btn-claim-prize" onclick="event.stopPropagation();openClaimPrizeModal()">🎁 Reclamar mi premio</button>`;
+      }
+    }
     banner.innerHTML=`${confetti}
       <div class="reto-gift-open">🎉</div>
       <div class="reto-title">${isMe?'¡¡GANASTE!!':'¡Tenemos ganador!'}</div>
       <div class="reto-winner-name">${escapeHtml(name)}</div>
       <div class="reto-winner-sub">${isMe?`¡Felicidades! Tú y ${escapeHtml(dog)} os lleváis el arnés + juguete + premio sorpresa 🎁`:`${escapeHtml(name)} y ${escapeHtml(dog)} se llevan el premio 🐕`}<br>Compartió ${winner.shares} veces · ¡Gracias por mover la comunidad!</div>
+      ${claimSection}
       <div class="reto-prize" style="margin-top:12px">🏆 Toca para ver el ranking completo</div>`;
   }catch(e){
     banner.innerHTML=`<div class="reto-gift-open">🎉</div><div class="reto-title">¡El reto ha terminado!</div><div class="reto-winner-sub">Toca para ver quién ganó</div>`;
     banner.className='reto-banner revealed';
+  }
+}
+
+async function checkAlreadyClaimed(){
+  try{
+    const r = await fetch(SUPA_URL+`/rest/v1/premios_ganadores?user_id=eq.${USER_ID}&reto_id=eq.${RETO_ID}&select=id`,{headers:HEADERS});
+    const data = await r.json();
+    return Array.isArray(data) && data.length > 0;
+  } catch(e){ return false; }
+}
+
+function openClaimPrizeModal(){
+  document.getElementById('claimPrizeModal').classList.add('open');
+}
+
+function closeClaimPrizeModal(){
+  document.getElementById('claimPrizeModal').classList.remove('open');
+  document.getElementById('claim-nombre').value='';
+  document.getElementById('claim-telefono').value='';
+  document.getElementById('claim-direccion').value='';
+  document.getElementById('claim-talla').value='';
+  document.getElementById('claim-observaciones').value='';
+}
+
+async function submitClaimPrize(){
+  const nombre = document.getElementById('claim-nombre').value.trim();
+  const telefono = document.getElementById('claim-telefono').value.trim();
+  const direccion = document.getElementById('claim-direccion').value.trim();
+  const talla = document.getElementById('claim-talla').value;
+  const observaciones = document.getElementById('claim-observaciones').value.trim();
+
+  if(nombre.length < 3){showToast('Escribe tu nombre completo','error');return;}
+  if(telefono.length < 7){showToast('Escribe un teléfono válido','error');return;}
+  if(direccion.length < 10){showToast('Escribe una dirección completa','error');return;}
+  if(!talla){showToast('Elige una talla del arnés','error');return;}
+
+  const btn = document.getElementById('btn-claim-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Enviando...';
+
+  try{
+    const profile = getProfile();
+    const res = await fetch(SUPA_URL+'/rest/v1/premios_ganadores',{
+      method:'POST',
+      headers:{...HEADERS,'Prefer':'return=minimal'},
+      body:JSON.stringify({
+        user_id: USER_ID,
+        reto_id: RETO_ID,
+        nombre_completo: nombre,
+        telefono: telefono,
+        direccion: direccion,
+        talla_arnes: talla,
+        observaciones: observaciones || null
+      })
+    });
+
+    if(!res.ok){
+      showToast('Error al enviar los datos','error');
+      btn.disabled=false;
+      btn.innerHTML='✅ Enviar datos';
+      return;
+    }
+
+    // Notificar a Carlos por ntfy
+    try{
+      const mensaje = [
+        'GANADOR DEL RETO HA RECLAMADO PREMIO',
+        '',
+        `Reto: ${RETO_ID}`,
+        '',
+        `Nombre: ${nombre}`,
+        `Telefono: ${telefono}`,
+        `Direccion: ${direccion}`,
+        `Talla arnes: ${talla}`,
+        observaciones ? `Observaciones: ${observaciones}` : 'Sin observaciones',
+        '',
+        `Su perro: ${profile?.nombre_perro || '-'}`,
+        `Zona: ${profile?.zona || '-'}`
+      ].join('\n');
+      await fetch('https://ntfy.sh/perrosdelaisla-citas-2026',{
+        method:'POST',
+        headers:{
+          'Content-Type':'text/plain; charset=utf-8',
+          'Title':'Ganador del reto reclamo premio',
+          'Priority':'high',
+          'Tags':'trophy,gift'
+        },
+        body: mensaje
+      });
+    } catch(e){ console.warn('Error notificando ntfy:',e); }
+
+    closeClaimPrizeModal();
+    showToast('Datos enviados! Carlos te contactara pronto','success');
+    setTimeout(()=>{ updateRetoBanner(); }, 800);
+
+  } catch(err){
+    showToast('Error de conexion','error');
+    btn.disabled=false;
+    btn.innerHTML='Enviar datos';
   }
 }
 

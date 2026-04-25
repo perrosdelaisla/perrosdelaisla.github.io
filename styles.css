@@ -498,7 +498,37 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
   font-size:16px;
 }
 
-/* FIX anti-duplicados: el modal de recuperación debe aparecer SOBRE el onboarding (z-index 5000) */
-#recoverModal{
-  z-index:5500 !important;
+/* Botón Reclamar premio (solo visible para el ganador) */
+.btn-claim-prize{
+  display:block;
+  width:100%;
+  margin:14px 0 4px;
+  padding:14px;
+  background:linear-gradient(135deg,#9cb64b,#7a9a2a);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;
+  letter-spacing:1px;
+  cursor:pointer;
+  box-shadow:0 4px 14px rgba(156,182,75,0.4);
+  transition:transform .2s;
+}
+.btn-claim-prize:active{
+  transform:scale(0.97);
+  background:linear-gradient(135deg,#7a9a2a,#5a7a1a);
+}
+
+/* Mensaje de confirmación tras reclamar */
+.claim-confirmed{
+  margin:14px 0 4px;
+  padding:12px;
+  background:#0a2a0a;
+  border:1px solid #1a4a1a;
+  color:#27ae60;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:700;
+  text-align:center;
 }

@@ -8,7 +8,7 @@
 <title>Procesionaria Mallorca · Perros de la Isla</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
 
@@ -264,6 +264,25 @@
 <button onclick="installApp()" id="installBtn" style="width:100%;padding:12px;background:#c0392b;border:none;color:#fff;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer">Instalar ahora</button>
 </div>
 
+<!-- MODAL RECLAMAR PREMIO -->
+<div class="modal" id="claimPrizeModal">
+  <div class="modal-box">
+    <h2>🎁 Reclamar tu premio</h2>
+    <p style="color:#ccc;font-size:13px;line-height:1.6;margin-bottom:14px">
+      ¡Felicidades por ganar! Necesitamos algunos datos para enviarte el premio.
+    </p>
+    <div class="form-group"><label>Nombre completo</label><input type="text" id="claim-nombre" placeholder="Ej: María García López"></div>
+    <div class="form-group"><label>Teléfono</label><input type="tel" id="claim-telefono" placeholder="Ej: 666 777 888"></div>
+    <div class="form-group"><label>Dirección completa</label><textarea id="claim-direccion" placeholder="Calle, número, piso, código postal, ciudad" style="height:60px"></textarea></div>
+    <div class="form-group"><label>Talla del arnés</label><select id="claim-talla"><option value="">Elige una talla</option><option value="Pequeña">Pequeña (perros de hasta 8kg)</option><option value="Mediana">Mediana (perros de 8 a 18kg)</option><option value="Grande">Grande (perros de 18 a 30kg)</option><option value="XL">XL (perros de más de 30kg)</option></select></div>
+    <div class="form-group"><label>Observaciones (opcional)</label><textarea id="claim-observaciones" placeholder="Horario de entrega, indicaciones especiales..." style="height:60px"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeClaimPrizeModal()">Cancelar</button>
+      <button class="btn-submit" id="btn-claim-submit" onclick="submitClaimPrize()" style="background:#9cb64b">✅ Enviar datos</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL DE IMAGEN -->
 <div id="imgModal">
   <button class="img-close" onclick="closeImage()" aria-label="Cerrar imagen">✕</button>
@@ -273,6 +292,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=5"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>

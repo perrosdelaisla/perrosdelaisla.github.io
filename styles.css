@@ -532,3 +532,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
   font-weight:700;
   text-align:center;
 }
+
+/* FIX bug Flor: recoverModal por encima de onboarding */
+#recoverModal{z-index:5500 !important}
+#recoverModal.open{display:flex !important}

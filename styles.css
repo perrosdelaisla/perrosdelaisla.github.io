@@ -533,6 +533,14 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
   text-align:center;
 }
 
+/* HUELLITAS */
+.btn-huellita{display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #333;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#aaa;transition:all .2s;font-family:'Inter',sans-serif;margin-top:8px;font-weight:600}
+.btn-huellita:active{transform:scale(0.95)}
+.btn-huellita.ya-dado{background:#111a0a;border-color:#9cb64b;color:#9cb64b;box-shadow:0 0 0 2px rgba(156,182,75,0.2)}
+.btn-huellita-sm{padding:4px 10px;font-size:11px;margin-top:0;margin-left:6px}
+.huellita-count{font-weight:700;min-width:14px;text-align:center}
+.badge-item.unlocked-social{border-color:#f9ca24;background:#1a1a00}
+
 /* FIX bug Flor: recoverModal por encima de onboarding */
 #recoverModal{z-index:5500 !important}
 #recoverModal.open{display:flex !important}

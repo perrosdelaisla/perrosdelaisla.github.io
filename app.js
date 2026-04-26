@@ -1292,4 +1292,42 @@ function showInstallBanner(){
 function installApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').style.display='none';});}else{closeBanner();}}
 function closeBanner(){document.getElementById('installBanner').style.display='none';}
 document.addEventListener('DOMContentLoaded',()=>{setTimeout(showInstallBanner,3000);});
+
+// ===== SWIPE ENTRE PESTAÑAS =====
+const TABS=['info','mapa','vets','adiestramiento'];
+let swipeStartX=0,swipeStartY=0;
+document.addEventListener('touchstart',e=>{swipeStartX=e.touches[0].clientX;swipeStartY=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{
+  // No hacer swipe si hay un modal abierto
+  if(document.querySelector('.modal.open,.profile-modal.open,.ranking-modal.open')) return;
+  const dx=e.changedTouches[0].clientX-swipeStartX;
+  const dy=e.changedTouches[0].clientY-swipeStartY;
+  if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)) return;
+  const activeSection=document.querySelector('.section.active');
+  if(!activeSection) return;
+  const currentIdx=TABS.indexOf(activeSection.id);
+  const nextIdx=dx<0?Math.min(currentIdx+1,TABS.length-1):Math.max(currentIdx-1,0);
+  if(nextIdx===currentIdx) return;
+  const navBtns=document.querySelectorAll('.nav button');
+  showTab(TABS[nextIdx],navBtns[nextIdx]);
+},{passive:true});
+
+// ===== BOTÓN ATRÁS =====
+history.pushState({pdi:true},'','');
+let backPressedAt=0;
+window.addEventListener('popstate',()=>{
+  // Cerrar modales en orden de prioridad
+  if(document.getElementById('imgModal').style.display==='flex'){closeImage();history.pushState({pdi:true},'','');return;}
+  if(document.querySelector('.modal.open')){document.querySelector('.modal.open').classList.remove('open');history.pushState({pdi:true},'','');return;}
+  if(document.querySelector('.ranking-modal.open')){closeRanking();history.pushState({pdi:true},'','');return;}
+  if(document.querySelector('.profile-modal.open')){closeProfile();history.pushState({pdi:true},'','');return;}
+  if(!document.getElementById('onboarding').classList.contains('hidden')){document.getElementById('onboarding').classList.add('hidden');history.pushState({pdi:true},'','');return;}
+  // Sin nada abierto: doble toque para salir
+  const now=Date.now();
+  if(now-backPressedAt<3000){return;}
+  backPressedAt=now;
+  showToast('Pulsa atrás otra vez para salir','error');
+  history.pushState({pdi:true},'','');
+});
+
 if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{});}

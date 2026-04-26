@@ -544,3 +544,23 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 /* FIX bug Flor: recoverModal por encima de onboarding */
 #recoverModal{z-index:5500 !important}
 #recoverModal.open{display:flex !important}
+
+/* MINI PERFIL PÚBLICO */
+#miniPerfilModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:6200;justify-content:center;align-items:center;padding:0}
+#miniPerfilModal.open{display:flex}
+#miniPerfilContent{position:relative;width:100%;max-width:480px;height:100vh;max-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.mini-perfil-close{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.7);color:#fff;border:none;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(8px)}
+.mini-perfil-close:active{background:rgba(192,57,43,0.9)}
+.mini-perfil-foto{flex:1;background-size:cover;background-position:center;background-color:#111}
+.mini-perfil-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 60%, rgba(0,0,0,0) 100%);padding:50px 20px 24px 20px;color:#fff}
+.mini-perfil-nombre{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.5px;margin-bottom:4px;line-height:1.1}
+.mini-perfil-zona{font-size:13px;color:#ddd;margin-bottom:10px}
+.mini-perfil-stats{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:#fff;margin-bottom:10px;font-weight:600}
+.mini-perfil-stats span{background:rgba(255,255,255,0.12);padding:4px 10px;border-radius:14px;backdrop-filter:blur(4px)}
+.mini-perfil-insignias{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;font-size:20px}
+.mini-insignia{background:rgba(156,182,75,0.25);border:1px solid rgba(156,182,75,0.5);border-radius:50%;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center}
+.mini-perfil-huellita{width:100%;padding:14px;background:linear-gradient(135deg,#9cb64b,#7a9a2a);color:#fff;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;box-shadow:0 4px 14px rgba(156,182,75,0.4)}
+.mini-perfil-huellita:active{transform:scale(0.97)}
+.mini-perfil-huellita.ya-dado{background:#1a3a1a;color:#9cb64b;cursor:default}
+.ranking-avatar.clickable{cursor:pointer;transition:transform .15s}
+.ranking-avatar.clickable:active{transform:scale(0.95)}

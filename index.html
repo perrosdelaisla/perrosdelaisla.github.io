@@ -8,7 +8,7 @@
 <title>Procesionaria Mallorca · Perros de la Isla</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<link rel="stylesheet" href="styles.css?v=5">
+<link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 
@@ -136,7 +136,6 @@
     <div id="map"><button id="exitFullBtn" onclick="toggleMapFull(event)">❌ Salir</button><button class="map-layer-btn" id="layerToggleBtn" onclick="toggleMapLayer(event)">🗺️ Callejero</button></div>
     <div id="hotZoneBox" style="display:none;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:12px;font-size:13px;color:#f0f0f0">🔥 <strong id="hotZoneText"></strong></div>
 
-    <!-- BUG 2 FIX: nuevo orden — Pantalla completa → Ubicación → Ranking → Compartir → texto → leyenda -->
     <div class="avistamientos-content active" id="avistamientos-content">
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
@@ -148,7 +147,6 @@
       <button class="reportar-btn" onclick="activateReportMode()">📍 Reportar peligro</button>
     </div>
 
-    <!-- BUG 2 FIX: mismo orden en rutas -->
     <div class="rutas-content" id="rutas-content">
       <button class="btn-secondary" onclick="toggleMapFull()">🖥️ Pantalla completa</button>
       <button class="btn-secondary" onclick="goToUserLocation()">📍 Usar mi ubicación</button>
@@ -292,6 +290,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=7"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

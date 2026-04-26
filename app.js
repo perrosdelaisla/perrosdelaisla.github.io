@@ -397,7 +397,7 @@ async function openProfile(){
   // POSICIÓN EN EL RANKING
   try {
     const [usersRes, alertasRes, rutasRes] = await Promise.all([
-      fetch(SUPA_URL+'/rest/v1/usuarios?select=id,shares',{headers:HEADERS}),
+      fetch(SUPA_URL+'/rest/v1/usuarios?select=id,shares,huellitas_dadas,huellitas_recibidas',{headers:HEADERS}),
       fetch(SUPA_URL+'/rest/v1/avistamientos?select=reporter_id&status=eq.activo',{headers:HEADERS}),
       fetch(SUPA_URL+'/rest/v1/rutas?select=reporter_id,verificada&status=eq.activo',{headers:HEADERS})
     ]);
@@ -414,6 +414,7 @@ async function openProfile(){
       }
     });
     usersAll.forEach(u => { if(u.shares && u.shares > 0) scoresAll[u.id] = (scoresAll[u.id]||0) + (u.shares*5); });
+    usersAll.forEach(u => { if(u.huellitas_dadas&&u.huellitas_dadas>0) scoresAll[u.id]=(scoresAll[u.id]||0)+u.huellitas_dadas*1; if(u.huellitas_recibidas&&u.huellitas_recibidas>0) scoresAll[u.id]=(scoresAll[u.id]||0)+u.huellitas_recibidas*3; });
 
     const ranking = usersAll
       .map(u => ({id: u.id, score: scoresAll[u.id]||0}))
@@ -641,6 +642,16 @@ async function loadAvistamientos(){
     if(misHuellitasReportes.has(id)) {
       const btn = item.querySelector('.btn-huellita');
       if(btn) btn.classList.add('ya-dado');
+    }
+  });
+  // Actualizar contadores reales de huellitas por reporte
+  const conteos = await contarHuellitasReportes(data.map(a=>a.id));
+  document.querySelectorAll('.avist-item').forEach(item => {
+    const id = item.dataset.id;
+    const count = conteos.get(id);
+    if(count) {
+      const span = item.querySelector('.btn-huellita .huellita-count');
+      if(span) span.textContent = count;
     }
   });}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
 }
@@ -916,7 +927,7 @@ async function openRanking(){
   const container=document.getElementById('ranking-list');
   container.innerHTML='<p style="color:#555;font-size:13px;text-align:center">Cargando ranking...</p>';
   try{
-    const ur=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto,shares',{headers:HEADERS});
+    const ur=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto,shares,huellitas_dadas,huellitas_recibidas',{headers:HEADERS});
     const users=await ur.json();
     const ar=await fetch(SUPA_URL+'/rest/v1/avistamientos?select=reporter_id&status=eq.activo',{headers:HEADERS});
     const alertas=await ar.json();
@@ -926,6 +937,7 @@ async function openRanking(){
     alertas.forEach(a=>{if(a.reporter_id){scores[a.reporter_id]=(scores[a.reporter_id]||0)+10;}});
     rutas.forEach(r=>{if(r.reporter_id){scores[r.reporter_id]=(scores[r.reporter_id]||0)+15;if(r.verificada) scores[r.reporter_id]+=25;}});
     users.forEach(u=>{if(u.shares&&u.shares>0){scores[u.id]=(scores[u.id]||0)+(u.shares*5);}});
+    users.forEach(u=>{if(u.huellitas_dadas&&u.huellitas_dadas>0){scores[u.id]=(scores[u.id]||0)+u.huellitas_dadas*1;}if(u.huellitas_recibidas&&u.huellitas_recibidas>0){scores[u.id]=(scores[u.id]||0)+u.huellitas_recibidas*3;}});
     const ranking=users.map(u=>({...u,score:scores[u.id]||0})).filter(u=>u.score>0).sort((a,b)=>b.score-a.score).slice(0,15);
     if(ranking.length===0){container.innerHTML='<p style="color:#555;font-size:13px;text-align:center">Aún no hay actividad. ¡Sé el primero en reportar o compartir una ruta!</p>';return;}
     container.innerHTML=ranking.map((u,i)=>{
@@ -1439,6 +1451,19 @@ async function cargarMisHuellitas(targetType, ids) {
     const data = await r.json();
     return new Set(data.map(h=>h.target_id));
   } catch(e) { return new Set(); }
+}
+
+async function contarHuellitasReportes(ids) {
+  if(!ids||ids.length===0) return new Map();
+  try {
+    const qs = ids.map(id=>`"${id}"`).join(',');
+    const res = await fetch(SUPA_URL+`/rest/v1/huellitas?target_type=eq.reporte&target_id=in.(${qs})&select=target_id`, {headers:HEADERS});
+    if(!res.ok) return new Map();
+    const data = await res.json();
+    const counts = new Map();
+    data.forEach(h => { counts.set(h.target_id, (counts.get(h.target_id)||0) + 1); });
+    return counts;
+  } catch(e) { return new Map(); }
 }
 
 // ===== MINI PERFIL PÚBLICO =====

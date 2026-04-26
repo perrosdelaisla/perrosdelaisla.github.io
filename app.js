@@ -634,7 +634,7 @@ async function loadAvistamientos(){
   });
 }
   const container=document.getElementById('avist-container');if(data.length===0){container.innerHTML='<p style="color:#555;font-size:13px">Aún no hay alertas reportadas. ¡Sé el primero!</p>';return;}
-  container.innerHTML=data.map(a=>{const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';const tipo=a.tipo_peligro||'Procesionaria';const tipoIcon=getPeligroIcon(tipo);const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;return `<div class="avist-item ${hist?'historico':''}" data-id="${a.id}"><div class="avist-icon">${tipoIcon}</div><div class="avist-info"><h4 class="clickable-location" onclick="goToMapMarker('${a.id}','${a.lat}','${a.lng}')">${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4><div style="font-size:11px;font-weight:700;color:${getPeligroColor(tipo)};margin:3px 0;text-transform:uppercase;letter-spacing:.5px">${tipoIcon} ${escapeHtml(tipoLabel)}</div>${(()=>{const arr=(a.fotos&&Array.isArray(a.fotos)&&a.fotos.length>0)?a.fotos:(a.foto?[a.foto]:[]);if(arr.length===0) return '';if(arr.length===1) return `<img src="${arr[0]}" alt="Alerta" onclick="openImage('${arr[0]}')" class="avist-img">`;return `<div class="gallery-scroll">${arr.map(u=>`<img src="${u}" onclick="openImage('${u}')" class="gallery-img">`).join('')}</div><div class="gallery-dots">${arr.length} fotos · desliza →</div>`;})()}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.edited_at?'<span class="edited-mark">(editado)</span>':''}${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="event.stopPropagation();openImage('${nameInfo.foto}')" class="clickable-img" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div>${a.reporter_id===USER_ID?`<button class="btn-edit-own" onclick='openEditModal(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>✏️ Editar mi reporte</button>`:''}<button class="btn-huellita" onclick="darHuellita('reporte','${a.id}',this)">🐾 <span class="huellita-count">0</span></button></div></div>`;}).join('');checkHotZone();
+  container.innerHTML=data.map(a=>{const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';const tipo=a.tipo_peligro||'Procesionaria';const tipoIcon=getPeligroIcon(tipo);const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;return `<div class="avist-item ${hist?'historico':''}" data-id="${a.id}"><div class="avist-icon">${tipoIcon}</div><div class="avist-info"><h4 class="clickable-location" onclick="goToMapMarker('${a.id}','${a.lat}','${a.lng}')">${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4><div style="font-size:11px;font-weight:700;color:${getPeligroColor(tipo)};margin:3px 0;text-transform:uppercase;letter-spacing:.5px">${tipoIcon} ${escapeHtml(tipoLabel)}</div>${(()=>{const arr=(a.fotos&&Array.isArray(a.fotos)&&a.fotos.length>0)?a.fotos:(a.foto?[a.foto]:[]);if(arr.length===0) return '';if(arr.length===1) return `<img src="${arr[0]}" alt="Alerta" onclick="openImage('${arr[0]}')" class="avist-img">`;return `<div class="gallery-scroll">${arr.map(u=>`<img src="${u}" onclick="openImage('${u}')" class="gallery-img">`).join('')}</div><div class="gallery-dots">${arr.length} fotos · desliza →</div>`;})()}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.edited_at?'<span class="edited-mark">(editado)</span>':''}${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="event.stopPropagation();${a.reporter_id!==USER_ID?`abrirMiniPerfil('${a.reporter_id}')`:`openImage('${nameInfo.foto}')`}" class="clickable-img" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div>${a.reporter_id===USER_ID?`<button class="btn-edit-own" onclick='openEditModal(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>✏️ Editar mi reporte</button>`:''}<button class="btn-huellita" onclick="darHuellita('reporte','${a.id}',this)">🐾 <span class="huellita-count">0</span></button></div></div>`;}).join('');checkHotZone();
   const misHuellitasReportes = await cargarMisHuellitas('reporte', data.map(a=>a.id));
   document.querySelectorAll('.avist-item').forEach(item => {
     const id = item.dataset.id;
@@ -935,15 +935,11 @@ async function openRanking(){
       // BUG 3 FIX: onclick directo en la <img> con stopPropagation
       const hasPhoto=u.foto&&u.visible;
       const avatarInner=hasPhoto
-        ? `<img src="${u.foto}" alt="" class="clickable-img" onclick="event.stopPropagation();openImage('${u.foto}')">`
+        ? `<img src="${u.foto}" alt="" ${!isMe ? `onclick="event.stopPropagation();abrirMiniPerfil('${u.id}')"` : `class="clickable-img" onclick="event.stopPropagation();openImage('${u.foto}')"`}>`
         : (u.visible?u.nombre.charAt(0).toUpperCase():'?');
-      return `<div class="ranking-item ${isMe?'is-me':''}"><div class="ranking-pos">${i+1}</div><div class="ranking-avatar">${avatarInner}</div><div class="ranking-info"><div class="ranking-name">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div><div class="ranking-dog">${escapeHtml(u.zona)}</div></div><div class="ranking-score"><div class="ranking-pts">${u.score}</div><div class="ranking-label">puntos</div></div>${!isMe?`<button class="btn-huellita btn-huellita-sm" onclick="event.stopPropagation();darHuellita('perfil','${u.id}',this)">🐾 <span class="huellita-count">0</span></button>`:''}</div>`;
+      const avatarClick=!isMe&&!hasPhoto?`onclick="event.stopPropagation();abrirMiniPerfil('${u.id}')"`:'' ;
+      return `<div class="ranking-item ${isMe?'is-me':''}"><div class="ranking-pos">${i+1}</div><div class="ranking-avatar ${!isMe?'clickable':''}" ${avatarClick}>${avatarInner}</div><div class="ranking-info"><div class="ranking-name">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div><div class="ranking-dog">${escapeHtml(u.zona)}</div></div><div class="ranking-score"><div class="ranking-pts">${u.score}</div><div class="ranking-label">puntos</div></div></div>`;
     }).join('');
-    const misHuellitasPerfiles = await cargarMisHuellitas('perfil', ranking.map(u=>u.id));
-    document.querySelectorAll('.ranking-item .btn-huellita').forEach(btn => {
-      const userId = btn.getAttribute('onclick').match(/'perfil','([^']+)'/)?.[1];
-      if(userId && misHuellitasPerfiles.has(userId)) btn.classList.add('ya-dado');
-    });
   }catch(e){container.innerHTML='<p style="color:#c0392b;font-size:13px;text-align:center">Error cargando ranking.</p>';}
 }
 function closeRanking(){document.getElementById('rankingModal').classList.remove('open');}
@@ -1367,6 +1363,8 @@ history.pushState({pdi:true},'','');
 let backPressedAt=0;
 window.addEventListener('popstate',()=>{
   // Cerrar modales en orden de prioridad
+  const miniPerfil=document.getElementById('miniPerfilModal');
+  if(miniPerfil&&miniPerfil.classList.contains('open')){cerrarMiniPerfil();history.pushState({pdi:true},'','');return;}
   if(document.getElementById('imgModal').style.display==='flex'){closeImage();history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.modal.open')){document.querySelector('.modal.open').classList.remove('open');history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.ranking-modal.open')){closeRanking();history.pushState({pdi:true},'','');return;}
@@ -1441,6 +1439,78 @@ async function cargarMisHuellitas(targetType, ids) {
     const data = await r.json();
     return new Set(data.map(h=>h.target_id));
   } catch(e) { return new Set(); }
+}
+
+// ===== MINI PERFIL PÚBLICO =====
+async function abrirMiniPerfil(userId) {
+  const modal = document.getElementById('miniPerfilModal');
+  const content = document.getElementById('miniPerfilContent');
+  modal.classList.add('open');
+  content.innerHTML = '<p style="color:#888;text-align:center;padding:40px">Cargando...</p>';
+
+  try {
+    const r = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${userId}&select=*`, {headers:HEADERS});
+    const [u] = await r.json();
+    if(!u) { content.innerHTML = '<p style="color:#c0392b;text-align:center;padding:40px">Usuario no encontrado</p>'; return; }
+
+    const [alertasRes, rutasRes] = await Promise.all([
+      fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${userId}&status=eq.activo&select=id`, {headers:HEADERS}),
+      fetch(SUPA_URL+`/rest/v1/rutas?reporter_id=eq.${userId}&status=eq.activo&select=id,verificada,waypoints`, {headers:HEADERS})
+    ]);
+    const alertas = await alertasRes.json();
+    const rutas = await rutasRes.json();
+    const rutasVerificadas = rutas.filter(r=>r.verificada).length;
+    const hasDetailedRoute = rutas.some(r=>r.waypoints && r.waypoints.length>=10);
+
+    const r2 = await fetch(SUPA_URL+`/rest/v1/huellitas?user_id=eq.${USER_ID}&target_type=eq.perfil&target_id=eq.${userId}&select=id`, {headers:HEADERS});
+    const yaDada = (await r2.json()).length > 0;
+
+    const reportCount = alertas.length;
+    const rutasTotal = rutas.length;
+    const huellitasDadas = u.huellitas_dadas || 0;
+    const huellitasRecibidas = u.huellitas_recibidas || 0;
+    const sharesCount = u.shares || 0;
+
+    const insigniasDesbloqueadas = [
+      ...BADGES_ALERTAS.filter(b => b.check(reportCount, 0)),
+      ...BADGES_RUTAS.filter(b => b.check(rutasTotal, rutasVerificadas, hasDetailedRoute)),
+      ...BADGES_SHARES.filter(b => b.check(sharesCount)),
+      ...BADGES_SOCIALES.filter(b => b.check(huellitasDadas, huellitasRecibidas))
+    ];
+
+    const displayName = u.visible ? u.nombre : 'Un vecino de '+u.zona;
+    const displayDog = u.visible && u.nombre_perro ? ' y '+u.nombre_perro+' 🐕' : '';
+    const fotoSrc = u.foto || 'https://i.ibb.co/FbBcFvBQ/logo-png.png';
+
+    const insigniasHtml = insigniasDesbloqueadas.length > 0
+      ? insigniasDesbloqueadas.map(b => `<span class="mini-insignia" title="${b.name}">${b.emoji}</span>`).join('')
+      : '<span style="color:#ddd;font-size:11px">Sin insignias aún</span>';
+
+    content.innerHTML = `
+      <button class="mini-perfil-close" onclick="cerrarMiniPerfil()">✕</button>
+      <div class="mini-perfil-foto" style="background-image:url('${fotoSrc}')"></div>
+      <div class="mini-perfil-overlay">
+        <div class="mini-perfil-nombre">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div>
+        <div class="mini-perfil-zona">📍 ${escapeHtml(u.zona)}</div>
+        <div class="mini-perfil-stats">
+          <span>${reportCount} 🚨</span>
+          <span>${rutasTotal} 🗺️</span>
+          <span>${sharesCount} 📢</span>
+          <span>${huellitasRecibidas} 🐾</span>
+        </div>
+        <div class="mini-perfil-insignias">${insigniasHtml}</div>
+        <button class="mini-perfil-huellita ${yaDada?'ya-dado':''}" onclick="darHuellita('perfil','${userId}',this)" ${yaDada?'disabled':''}>
+          ${yaDada ? '✅ Ya le diste huellita' : '🐾 Dar huellita'}
+        </button>
+      </div>
+    `;
+  } catch(e) {
+    content.innerHTML = '<p style="color:#c0392b;text-align:center;padding:40px">Error al cargar perfil</p>';
+  }
+}
+
+function cerrarMiniPerfil() {
+  document.getElementById('miniPerfilModal').classList.remove('open');
 }
 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{});}

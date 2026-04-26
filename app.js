@@ -122,10 +122,25 @@ const BADGES_SHARES=[
   {id:'viral_isla',emoji:'👑',name:'Viral de la Isla',desc:'Compartir 30 veces',check:(s)=>s>=30}
 ];
 
-function renderAllBadges(reports,votes,rutasTotal,rutasVerificadas,hasDetailedRoute,sharesCount){
+const BADGES_SOCIALES = [
+  {id:'nuevo_manada', emoji:'🌱', name:'Nuevo en la Manada', desc:'Unirse a la comunidad', check:(d,r)=>true},
+  {id:'primera_huellita', emoji:'🌟', name:'Primera Huellita', desc:'Dar tu primera huellita', check:(d,r)=>d>=1},
+  {id:'patas_sol', emoji:'☀️', name:'Patas al Sol', desc:'Recibir 10 huellitas', check:(d,r)=>r>=10},
+  {id:'hijo_isla', emoji:'🏝️', name:'Hijo de la Isla', desc:'Recibir 25 huellitas', check:(d,r)=>r>=25},
+  {id:'alma_isla', emoji:'🌊', name:'Alma de la Isla', desc:'Recibir 50 huellitas', check:(d,r)=>r>=50}
+];
+
+function renderAllBadges(reports,votes,rutasTotal,rutasVerificadas,hasDetailedRoute,sharesCount,huellitasDadas=0,huellitasRecibidas=0){
   document.getElementById('badges-grid-alertas').innerHTML=BADGES_ALERTAS.map(b=>{const u=b.check(reports,votes);return `<div class="badge-item ${u?'unlocked':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
   document.getElementById('badges-grid-rutas').innerHTML=BADGES_RUTAS.map(b=>{const u=b.check(rutasTotal,rutasVerificadas,hasDetailedRoute);return `<div class="badge-item ${u?'unlocked-ruta':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
   document.getElementById('badges-grid-shares').innerHTML=BADGES_SHARES.map(b=>{const u=b.check(sharesCount||0);return `<div class="badge-item ${u?'unlocked-share':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
+  const grid = document.getElementById('badges-grid-sociales');
+  if(grid) {
+    grid.innerHTML = BADGES_SOCIALES.map(b=>{
+      const u=b.check(huellitasDadas, huellitasRecibidas);
+      return `<div class="badge-item ${u?'unlocked-social':'locked'}"><span class="badge-emoji">${u?b.emoji:'🔒'}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;
+    }).join('');
+  }
 }
 
 // PERFIL
@@ -208,8 +223,22 @@ async function saveProfile(){
 }
 
 async function finalizeSaveProfile(nombre, perro, zona, visible){
-  let fotoUrl=getProfile()?.foto||null;
+  const hadFotoAntes = getProfile()?.foto || null;
+  let fotoUrl=hadFotoAntes;
   if(profilePhotoFile){showToast('Subiendo foto...','success');fotoUrl=await uploadProfilePhoto(profilePhotoFile);profilePhotoFile=null;}
+  // Bonus +15 huellitas por subir foto de perfil por primera vez
+  if(fotoUrl && !hadFotoAntes) {
+    try {
+      const r = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=huellitas_recibidas`,{headers:HEADERS});
+      const [u] = await r.json();
+      const current = u?.huellitas_recibidas || 0;
+      await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}`, {
+        method:'PATCH', headers:{...HEADERS,'Prefer':'return=minimal'},
+        body: JSON.stringify({huellitas_recibidas: current + 15})
+      });
+      showToast('+15 huellitas bonus por subir tu foto 🐾','success');
+    } catch(e){}
+  }
   const profile={nombre,nombre_perro:perro,zona,visible,foto:fotoUrl,created_at:getProfile()?.created_at||new Date().toISOString()};
   localStorage.setItem('pdi_profile',JSON.stringify(profile));
   fetch(SUPA_URL+"/rest/v1/usuarios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal,resolution=merge-duplicates"},body:JSON.stringify({id:USER_ID,nombre,nombre_perro:perro,zona,visible,foto:fotoUrl})}).catch(()=>{});
@@ -355,7 +384,15 @@ async function openProfile(){
   }catch(e){}
   document.getElementById('prof-shares').textContent=sharesCount;
 
-  renderAllBadges(reportCount,voteCount,rutasTotal,rutasVerificadas,hasDetailedRoute,sharesCount);
+  let huellitasDadas=0, huellitasRecibidas=0;
+  try {
+    const sr2=await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=huellitas_dadas,huellitas_recibidas`,{headers:HEADERS});
+    const [su2]=await sr2.json();
+    huellitasDadas=su2?.huellitas_dadas||0;
+    huellitasRecibidas=su2?.huellitas_recibidas||0;
+  } catch(e){}
+
+  renderAllBadges(reportCount,voteCount,rutasTotal,rutasVerificadas,hasDetailedRoute,sharesCount,huellitasDadas,huellitasRecibidas);
 
   // POSICIÓN EN EL RANKING
   try {
@@ -597,7 +634,15 @@ async function loadAvistamientos(){
   });
 }
   const container=document.getElementById('avist-container');if(data.length===0){container.innerHTML='<p style="color:#555;font-size:13px">Aún no hay alertas reportadas. ¡Sé el primero!</p>';return;}
-  container.innerHTML=data.map(a=>{const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';const tipo=a.tipo_peligro||'Procesionaria';const tipoIcon=getPeligroIcon(tipo);const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;return `<div class="avist-item ${hist?'historico':''}" data-id="${a.id}"><div class="avist-icon">${tipoIcon}</div><div class="avist-info"><h4 class="clickable-location" onclick="goToMapMarker('${a.id}','${a.lat}','${a.lng}')">${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4><div style="font-size:11px;font-weight:700;color:${getPeligroColor(tipo)};margin:3px 0;text-transform:uppercase;letter-spacing:.5px">${tipoIcon} ${escapeHtml(tipoLabel)}</div>${(()=>{const arr=(a.fotos&&Array.isArray(a.fotos)&&a.fotos.length>0)?a.fotos:(a.foto?[a.foto]:[]);if(arr.length===0) return '';if(arr.length===1) return `<img src="${arr[0]}" alt="Alerta" onclick="openImage('${arr[0]}')" class="avist-img">`;return `<div class="gallery-scroll">${arr.map(u=>`<img src="${u}" onclick="openImage('${u}')" class="gallery-img">`).join('')}</div><div class="gallery-dots">${arr.length} fotos · desliza →</div>`;})()}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.edited_at?'<span class="edited-mark">(editado)</span>':''}${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="event.stopPropagation();openImage('${nameInfo.foto}')" class="clickable-img" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div>${a.reporter_id===USER_ID?`<button class="btn-edit-own" onclick='openEditModal(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>✏️ Editar mi reporte</button>`:''}</div></div>`;}).join('');checkHotZone();}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
+  container.innerHTML=data.map(a=>{const riesgo=a.riesgo||'Sin especificar';const clase=riesgo.toLowerCase().includes('medio')?'medio':riesgo.toLowerCase().includes('bajo')?'bajo':'alto';const hist=isHistorico(a.created_at);const conf=a.confirmations||0;const ya=localStorage.getItem('pdi_conf_'+a.id);const nameInfo=a.reporter_id?namesCache[a.reporter_id]:null;const reporterName=nameInfo?nameInfo.name:'';const rCount=a.reporter_id?(reportCounts[a.reporter_id]||0):0;const topBadge=getHighestBadge(rCount,0);const badgeTag=topBadge?` · ${topBadge.emoji} ${topBadge.name}`:'';const tipo=a.tipo_peligro||'Procesionaria';const tipoIcon=getPeligroIcon(tipo);const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;return `<div class="avist-item ${hist?'historico':''}" data-id="${a.id}"><div class="avist-icon">${tipoIcon}</div><div class="avist-info"><h4 class="clickable-location" onclick="goToMapMarker('${a.id}','${a.lat}','${a.lng}')">${escapeHtml(a.ubicacion||'Ubicación desconocida')}</h4><div style="font-size:11px;font-weight:700;color:${getPeligroColor(tipo)};margin:3px 0;text-transform:uppercase;letter-spacing:.5px">${tipoIcon} ${escapeHtml(tipoLabel)}</div>${(()=>{const arr=(a.fotos&&Array.isArray(a.fotos)&&a.fotos.length>0)?a.fotos:(a.foto?[a.foto]:[]);if(arr.length===0) return '';if(arr.length===1) return `<img src="${arr[0]}" alt="Alerta" onclick="openImage('${arr[0]}')" class="avist-img">`;return `<div class="gallery-scroll">${arr.map(u=>`<img src="${u}" onclick="openImage('${u}')" class="gallery-img">`).join('')}</div><div class="gallery-dots">${arr.length} fotos · desliza →</div>`;})()}<p>${escapeHtml(a.descripcion||'Sin descripción')}</p><div class="avist-meta"><span>🕒 ${timeAgo(a.created_at)}</span>${a.edited_at?'<span class="edited-mark">(editado)</span>':''}${a.distance?`<span class="dot-sep">·</span><span>📍 A ${a.distance.toFixed(1)} km</span>`:''}<span class="dot-sep">·</span><span class="badge ${clase}">${riesgo}</span>${hist?'<span class="badge historico">Histórico</span>':''}</div>${reporterName?`<p class="avist-reporter">${nameInfo&&nameInfo.foto?`<img src="${nameInfo.foto}" onclick="event.stopPropagation();openImage('${nameInfo.foto}')" class="clickable-img" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px">`:''}Reportado por ${escapeHtml(reporterName)}${badgeTag}</p>`:''}${conf>0?`<p class="confirm-count">✅ ${conf} persona${conf>1?'s':''} confirmó que sigue ahí</p>`:''}<div class="confirm-actions"><button class="btn-confirm" onclick="confirmSighting('${a.id}',true)" ${ya?'disabled':''}>${ya==='confirm'?'✅ Confirmado':'👁️ Sigue ahí'}</button><button class="btn-deny" onclick="confirmSighting('${a.id}',false)" ${ya?'disabled':''}>${ya==='deny'?'❌ Desmentido':'🚫 Ya no está'}</button></div>${a.reporter_id===USER_ID?`<button class="btn-edit-own" onclick='openEditModal(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>✏️ Editar mi reporte</button>`:''}<button class="btn-huellita" onclick="darHuellita('reporte','${a.id}',this)">🐾 <span class="huellita-count">0</span></button></div></div>`;}).join('');checkHotZone();
+  const misHuellitasReportes = await cargarMisHuellitas('reporte', data.map(a=>a.id));
+  document.querySelectorAll('.avist-item').forEach(item => {
+    const id = item.dataset.id;
+    if(misHuellitasReportes.has(id)) {
+      const btn = item.querySelector('.btn-huellita');
+      if(btn) btn.classList.add('ya-dado');
+    }
+  });}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
 }
 
 // RUTAS
@@ -892,8 +937,13 @@ async function openRanking(){
       const avatarInner=hasPhoto
         ? `<img src="${u.foto}" alt="" class="clickable-img" onclick="event.stopPropagation();openImage('${u.foto}')">`
         : (u.visible?u.nombre.charAt(0).toUpperCase():'?');
-      return `<div class="ranking-item ${isMe?'is-me':''}"><div class="ranking-pos">${i+1}</div><div class="ranking-avatar">${avatarInner}</div><div class="ranking-info"><div class="ranking-name">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div><div class="ranking-dog">${escapeHtml(u.zona)}</div></div><div class="ranking-score"><div class="ranking-pts">${u.score}</div><div class="ranking-label">puntos</div></div></div>`;
+      return `<div class="ranking-item ${isMe?'is-me':''}"><div class="ranking-pos">${i+1}</div><div class="ranking-avatar">${avatarInner}</div><div class="ranking-info"><div class="ranking-name">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div><div class="ranking-dog">${escapeHtml(u.zona)}</div></div><div class="ranking-score"><div class="ranking-pts">${u.score}</div><div class="ranking-label">puntos</div></div>${!isMe?`<button class="btn-huellita btn-huellita-sm" onclick="event.stopPropagation();darHuellita('perfil','${u.id}',this)">🐾 <span class="huellita-count">0</span></button>`:''}</div>`;
     }).join('');
+    const misHuellitasPerfiles = await cargarMisHuellitas('perfil', ranking.map(u=>u.id));
+    document.querySelectorAll('.ranking-item .btn-huellita').forEach(btn => {
+      const userId = btn.getAttribute('onclick').match(/'perfil','([^']+)'/)?.[1];
+      if(userId && misHuellitasPerfiles.has(userId)) btn.classList.add('ya-dado');
+    });
   }catch(e){container.innerHTML='<p style="color:#c0392b;font-size:13px;text-align:center">Error cargando ranking.</p>';}
 }
 function closeRanking(){document.getElementById('rankingModal').classList.remove('open');}
@@ -1329,5 +1379,68 @@ window.addEventListener('popstate',()=>{
   showToast('Pulsa atrás otra vez para salir','error');
   history.pushState({pdi:true},'','');
 });
+
+// ===== HUELLITAS 🐾 =====
+async function darHuellita(targetType, targetId, btnEl) {
+  if(!getProfile()) { showToast('Únete a la comunidad primero 🐾','error'); return; }
+  if(btnEl.classList.contains('ya-dado')) { showToast('Ya diste huellita aquí 🐾','error'); return; }
+
+  // Anti-abuso: máximo 20 huellitas por día
+  try {
+    const r = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=huellitas_hoy,huellitas_hoy_fecha`, {headers:HEADERS});
+    const [u] = await r.json();
+    const today = new Date().toISOString().split('T')[0];
+    const isNewDay = !u || u.huellitas_hoy_fecha !== today;
+    const countHoy = isNewDay ? 0 : (u?.huellitas_hoy || 0);
+    if(countHoy >= 20) { showToast('Máximo 20 huellitas por día 🐾','error'); return; }
+  } catch(e) {}
+
+  try {
+    const res = await fetch(SUPA_URL+'/rest/v1/huellitas', {
+      method:'POST',
+      headers:{...HEADERS,'Prefer':'return=minimal'},
+      body: JSON.stringify({user_id: USER_ID, target_type: targetType, target_id: targetId})
+    });
+    if(!res.ok) { showToast('Ya diste huellita aquí 🐾','error'); return; }
+
+    btnEl.classList.add('ya-dado');
+    const countEl = btnEl.querySelector('.huellita-count');
+    if(countEl) countEl.textContent = parseInt(countEl.textContent||'0') + 1;
+
+    const today = new Date().toISOString().split('T')[0];
+    const r2 = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=huellitas_dadas,huellitas_hoy,huellitas_hoy_fecha`, {headers:HEADERS});
+    const [u2] = await r2.json();
+    const isNewDay2 = !u2 || u2.huellitas_hoy_fecha !== today;
+    await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}`, {
+      method:'PATCH', headers:{...HEADERS,'Prefer':'return=minimal'},
+      body: JSON.stringify({
+        huellitas_dadas: (u2?.huellitas_dadas||0) + 1,
+        huellitas_hoy: isNewDay2 ? 1 : (u2?.huellitas_hoy||0) + 1,
+        huellitas_hoy_fecha: today
+      })
+    });
+
+    if(targetType === 'perfil') {
+      const r3 = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${targetId}&select=huellitas_recibidas`, {headers:HEADERS});
+      const [u3] = await r3.json();
+      await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${targetId}`, {
+        method:'PATCH', headers:{...HEADERS,'Prefer':'return=minimal'},
+        body: JSON.stringify({huellitas_recibidas: (u3?.huellitas_recibidas||0) + 1})
+      });
+    }
+
+    showToast('+1 huellita dada 🐾','success');
+  } catch(e) { showToast('Error al dar huellita','error'); }
+}
+
+async function cargarMisHuellitas(targetType, ids) {
+  if(!ids||ids.length===0) return new Set();
+  try {
+    const qs = ids.map(id=>`"${id}"`).join(',');
+    const r = await fetch(SUPA_URL+`/rest/v1/huellitas?user_id=eq.${USER_ID}&target_type=eq.${targetType}&target_id=in.(${qs})&select=target_id`, {headers:HEADERS});
+    const data = await r.json();
+    return new Set(data.map(h=>h.target_id));
+  } catch(e) { return new Set(); }
+}
 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{});}

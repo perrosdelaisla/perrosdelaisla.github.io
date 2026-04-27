@@ -1353,9 +1353,18 @@ document.addEventListener('DOMContentLoaded',()=>{setTimeout(showInstallBanner,3
 
 // ===== SWIPE ENTRE PESTAÑAS =====
 const TABS=['info','mapa','vets','adiestramiento'];
-let swipeStartX=0,swipeStartY=0;
-document.addEventListener('touchstart',e=>{swipeStartX=e.touches[0].clientX;swipeStartY=e.touches[0].clientY;},{passive:true});
+let swipeStartX=0,swipeStartY=0,swipeBlocked=false;
+document.addEventListener('touchstart',e=>{
+  swipeStartX=e.touches[0].clientX;
+  swipeStartY=e.touches[0].clientY;
+  // Bloquear swipe si el toque empieza dentro de zonas interactivas
+  // (mapa, toolbars de trazado/GPS, banner del reto, mini perfil a pantalla completa)
+  const target=e.target;
+  swipeBlocked = !!target.closest('#map, #traceToolbar, #gpsToolbar, .reto-banner, #miniPerfilModal');
+},{passive:true});
 document.addEventListener('touchend',e=>{
+  // Bloqueado si el toque empezó en una zona interactiva
+  if(swipeBlocked) return;
   // No hacer swipe si hay un modal abierto
   if(document.querySelector('.modal.open,.profile-modal.open,.ranking-modal.open')) return;
   const dx=e.changedTouches[0].clientX-swipeStartX;

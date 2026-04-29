@@ -626,8 +626,7 @@ async function loadAvistamientos(){
   data.forEach(a=>{
     const lat=parseFloat(a.lat),lng=parseFloat(a.lng);
     if(isNaN(lat)||isNaN(lng)) return;
-    const color=getPeligroColor(a.tipo_peligro||'Procesionaria');
-    const icon=createRiskIcon(color,isHistorico(a.created_at));
+    const icon=createRiskIcon('#c0392b',isHistorico(a.created_at));
     const tipo=a.tipo_peligro||'Procesionaria';
     const popupHtml=`<div class="popup-clickable" onclick="goToCard('${a.id}','.avist-item')"><div style="font-size:13px">${getPeligroIcon(tipo)} <b>${escapeHtml(a.ubicacion||'Sin ubicación')}</b><br><span style="color:#666;font-size:11px">${timeAgo(a.created_at)}</span><br>${escapeHtml(tipo)} · ${escapeHtml(a.riesgo||'')}</div><span class="popup-hint">👁️ Ver detalles ↓</span></div>`;
     const mk=L.marker([lat,lng],{icon}).addTo(markersLayer).bindPopup(popupHtml);
@@ -668,8 +667,13 @@ function renderRutasOnMap(rutas){
   cachedAvistamientos.forEach(a=>{
     const lat=parseFloat(a.lat),lng=parseFloat(a.lng);
     if(isNaN(lat)||isNaN(lng)) return;
-    const icon=createRiskIcon(colorForRisk(a),true);
-    L.marker([lat,lng],{icon}).addTo(rutasLayer).bindPopup(`<div style="font-size:12px">⚠️ <b>Alerta procesionaria</b><br>${escapeHtml(a.ubicacion||'')}<br><span style="color:#888;font-size:11px">${timeAgo(a.created_at)}</span></div>`);
+    const icon=createRiskIcon('#c0392b',true);
+    const tipo=a.tipo_peligro||'Procesionaria';
+    const tipoIcon=getPeligroIcon(tipo);
+    const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;
+    const riesgo=a.riesgo||'';
+    const popupHtml=`<div style="font-size:12px">${tipoIcon} <b>${escapeHtml(tipoLabel)}</b>${riesgo?' · '+escapeHtml(riesgo):''}<br>${escapeHtml(a.ubicacion||'')}<br><span style="color:#888;font-size:11px">${timeAgo(a.created_at)}</span></div>`;
+    L.marker([lat,lng],{icon}).addTo(rutasLayer).bindPopup(popupHtml);
   });
   rutas.forEach(r=>{
     const wps=r.waypoints;

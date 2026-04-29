@@ -1,6 +1,6 @@
 // Service Worker — Perros de la Isla
 // Estrategia: network-first para archivos propios (HTML/CSS/JS), cache-first para externos
-const CACHE_VERSION = 'pdi-v7';
+const CACHE_VERSION = 'pdi-v8';
 const CACHE_NAME = CACHE_VERSION;
 const OWN_ASSETS = [
   './',

@@ -3,6 +3,9 @@ const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const HEADERS={"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
 const WA="34622922173";
 const WA_MSG={educacion:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Educación canina básica y avanzada.",reactividad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Control de reactividad e impulsividad.",cachorros:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el programa de Educación temprana para cachorros.",ansiedad:"Hola, te escribo desde la app de Perros de la Isla. Me interesa el servicio de Gestión de ansiedad y miedos.",general:"Hola, te escribo desde la app de Perros de la Isla. Me gustaría consultarte sobre vuestros servicios de adiestramiento."};
+// Visibilidad de reportes en la lista (días). Subir/bajar según volumen
+// de usuarios activos. Con pocos usuarios → más alto. Con muchos → más bajo.
+const DIAS_VISIBILIDAD_REPORTES = 45;
 function openWhatsApp(s){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(WA_MSG[s]||WA_MSG.general),"_blank");return false;}
 
 function previewPhotos(event){
@@ -619,7 +622,7 @@ function goToCard(id,cardSelector){
 }
 
 async function loadAvistamientos(){
-  try{const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando avistamientos.</p>';return;}let data=await res.json();data=data.filter(a=>{if(!a.created_at) return true;const days=(Date.now()-new Date(a.created_at).getTime())/86400000;if(days<=7) return true;if(a.last_confirmed_at){if((Date.now()-new Date(a.last_confirmed_at).getTime())/86400000<=7) return true;}return false;});cachedAvistamientos=data;const reporterIds=[...new Set(data.map(a=>a.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);const reportCounts={};data.forEach(a=>{if(a.reporter_id){reportCounts[a.reporter_id]=(reportCounts[a.reporter_id]||0)+1;}});if(userLat&&userLng){data=data.map(a=>({...a,distance:(a.lat&&a.lng)?getDistance(userLat,userLng,parseFloat(a.lat),parseFloat(a.lng)):null}));data.sort((a,b)=>{if(a.distance===null) return 1;if(b.distance===null) return -1;return a.distance-b.distance;});}
+  try{const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando avistamientos.</p>';return;}let data=await res.json();data=data.filter(a=>{if(!a.created_at) return true;const days=(Date.now()-new Date(a.created_at).getTime())/86400000;if(days<=DIAS_VISIBILIDAD_REPORTES) return true;if(a.last_confirmed_at){if((Date.now()-new Date(a.last_confirmed_at).getTime())/86400000<=DIAS_VISIBILIDAD_REPORTES) return true;}return false;});cachedAvistamientos=data;const reporterIds=[...new Set(data.map(a=>a.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);const reportCounts={};data.forEach(a=>{if(a.reporter_id){reportCounts[a.reporter_id]=(reportCounts[a.reporter_id]||0)+1;}});if(userLat&&userLng){data=data.map(a=>({...a,distance:(a.lat&&a.lng)?getDistance(userLat,userLng,parseFloat(a.lat),parseFloat(a.lng)):null}));data.sort((a,b)=>{if(a.distance===null) return 1;if(b.distance===null) return -1;return a.distance-b.distance;});}
   if(currentMapMode==='avistamientos'){
   markersLayer.clearLayers();
   markersById={};

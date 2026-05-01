@@ -765,6 +765,8 @@ function openEditModal(a){
   tempMarker.on('dragend',ev=>{const ll=ev.target.getLatLng();selectedLat=ll.lat;selectedLng=ll.lng;});
   window.map.setView([selectedLat,selectedLng],16);
   renderPhotoPreviews();
+  const btnDelete=document.getElementById('btn-delete-own');
+  if(btnDelete){btnDelete.style.display='block';btnDelete.disabled=false;btnDelete.textContent='🗑️ Eliminar reporte';}
   document.getElementById('modal').classList.add('open');
   showToast('Toca el mapa o arrastra el marcador para mover la ubicación','success');
 }
@@ -779,6 +781,8 @@ function closeEditModal(){
   const title=document.querySelector('#modal .modal-box h2');
   if(title) title.textContent='📍 Reportar peligro';
   document.getElementById('btn-submit').textContent='Enviar alerta';
+  const btnDelete=document.getElementById('btn-delete-own');
+  if(btnDelete){btnDelete.style.display='none';}
   document.getElementById('inp-tipo').value='Procesionaria';
   document.getElementById('inp-otro-peligro').value='';
   document.getElementById('otro-peligro-group').style.display='none';
@@ -906,6 +910,35 @@ async function submitEdit(){
     isSubmitting=false;
     btn.disabled=false;
     btn.innerHTML='Guardar cambios';
+  }
+}
+
+async function deleteOwnReport(){
+  if(!editMode || !editingId){
+    showToast('No hay reporte en edición','error');
+    return;
+  }
+  const ok = confirm('¿Eliminar este reporte?\n\nDejará de aparecer en el mapa y en la lista. No se podrá recuperar desde la app.');
+  if(!ok) return;
+  const btn = document.getElementById('btn-delete-own');
+  if(btn){btn.disabled = true; btn.textContent = 'Eliminando...';}
+  try {
+    const res = await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${editingId}`, {
+      method:'PATCH',
+      headers:{...HEADERS,'Prefer':'return=minimal'},
+      body: JSON.stringify({status:'archivado'})
+    });
+    if(!res.ok){
+      showToast('Error al eliminar el reporte','error');
+      if(btn){btn.disabled = false; btn.textContent = '🗑️ Eliminar reporte';}
+      return;
+    }
+    closeEditModal();
+    await loadAvistamientos();
+    showToast('✅ Reporte eliminado','success');
+  } catch(err){
+    showToast('Error de conexión','error');
+    if(btn){btn.disabled = false; btn.textContent = '🗑️ Eliminar reporte';}
   }
 }
 

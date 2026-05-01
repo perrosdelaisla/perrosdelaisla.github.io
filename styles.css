@@ -564,3 +564,6 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .mini-perfil-huellita.ya-dado{background:#1a3a1a;color:#9cb64b;cursor:default}
 .ranking-avatar.clickable{cursor:pointer;transition:transform .15s}
 .ranking-avatar.clickable:active{transform:scale(0.95)}
+.btn-delete-own{width:100%;padding:10px;margin-top:8px;background:#2a0a0a;color:#c0392b;border:1px solid #4a1a1a;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+.btn-delete-own:active{background:#4a1a1a}
+.btn-delete-own:disabled{opacity:.4;cursor:not-allowed}

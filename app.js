@@ -457,7 +457,6 @@ function editProfile(){closeProfile();const p=getProfile();if(p){document.getEle
 
 // ===== MIS REPORTES =====
 async function openMisReportes(){
-  closeProfile();
   const modal = document.getElementById('misReportesModal');
   const container = document.getElementById('mis-reportes-container');
   modal.classList.add('open');
@@ -475,6 +474,24 @@ async function openMisReportes(){
   }
 }
 
+function editarDesdeMisReportes(a){
+  closeMisReportes();
+  closeProfile();
+  const navBtns = document.querySelectorAll('.nav button');
+  const mapaBtnIdx = TABS.indexOf('mapa');
+  if(mapaBtnIdx >= 0 && navBtns[mapaBtnIdx]){
+    showTab('mapa', navBtns[mapaBtnIdx]);
+  }
+  const intentar = () => {
+    if(window.map){
+      openEditModal(a);
+    } else {
+      setTimeout(intentar, 100);
+    }
+  };
+  setTimeout(intentar, 200);
+}
+
 function renderMisReportes(data){
   const container = document.getElementById('mis-reportes-container');
   container.innerHTML = data.map(a => {
@@ -486,7 +503,7 @@ function renderMisReportes(data){
     const thumb = fotoArr.length > 0 ? `<img src="${fotoArr[0]}" class="mis-rep-thumb" onclick="event.stopPropagation();openImage('${fotoArr[0]}')">` : '';
     const accion = archivado
       ? `<button class="btn-reactivar" onclick="reactivarReporte('${a.id}')">🔄 Reactivar</button>`
-      : `<button class="btn-edit-own" onclick='openEditModal(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>✏️ Editar</button>`;
+      : `<button class="btn-edit-own" onclick='editarDesdeMisReportes(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>✏️ Editar</button>`;
     return `
       <div class="mis-rep-item ${archivado ? 'archivado' : ''}">
         ${thumb}

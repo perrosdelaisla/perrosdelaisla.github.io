@@ -851,12 +851,30 @@ function openEditModal(a){
   renderPhotoPreviews();
   const btnDelete=document.getElementById('btn-delete-own');
   if(btnDelete){btnDelete.style.display='block';btnDelete.disabled=false;btnDelete.textContent='🗑️ Eliminar reporte';}
+  const inpUbi=document.getElementById('inp-ubicacion');
+  if(inpUbi){
+    inpUbi.classList.add('location-clickable');
+    inpUbi.readOnly=true;
+    inpUbi.onclick=startLocationPicker;
+    inpUbi.title='Toca para cambiar la ubicación en el mapa';
+  }
   document.getElementById('modal').classList.add('open');
   showToast('Toca el mapa o arrastra el marcador para mover la ubicación','success');
 }
 
 function closeEditModal(){
   document.getElementById('modal').classList.remove('open');
+  const inpUbi=document.getElementById('inp-ubicacion');
+  if(inpUbi){
+    inpUbi.classList.remove('location-clickable');
+    inpUbi.readOnly=false;
+    inpUbi.onclick=null;
+    inpUbi.removeAttribute('title');
+  }
+  const lpToolbar=document.getElementById('locationPickerToolbar');
+  if(lpToolbar) lpToolbar.classList.remove('active');
+  const lpModal=document.getElementById('modal');
+  if(lpModal) lpModal.classList.remove('hidden-temporarily');
   if(tempMarker){window.map.removeLayer(tempMarker);tempMarker=null;}
   selectedLat=null;selectedLng=null;
   reportMode=false;editMode=false;editingId=null;
@@ -879,6 +897,32 @@ function closeEditModal(){
   if(list) list.innerHTML='';
   const counter=document.getElementById('photoCount');
   if(counter) counter.textContent='0';
+}
+
+function startLocationPicker(){
+  if(!editMode) return;
+  const modal=document.getElementById('modal');
+  if(modal) modal.classList.add('hidden-temporarily');
+  const toolbar=document.getElementById('locationPickerToolbar');
+  if(toolbar) toolbar.classList.add('active');
+  if(window.map) window.map.invalidateSize();
+}
+
+function finishLocationPicker(){
+  const toolbar=document.getElementById('locationPickerToolbar');
+  if(toolbar) toolbar.classList.remove('active');
+  const modal=document.getElementById('modal');
+  if(modal) modal.classList.remove('hidden-temporarily');
+  if(selectedLat && selectedLng){
+    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${selectedLat}&lon=${selectedLng}&format=json`)
+      .then(r=>r.json())
+      .then(d=>{
+        const lugar=d.address.city||d.address.town||d.address.village||"Zona desconocida";
+        const inp=document.getElementById('inp-ubicacion');
+        if(inp) inp.value=lugar+" ("+selectedLat.toFixed(5)+", "+selectedLng.toFixed(5)+")";
+      })
+      .catch(()=>{});
+  }
 }
 
 async function compressImage(file,maxW,q){maxW=maxW||1200;q=q||0.75;return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');let w=img.width,h=img.height;if(w>maxW){h=(maxW/w)*h;w=maxW;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>res(b),'image/jpeg',q);};img.onerror=rej;img.src=e.target.result;};r.onerror=rej;r.readAsDataURL(file);});}

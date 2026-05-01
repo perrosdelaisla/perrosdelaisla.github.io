@@ -369,6 +369,8 @@ async function openProfile(){
   try{const r=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&select=id`,{headers:HEADERS});const data=await r.json();reportCount=data.length||0;}catch(e){}
   document.getElementById('prof-reports').textContent=reportCount;
 
+  try{const rAll=await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&select=id`,{headers:HEADERS});const allData=await rAll.json();const counter=document.getElementById('mis-reportes-count');if(counter) counter.textContent=`(${Array.isArray(allData)?allData.length:0})`;}catch(e){}
+
   let rutasTotal=0,rutasVerificadas=0,hasDetailedRoute=false;
   try{
     const rr=await fetch(SUPA_URL+`/rest/v1/rutas?reporter_id=eq.${USER_ID}&select=id,verificada,waypoints`,{headers:HEADERS});
@@ -452,6 +454,71 @@ async function openProfile(){
 
 function closeProfile(){document.getElementById('profileModal').classList.remove('open');}
 function editProfile(){closeProfile();const p=getProfile();if(p){document.getElementById('onb-nombre').value=p.nombre;document.getElementById('onb-perro').value=p.nombre_perro;document.getElementById('onb-zona').value=p.zona;document.getElementById('onb-visible').checked=p.visible;if(p.foto){document.getElementById('onb-foto-preview').innerHTML=`<img src="${p.foto}" alt="Tu foto">`;}}profilePhotoFile=null;document.getElementById('onboarding').classList.remove('hidden');}
+
+// ===== MIS REPORTES =====
+async function openMisReportes(){
+  closeProfile();
+  const modal = document.getElementById('misReportesModal');
+  const container = document.getElementById('mis-reportes-container');
+  modal.classList.add('open');
+  container.innerHTML = '<p style="color:#888;text-align:center;padding:30px">Cargando...</p>';
+  try {
+    const r = await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&order=created_at.desc&select=*`, {headers:HEADERS});
+    const data = await r.json();
+    if(!Array.isArray(data) || data.length === 0){
+      container.innerHTML = '<p style="color:#888;text-align:center;padding:40px">Aún no has reportado nada. ¡Anímate a contribuir!</p>';
+      return;
+    }
+    renderMisReportes(data);
+  } catch(e){
+    container.innerHTML = '<p style="color:#c0392b;text-align:center;padding:30px">Error al cargar tus reportes</p>';
+  }
+}
+
+function renderMisReportes(data){
+  const container = document.getElementById('mis-reportes-container');
+  container.innerHTML = data.map(a => {
+    const archivado = a.status !== 'activo';
+    const tipo = a.tipo_peligro || 'Procesionaria';
+    const tipoIcon = getPeligroIcon(tipo);
+    const tipoLabel = tipo === 'Otro' && a.otro_peligro ? a.otro_peligro : tipo;
+    const fotoArr = (a.fotos && Array.isArray(a.fotos) && a.fotos.length > 0) ? a.fotos : (a.foto ? [a.foto] : []);
+    const thumb = fotoArr.length > 0 ? `<img src="${fotoArr[0]}" class="mis-rep-thumb" onclick="event.stopPropagation();openImage('${fotoArr[0]}')">` : '';
+    const accion = archivado
+      ? `<button class="btn-reactivar" onclick="reactivarReporte('${a.id}')">🔄 Reactivar</button>`
+      : `<button class="btn-edit-own" onclick='openEditModal(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>✏️ Editar</button>`;
+    return `
+      <div class="mis-rep-item ${archivado ? 'archivado' : ''}">
+        ${thumb}
+        <div class="mis-rep-body">
+          <div class="mis-rep-tipo">${tipoIcon} ${escapeHtml(tipoLabel)}</div>
+          <div class="mis-rep-ubic">${escapeHtml(a.ubicacion || 'Sin ubicación')}</div>
+          <div class="mis-rep-meta">🕒 ${timeAgo(a.created_at)}${archivado ? ' · <span class="mis-rep-badge">📦 Archivado</span>' : ''}</div>
+          ${accion}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function reactivarReporte(id){
+  const ok = confirm('¿Reactivar este reporte?\n\nVolverá a aparecer en el mapa y la lista para todos los usuarios.');
+  if(!ok) return;
+  try {
+    const res = await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${id}`, {
+      method:'PATCH',
+      headers:{...HEADERS,'Prefer':'return=minimal'},
+      body: JSON.stringify({status:'activo', confirmations:0, denials:0, last_confirmed_at:null})
+    });
+    if(!res.ok){showToast('Error al reactivar','error');return;}
+    showToast('✅ Reporte reactivado','success');
+    openMisReportes();
+    await loadAvistamientos();
+  } catch(e){showToast('Error de conexión','error');}
+}
+
+function closeMisReportes(){
+  document.getElementById('misReportesModal').classList.remove('open');
+}
 
 // HELPERS
 function escapeHtml(t){if(t===null||t===undefined) return '';return String(t).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');}
@@ -1406,7 +1473,7 @@ document.addEventListener('touchend',e=>{
   // Bloqueado si el toque empezó en una zona interactiva
   if(swipeBlocked) return;
   // No hacer swipe si hay un modal abierto
-  if(document.querySelector('.modal.open,.profile-modal.open,.ranking-modal.open')) return;
+  if(document.querySelector('.modal.open,.profile-modal.open,.ranking-modal.open,#misReportesModal.open')) return;
   const dx=e.changedTouches[0].clientX-swipeStartX;
   const dy=e.changedTouches[0].clientY-swipeStartY;
   if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)) return;
@@ -1429,6 +1496,8 @@ window.addEventListener('popstate',()=>{
   if(document.getElementById('imgModal').style.display==='flex'){closeImage();history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.modal.open')){document.querySelector('.modal.open').classList.remove('open');history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.ranking-modal.open')){closeRanking();history.pushState({pdi:true},'','');return;}
+  const misRep=document.getElementById('misReportesModal');
+  if(misRep&&misRep.classList.contains('open')){closeMisReportes();history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.profile-modal.open')){closeProfile();history.pushState({pdi:true},'','');return;}
   if(!document.getElementById('onboarding').classList.contains('hidden')){document.getElementById('onboarding').classList.add('hidden');history.pushState({pdi:true},'','');return;}
   // Sin nada abierto: doble toque para salir

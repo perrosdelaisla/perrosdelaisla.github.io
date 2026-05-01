@@ -8,7 +8,7 @@
 <title>Procesionaria Mallorca · Perros de la Isla</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<link rel="stylesheet" href="styles.css?v=10">
+<link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body>
 
@@ -57,6 +57,7 @@
       <div class="stat-box"><div class="stat-num" id="prof-rutas">0</div><div class="stat-label">Rutas</div></div>
       <div class="stat-box"><div class="stat-num" id="prof-shares">0</div><div class="stat-label">Shares</div></div>
     </div>
+    <button id="btn-mis-reportes" class="btn-mis-reportes" onclick="openMisReportes()">📋 Mis reportes <span id="mis-reportes-count">(0)</span></button>
     <div class="badges-title">⚠️ Insignias de alerta</div>
     <div class="badges-grid" id="badges-grid-alertas"></div>
     <div class="badges-title" style="color:#5dade2">🗺️ Insignias de rutas</div>
@@ -237,6 +238,19 @@
   </div>
 </div>
 
+<!-- MIS REPORTES MODAL -->
+<div id="misReportesModal" class="mis-reportes-modal">
+  <div class="mis-reportes-card">
+    <div class="mis-reportes-header">
+      <h2>📋 Mis reportes</h2>
+      <button class="mis-reportes-close" onclick="closeMisReportes()">✕</button>
+    </div>
+    <div id="mis-reportes-container" class="mis-reportes-container">
+      <p style="color:#888;text-align:center;padding:30px">Cargando...</p>
+    </div>
+  </div>
+</div>
+
 <!-- GPS RECORDING TOOLBAR -->
 <div class="gps-toolbar" id="gpsToolbar">
   <div class="gps-header"><h4><span class="gps-dot"></span> Grabando paseo</h4></div>
@@ -298,6 +312,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=14"></script>
+<script src="app.js?v=15"></script>
 </body>
 </html>

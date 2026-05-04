@@ -4,7 +4,7 @@ body{background:#111;color:#f0f0f0;font-family:'Inter',sans-serif;-webkit-tap-hi
 .app{max-width:480px;margin:0 auto;background:#111;min-height:100vh}
 header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #222;position:sticky;top:0;z-index:1000}
 .logo-circle{width:38px;height:38px;border-radius:50%;background:#000;border:2px solid #c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;cursor:pointer;transition:transform .15s}
-.logo-circle:active{transform:scale(0.94)}
+.logo-circle:active{transform:scale(0.94);opacity:0.7}
 .logo-circle img{width:100%;height:100%;object-fit:contain;border-radius:50%}
 .header-text{flex:1;min-width:0}
 .header-text h1{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:#fff;line-height:1}

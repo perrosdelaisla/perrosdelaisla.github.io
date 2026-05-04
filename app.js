@@ -571,7 +571,7 @@ function filterVets(zone,btn){document.querySelectorAll('.filtro').forEach(b=>b.
 renderVets(vets);
 
 // NAV
-function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');document.body.classList.remove('tab-inicio','tab-info','tab-mapa','tab-vets','tab-adiestramiento');document.body.classList.add('tab-'+id);if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='inicio'&&typeof loadInicio==='function') loadInicio();window.scrollTo({top:0,behavior:'smooth'});}
+function showTab(id,btn,fromPopstate){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');document.body.classList.remove('tab-inicio','tab-info','tab-mapa','tab-vets','tab-adiestramiento');document.body.classList.add('tab-'+id);if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='inicio'&&typeof loadInicio==='function') loadInicio();if(!fromPopstate&&id!=='inicio') history.pushState({tab:id},'','#'+id);window.scrollTo({top:0,behavior:'smooth'});}
 
 // MAP MODE TOGGLE
 let currentMapMode='avistamientos';
@@ -1454,9 +1454,10 @@ document.addEventListener('DOMContentLoaded',()=>{setTimeout(showInstallBanner,3
 
 // ===== SWIPE ENTRE PESTAÑAS (siguiendo el dedo) =====
 const TABS=['inicio','info','mapa','vets','adiestramiento'];
-const SWIPE_THRESHOLD_PCT=0.25;
+const SWIPE_THRESHOLD_PCT=0.15;
+const SWIPE_VELOCITY_THRESHOLD=0.3;
 const SWIPE_MIN_HORIZ=10;
-let swipeStartX=0,swipeStartY=0,swipeBlocked=false,swipeStarted=false,swipePreviewSection=null,swipeDirection=0,swipeActiveDelta=0;
+let swipeStartX=0,swipeStartY=0,swipeBlocked=false,swipeStarted=false,swipePreviewSection=null,swipeDirection=0,swipeActiveDelta=0,swipeStartTime=0,swipeLastTime=0,swipeLastDelta=0,swipeLastVelocity=0;
 
 function shouldInterceptSwipe(target){
   if(!target||!target.closest) return false;
@@ -1553,7 +1554,13 @@ document.addEventListener('touchstart',e=>{
   swipeStartY=e.touches[0].clientY;
   swipeStarted=false;
   swipeActiveDelta=0;
+  swipeStartTime=Date.now();
+  swipeLastTime=swipeStartTime;
+  swipeLastDelta=0;
+  swipeLastVelocity=0;
   swipeBlocked=!shouldInterceptSwipe(e.target);
+  // TODO: quitar logs cuando esté validado
+  if(!swipeBlocked) console.log('[swipe] start',{x:swipeStartX,y:swipeStartY});
 },{passive:true});
 
 document.addEventListener('touchmove',e=>{
@@ -1569,6 +1576,14 @@ document.addEventListener('touchmove',e=>{
     swipeStarted=true;
   }
   let appliedDx=swipePreviewSection?dx:dx*0.3;
+  // velocidad instantánea (px/ms) basada en el último tick
+  const nowTime=Date.now();
+  const dtTime=nowTime-swipeLastTime;
+  if(dtTime>0){
+    swipeLastVelocity=(appliedDx-swipeLastDelta)/dtTime;
+    swipeLastTime=nowTime;
+    swipeLastDelta=appliedDx;
+  }
   swipeActiveDelta=appliedDx;
   applySwipeTransform(appliedDx);
 },{passive:true});
@@ -1579,9 +1594,16 @@ document.addEventListener('touchend',()=>{
   const threshold=width*SWIPE_THRESHOLD_PCT;
   const active=getActiveSection();
   const activeIdx=active?TABS.indexOf(active.id):-1;
-  if(swipePreviewSection&&Math.abs(swipeActiveDelta)>threshold){
+  const passedDistance=Math.abs(swipeActiveDelta)>threshold;
+  // Flick rápido en la misma dirección que el gesto
+  const flickConsistent=(swipeDirection===1&&swipeLastVelocity<-SWIPE_VELOCITY_THRESHOLD)||(swipeDirection===-1&&swipeLastVelocity>SWIPE_VELOCITY_THRESHOLD);
+  // TODO: quitar logs cuando esté validado
+  console.log('[swipe] end',{dx:Math.round(swipeActiveDelta),vel:swipeLastVelocity.toFixed(3),threshold:Math.round(threshold),passedDistance,flickConsistent,direction:swipeDirection,activeIdx});
+  if(swipePreviewSection&&(passedDistance||flickConsistent)){
+    console.log('[swipe] -> completeSwipe to',TABS[activeIdx+swipeDirection]);
     completeSwipe(activeIdx+swipeDirection);
   }else{
+    console.log('[swipe] -> cancelSwipe');
     cancelSwipe();
   }
   swipeStarted=false;
@@ -1602,7 +1624,15 @@ window.addEventListener('popstate',()=>{
   if(misRep&&misRep.classList.contains('open')){closeMisReportes();history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.profile-modal.open')){closeProfile();history.pushState({pdi:true},'','');return;}
   if(!document.getElementById('onboarding').classList.contains('hidden')){document.getElementById('onboarding').classList.add('hidden');history.pushState({pdi:true},'','');return;}
-  // Sin nada abierto: doble toque para salir
+  // Sin modales: si no estamos en INICIO, volver a INICIO
+  const activeSection=document.querySelector('.section.active');
+  const currentTab=activeSection?activeSection.id:'inicio';
+  if(currentTab!=='inicio'){
+    showTabByName('inicio',true);
+    history.pushState({pdi:true},'','');
+    return;
+  }
+  // En INICIO sin modales: doble toque para salir
   const now=Date.now();
   if(now-backPressedAt<3000){return;}
   backPressedAt=now;
@@ -1759,11 +1789,11 @@ function cerrarMiniPerfil() {
 }
 
 // ===== INICIO HOME =====
-function showTabByName(id){
+function showTabByName(id,fromPopstate){
   const idx=TABS.indexOf(id);
   if(idx<0) return;
   const btn=document.querySelectorAll('.nav button')[idx];
-  if(btn) showTab(id,btn);
+  if(btn) showTab(id,btn,fromPopstate);
 }
 function switchMapModeByName(mode){
   const btn=document.querySelector(mode==='rutas'?'.toggle-rutas':'.toggle-avistamientos');

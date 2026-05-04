@@ -8,7 +8,7 @@
 <title>Procesionaria Mallorca · Perros de la Isla</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<link rel="stylesheet" href="styles.css?v=12">
+<link rel="stylesheet" href="styles.css?v=13">
 </head>
 <body>
 
@@ -116,19 +116,75 @@
     <button class="nav-training" onclick="showTab('adiestramiento',this)"><span>🐾</span>Servicios</button>
   </nav>
 
-  <div id="info" class="section active">
-    <!-- RETO COUNTDOWN -->
+  <div id="info" class="section section-portada active">
+    <!-- TODO: reemplazar por logo profesional cuando esté listo -->
+    <div class="port-header">
+      <div class="port-logo-placeholder"><div class="port-logo-rect"></div></div>
+      <div class="port-brand">
+        <div class="port-brand-name">PASEOS SEGUROS</div>
+        <div class="port-brand-sub">una iniciativa de Perros de la Isla</div>
+      </div>
+      <button class="port-menu-btn" onclick="openSideMenu()" aria-label="Abrir menú">☰</button>
+    </div>
+
+    <div class="port-saludo-wrap">
+      <div class="port-saludo">
+        <div class="port-avatar" id="portAvatar">🐾</div>
+        <div class="port-saludo-text">
+          <div class="port-saludo-hola" id="portHola">Hola, tutor</div>
+          <div class="port-saludo-pregunta" id="portPregunta">¿qué hacemos hoy?</div>
+        </div>
+      </div>
+      <button class="port-ganador" id="portGanador" onclick="openRanking()" style="display:none" aria-label="Ver ganador del reto">
+        <div class="port-ganador-halo"></div>
+        <div class="port-ganador-medalla"><div class="port-ganador-centro" id="portGanadorCentro">🏆</div></div>
+        <div class="port-ganador-conf conf-1"></div>
+        <div class="port-ganador-conf conf-2"></div>
+        <div class="port-ganador-conf conf-3"></div>
+      </button>
+    </div>
+
+    <!-- RETO COUNTDOWN (oculto si no hay reto activo, manejado por updateRetoBanner) -->
     <div class="reto-banner" id="retoBanner" onclick="openRanking()"></div>
-    <div class="alerta-banner"><div class="icon">🚨</div><div><h3>Temporada de alto riesgo activa</h3><p>Enero – Abril: máxima precaución en pinares de Mallorca</p></div></div>
-    <div class="season-card"><h3>Riesgo por meses</h3><div class="months"><div class="month risk">E</div><div class="month high-risk">F</div><div class="month high-risk">M</div><div class="month high-risk">A</div><div class="month risk">M</div><div class="month safe">J</div><div class="month safe">J</div><div class="month safe">A</div><div class="month safe">S</div><div class="month safe">O</div><div class="month risk">N</div><div class="month risk">D</div></div><p style="font-size:11px;color:#555;margin-top:9px">🔴 Alto riesgo · 🟡 Riesgo moderado · 🟢 Bajo riesgo</p></div>
-    <div class="info-card"><h3>¿Qué es la procesionaria?</h3><p>La procesionaria del pino (<em>Thaumetopoea pityocampa</em>) es una oruga muy común en los pinares de Mallorca. Sus pelos urticantes son <strong>extremadamente peligrosos</strong> para los perros: pueden causar necrosis en la lengua e incluso la muerte si no se actúa rápido.</p></div>
-    <div class="info-card"><h3>Aprende a reconocerla</h3><p>La procesionaria tiene dos formas visibles. Aprende a identificarlas para proteger a tu perro:</p><div style="display:flex;flex-direction:column;gap:10px;margin-top:12px"><div style="border-radius:8px;overflow:hidden;border:1px solid #333"><img src="https://i.ibb.co/BHP7LVrm/1024px-thaumetopoea-pityocampa800.jpg" alt="Procesionaria en procesión activa" class="clickable-img" onclick="openImage('https://i.ibb.co/BHP7LVrm/1024px-thaumetopoea-pityocampa800.jpg')" style="width:100%;height:140px;object-fit:cover"><div style="background:#2a0a0a;padding:8px 10px;font-size:12px"><strong style="color:#e17055">⚠️ Procesión activa en el suelo</strong><p style="color:#999;margin-top:3px;font-size:11px;line-height:1.4">Orugas en fila bajando del árbol o cruzando caminos. MÁXIMO PELIGRO.</p></div></div><div style="border-radius:8px;overflow:hidden;border:1px solid #333"><img src="https://i.ibb.co/qLrKDm82/d9737e72-f15b-4c34-b0c4-e04af16b8c01-16-9-aspect-ratio-1600w-0.jpg" alt="Bolsón de procesionaria" class="clickable-img" onclick="openImage('https://i.ibb.co/qLrKDm82/d9737e72-f15b-4c34-b0c4-e04af16b8c01-16-9-aspect-ratio-1600w-0.jpg')" style="width:100%;height:140px;object-fit:cover"><div style="background:#2a2200;padding:8px 10px;font-size:12px"><strong style="color:#f9ca24">⚡ Bolsones en los árboles</strong><p style="color:#999;margin-top:3px;font-size:11px;line-height:1.4">Nidos de seda blanca en las copas de los pinos. Las orugas están dentro y bajarán pronto.</p></div></div></div><p style="font-size:12px;color:#888;margin-top:10px;line-height:1.5">💡 <strong style="color:#bdc3c7">Importante:</strong> aunque las orugas estén muertas o secas, sus pelos urticantes siguen siendo peligrosos durante meses.</p></div>
-    <div class="info-card"><h3>Síntomas en tu perro</h3><p>Si tu perro tiene contacto, puede presentar de inmediato:</p><div class="sintomas"><div class="sintoma">Babeo intenso</div><div class="sintoma">Inflamación lengua</div><div class="sintoma">Rascado de boca</div><div class="sintoma">Vómitos</div><div class="sintoma">Dificultad al respirar</div><div class="sintoma">Lengua morada</div></div></div>
-    <div class="info-card card-urgente"><h3>Protocolo de emergencia</h3><div class="protocolo"><div class="paso"><div class="paso-num">1</div><p><strong>No toques</strong> la zona afectada sin guantes</p></div><div class="paso"><div class="paso-num">2</div><p>Lava con <strong>agua fría abundante</strong> durante 5–10 minutos</p></div><div class="paso"><div class="paso-num">3</div><p><strong>Ve al veterinario de urgencias de inmediato</strong></p></div><div class="paso"><div class="paso-num">4</div><p>Usa la pestaña <strong>Urgencias</strong> para encontrar la clínica más cercana</p></div></div></div>
-    <div class="info-card zonas"><h3>Zonas de mayor riesgo en Mallorca</h3><p>🌲 Serra de Tramuntana — Sóller, Valldemossa, Deià<br>🌲 Bosques de Calvià y Andratx<br>🌲 Pinares de Llucmajor y Campos<br>🌲 Zona norte — Alcúdia, Pollença, Formentor<br>🌲 Cualquier pinar en toda la isla</p></div>
-    <button class="btn-share" onclick="shareApp()">📢 Compartir app con amigos perrunos <span class="share-count" id="share-count-info"></span></button>
-    <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;margin-bottom:14px">Toca una vez por cada contacto para sumar puntos 🐾</p>
-    <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
+
+    <div class="port-cta-grid">
+      <button class="port-cta port-cta-peligros" onclick="showTabByName('mapa')" aria-label="Ver mapa de peligros">
+        <div class="port-cta-circle"></div>
+        <div class="port-cta-emoji">⚠️</div>
+        <div class="port-cta-titulo">Mapa de peligros</div>
+        <div class="port-cta-sub" id="portCtaPeligrosSub">cargando...</div>
+      </button>
+      <button class="port-cta port-cta-rutas" onclick="showTabByName('mapa');setTimeout(()=>switchMapModeByName('rutas'),200)" aria-label="Ver rutas recomendadas">
+        <div class="port-cta-circle"></div>
+        <div class="port-cta-emoji">🌳</div>
+        <div class="port-cta-titulo">Rutas recomendadas</div>
+        <div class="port-cta-sub">paseos seguros verificados</div>
+      </button>
+    </div>
+
+    <div class="port-section-title">qué peligros encuentras aquí</div>
+    <!-- TODO: reemplazar fondos de gradiente por fotos reales de cada peligro cuando estén disponibles -->
+    <div class="port-carrusel">
+      <button class="port-tarjeta tarjeta-procesionaria" onclick="openProcesionariaInfo()" aria-label="Información sobre procesionaria"><div class="port-tarjeta-label">Procesionaria</div></button>
+      <button class="port-tarjeta tarjeta-cristales" aria-label="Cristales"><div class="port-tarjeta-label">Cristales</div></button>
+      <button class="port-tarjeta tarjeta-veneno" aria-label="Comida envenenada"><div class="port-tarjeta-label">Comida envenenada</div></button>
+      <button class="port-tarjeta tarjeta-garrapatas" aria-label="Garrapatas"><div class="port-tarjeta-label">Garrapatas</div></button>
+      <button class="port-tarjeta tarjeta-otros" aria-label="Otros peligros"><div class="port-tarjeta-label">Otros</div></button>
+    </div>
+    <p class="port-carrusel-microcopy">empezamos con la procesionaria, hoy cubrimos cualquier peligro que veas en tu paseo</p>
+
+    <div class="port-section-title">accesos rápidos</div>
+    <div class="port-quick-grid">
+      <button class="port-quick" onclick="showTabByName('mapa');setTimeout(activateReportMode,200)" aria-label="Reportar peligro"><div class="port-quick-emoji">📸</div><div class="port-quick-label">Reportar</div></button>
+      <button class="port-quick" onclick="openRanking()" aria-label="Ver manada"><div class="port-quick-emoji">🐾</div><div class="port-quick-label">Manada</div></button>
+      <button class="port-quick" onclick="openProfile()" aria-label="Mi perfil"><div class="port-quick-emoji">👤</div><div class="port-quick-label">Mi perfil</div></button>
+    </div>
+
+    <!-- TODO: cuando exista pestaña interna de servicios PDLI, redirigir ahí en lugar de a web externa -->
+    <a class="port-pie" href="https://perrosdelaisla.com" target="_blank" rel="noopener">
+      <span class="port-pie-izq">servicios de adiestramiento</span>
+      <span class="port-pie-der">Perros de la Isla ›</span>
+    </a>
   </div>
 
   <div id="mapa" class="section">
@@ -238,6 +294,41 @@
   </div>
 </div>
 
+<!-- MODAL INFO PROCESIONARIA (contenido educativo movido desde portada) -->
+<div id="procesionariaInfoModal" class="proc-info-modal">
+  <div class="proc-info-card">
+    <div class="proc-info-header">
+      <h2>🐛 Procesionaria del pino</h2>
+      <button class="proc-info-close" onclick="closeProcesionariaInfo()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="proc-info-body">
+      <div class="alerta-banner"><div class="icon">🚨</div><div><h3>Temporada de alto riesgo activa</h3><p>Enero – Abril: máxima precaución en pinares de Mallorca</p></div></div>
+      <div class="season-card"><h3>Riesgo por meses</h3><div class="months"><div class="month risk">E</div><div class="month high-risk">F</div><div class="month high-risk">M</div><div class="month high-risk">A</div><div class="month risk">M</div><div class="month safe">J</div><div class="month safe">J</div><div class="month safe">A</div><div class="month safe">S</div><div class="month safe">O</div><div class="month risk">N</div><div class="month risk">D</div></div><p style="font-size:11px;color:#555;margin-top:9px">🔴 Alto riesgo · 🟡 Riesgo moderado · 🟢 Bajo riesgo</p></div>
+      <div class="info-card"><h3>¿Qué es la procesionaria?</h3><p>La procesionaria del pino (<em>Thaumetopoea pityocampa</em>) es una oruga muy común en los pinares de Mallorca. Sus pelos urticantes son <strong>extremadamente peligrosos</strong> para los perros: pueden causar necrosis en la lengua e incluso la muerte si no se actúa rápido.</p></div>
+      <div class="info-card"><h3>Aprende a reconocerla</h3><p>La procesionaria tiene dos formas visibles. Aprende a identificarlas para proteger a tu perro:</p><div style="display:flex;flex-direction:column;gap:10px;margin-top:12px"><div style="border-radius:8px;overflow:hidden;border:1px solid #333"><img src="https://i.ibb.co/BHP7LVrm/1024px-thaumetopoea-pityocampa800.jpg" alt="Procesionaria en procesión activa" class="clickable-img" onclick="openImage('https://i.ibb.co/BHP7LVrm/1024px-thaumetopoea-pityocampa800.jpg')" style="width:100%;height:140px;object-fit:cover"><div style="background:#2a0a0a;padding:8px 10px;font-size:12px"><strong style="color:#e17055">⚠️ Procesión activa en el suelo</strong><p style="color:#999;margin-top:3px;font-size:11px;line-height:1.4">Orugas en fila bajando del árbol o cruzando caminos. MÁXIMO PELIGRO.</p></div></div><div style="border-radius:8px;overflow:hidden;border:1px solid #333"><img src="https://i.ibb.co/qLrKDm82/d9737e72-f15b-4c34-b0c4-e04af16b8c01-16-9-aspect-ratio-1600w-0.jpg" alt="Bolsón de procesionaria" class="clickable-img" onclick="openImage('https://i.ibb.co/qLrKDm82/d9737e72-f15b-4c34-b0c4-e04af16b8c01-16-9-aspect-ratio-1600w-0.jpg')" style="width:100%;height:140px;object-fit:cover"><div style="background:#2a2200;padding:8px 10px;font-size:12px"><strong style="color:#f9ca24">⚡ Bolsones en los árboles</strong><p style="color:#999;margin-top:3px;font-size:11px;line-height:1.4">Nidos de seda blanca en las copas de los pinos. Las orugas están dentro y bajarán pronto.</p></div></div></div><p style="font-size:12px;color:#888;margin-top:10px;line-height:1.5">💡 <strong style="color:#bdc3c7">Importante:</strong> aunque las orugas estén muertas o secas, sus pelos urticantes siguen siendo peligrosos durante meses.</p></div>
+      <div class="info-card"><h3>Síntomas en tu perro</h3><p>Si tu perro tiene contacto, puede presentar de inmediato:</p><div class="sintomas"><div class="sintoma">Babeo intenso</div><div class="sintoma">Inflamación lengua</div><div class="sintoma">Rascado de boca</div><div class="sintoma">Vómitos</div><div class="sintoma">Dificultad al respirar</div><div class="sintoma">Lengua morada</div></div></div>
+      <div class="info-card card-urgente"><h3>Protocolo de emergencia</h3><div class="protocolo"><div class="paso"><div class="paso-num">1</div><p><strong>No toques</strong> la zona afectada sin guantes</p></div><div class="paso"><div class="paso-num">2</div><p>Lava con <strong>agua fría abundante</strong> durante 5–10 minutos</p></div><div class="paso"><div class="paso-num">3</div><p><strong>Ve al veterinario de urgencias de inmediato</strong></p></div><div class="paso"><div class="paso-num">4</div><p>Usa la pestaña <strong>Urgencias</strong> para encontrar la clínica más cercana</p></div></div></div>
+      <div class="info-card zonas"><h3>Zonas de mayor riesgo en Mallorca</h3><p>🌲 Serra de Tramuntana — Sóller, Valldemossa, Deià<br>🌲 Bosques de Calvià y Andratx<br>🌲 Pinares de Llucmajor y Campos<br>🌲 Zona norte — Alcúdia, Pollença, Formentor<br>🌲 Cualquier pinar en toda la isla</p></div>
+      <button class="btn-share" onclick="shareApp()">📢 Compartir app con amigos perrunos <span class="share-count" id="share-count-info"></span></button>
+      <p style="font-size:11px;color:#666;text-align:center;margin-top:-8px;margin-bottom:14px">Toca una vez por cada contacto para sumar puntos 🐾</p>
+    </div>
+  </div>
+</div>
+
+<!-- MENÚ LATERAL (hamburguesa de la portada) -->
+<div id="sideMenuModal" class="side-menu-modal" onclick="if(event.target===this) closeSideMenu()">
+  <div class="side-menu-card">
+    <div class="side-menu-header">
+      <h3>MENÚ</h3>
+      <button class="side-menu-close" onclick="closeSideMenu()" aria-label="Cerrar menú">✕</button>
+    </div>
+    <button class="side-menu-item" onclick="closeSideMenu();openProfile()"><span class="side-menu-item-emoji">👤</span>Mi perfil</button>
+    <button class="side-menu-item" onclick="closeSideMenu();openMisReportes()"><span class="side-menu-item-emoji">📋</span>Mis reportes</button>
+    <button class="side-menu-item" onclick="closeSideMenu();openRanking()"><span class="side-menu-item-emoji">🏆</span>Ranking de la comunidad</button>
+    <button class="side-menu-item" onclick="closeSideMenu();shareApp()"><span class="side-menu-item-emoji">📢</span>Compartir la app</button>
+  </div>
+</div>
+
 <!-- MIS REPORTES MODAL -->
 <div id="misReportesModal" class="mis-reportes-modal">
   <div class="mis-reportes-card">
@@ -318,6 +409,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=18"></script>
+<script src="app.js?v=19"></script>
 </body>
 </html>

@@ -597,3 +597,105 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .location-picker-done{background:#c0392b;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer}
 .location-picker-done:active{background:#a02d22}
 #modal.hidden-temporarily{display:none !important}
+
+/* ===== PORTADA HOME (rediseño casual game) ===== */
+body.tab-info > .app{background:#FFFAF3}
+body.tab-info > .app > header{display:none}
+body.tab-info > .app > .nav{background:#FFFAF3;border-color:#EDE0CC;top:0}
+body.tab-info > .app > .nav button{color:#8a7c63}
+body.tab-info > .app > .nav button.active{color:#c0392b;border-bottom-color:#c0392b}
+body.tab-info > .app > .nav button.nav-training.active{color:#9cb64b;border-bottom-color:#9cb64b}
+
+.section-portada{padding:0 16px 90px;color:#3a2e1e;font-family:'Inter',sans-serif}
+
+.port-header{display:flex;align-items:center;gap:12px;padding:16px 0 14px;border-bottom:1px solid #EDE0CC;margin-bottom:18px}
+.port-logo-placeholder{width:38px;height:38px;background:#000;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.port-logo-rect{width:18px;height:6px;background:#c0392b;border-radius:1px}
+.port-brand{flex:1;min-width:0}
+.port-brand-name{font-size:14px;font-weight:500;letter-spacing:0.8px;color:#3a2e1e}
+.port-brand-sub{font-size:11px;color:#8a7c63;margin-top:2px}
+.port-menu-btn{width:36px;height:36px;border-radius:50%;background:#FFF3D6;border:none;font-size:16px;color:#5C3F0E;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.port-menu-btn:active{transform:scale(0.94)}
+
+.port-saludo-wrap{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.port-saludo{flex:1;display:flex;align-items:center;gap:12px;min-width:0}
+.port-avatar{width:52px;height:52px;border-radius:50%;background:#D4E8B8;border:3px solid #FFF;box-shadow:0 2px 6px rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;overflow:hidden}
+.port-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.port-saludo-text{flex:1;min-width:0}
+.port-saludo-hola{font-size:19px;font-weight:500;color:#3a2e1e;line-height:1.2}
+.port-saludo-pregunta{font-size:13px;color:#8a7c63;margin-top:3px;line-height:1.3}
+
+.port-ganador{position:relative;width:78px;height:78px;background:none;border:none;padding:0;cursor:pointer;flex-shrink:0;transition:transform .15s}
+.port-ganador:active{transform:scale(0.96)}
+.port-ganador-halo{position:absolute;inset:0;border-radius:50%;background:#FFD978;opacity:0.35}
+.port-ganador-medalla{position:absolute;top:4px;left:4px;width:70px;height:70px;border-radius:50%;background:linear-gradient(180deg,#E8A833 0%,#F4C962 100%);box-shadow:0 2px 0 #B8821E,0 4px 10px rgba(184,130,30,0.3);display:flex;align-items:center;justify-content:center}
+.port-ganador-centro{width:56px;height:56px;border-radius:50%;background:#FFF3D6;border:2px solid #FFE9A8;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;color:#5C3F0E;overflow:hidden;text-align:center;line-height:1}
+.port-ganador-centro img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.port-ganador-centro .ganador-nombre{font-size:8px;font-weight:600;margin-top:2px;letter-spacing:0.3px;padding:0 2px;line-height:1.1}
+.port-ganador-conf{position:absolute;border-radius:50%;background:#FFD978}
+.port-ganador-conf.conf-1{top:0;right:4px;width:8px;height:8px;background:#F4C962}
+.port-ganador-conf.conf-2{bottom:4px;left:0;width:7px;height:7px;background:#FFE9A8}
+.port-ganador-conf.conf-3{top:36px;left:-2px;width:6px;height:6px;background:#FFD978}
+
+body.tab-info .reto-banner{margin-bottom:20px}
+body.tab-info .reto-banner:empty{display:none}
+
+.port-cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.port-cta{position:relative;border:none;border-radius:22px;min-height:130px;padding:18px 14px;text-align:left;cursor:pointer;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .15s;font-family:'Inter',sans-serif}
+.port-cta:active{transform:scale(0.98)}
+.port-cta-circle{position:absolute;top:-20px;right:-20px;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.25)}
+.port-cta-emoji{font-size:30px;line-height:1;margin-bottom:6px;position:relative;z-index:1}
+.port-cta-titulo{font-size:15px;font-weight:500;line-height:1.2;position:relative;z-index:1}
+.port-cta-sub{font-size:11px;font-weight:500;margin-top:4px;line-height:1.2;position:relative;z-index:1}
+.port-cta-peligros{background:linear-gradient(180deg,#FFE0D6 0%,#FFCAB8 100%);box-shadow:0 3px 0 #E89976,0 6px 12px rgba(232,153,118,0.25);color:#5C1A0B}
+.port-cta-peligros .port-cta-sub{color:#8C2D14}
+.port-cta-rutas{background:linear-gradient(180deg,#DCEDB8 0%,#BBDB7E 100%);box-shadow:0 3px 0 #8FB544,0 6px 12px rgba(143,181,68,0.25);color:#2D3F0F}
+.port-cta-rutas .port-cta-sub{color:#4A5F1F}
+
+.port-section-title{font-size:12px;font-weight:500;color:#6b5a44;margin-bottom:10px;letter-spacing:0.3px}
+.port-carrusel{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 16px 6px;margin:0 -16px;scrollbar-width:none}
+.port-carrusel::-webkit-scrollbar{display:none}
+.port-tarjeta{flex:0 0 92px;width:92px;height:92px;border-radius:18px;border:none;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding:8px;scroll-snap-align:start;transition:transform .15s;position:relative;overflow:hidden;font-family:'Inter',sans-serif}
+.port-tarjeta:active{transform:scale(0.96)}
+.port-tarjeta-label{font-size:11px;font-weight:500;color:#fff;text-align:center;line-height:1.1}
+.tarjeta-procesionaria{background:linear-gradient(180deg,#F4A88A 0%,#E8825E 100%);box-shadow:0 2px 0 #C9684A}
+.tarjeta-cristales{background:linear-gradient(180deg,#C9C4B8 0%,#A8A296 100%);box-shadow:0 2px 0 #87816F}
+.tarjeta-veneno{background:linear-gradient(180deg,#C8DD9A 0%,#A8C470 100%);box-shadow:0 2px 0 #87A356}
+.tarjeta-garrapatas{background:linear-gradient(180deg,#FAD78A 0%,#F4BD52 100%);box-shadow:0 2px 0 #C49232}
+.tarjeta-garrapatas .port-tarjeta-label{color:#5C3F0E}
+.tarjeta-otros{background:linear-gradient(180deg,#BFD9F2 0%,#92BCE4 100%);box-shadow:0 2px 0 #6896C2}
+
+.port-carrusel-microcopy{font-size:11px;color:#8a7c63;margin-top:10px;margin-bottom:22px;line-height:1.4}
+
+.port-quick-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+.port-quick{background:#FFF;border:none;border-radius:18px;padding:14px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 2px 0 #EFE6D6,0 1px 8px rgba(0,0,0,0.04);transition:transform .15s;font-family:'Inter',sans-serif;min-height:64px}
+.port-quick:active{transform:scale(0.96)}
+.port-quick-emoji{font-size:22px;line-height:1}
+.port-quick-label{font-size:11px;font-weight:500;color:#6b5a44}
+
+.port-pie{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#2C2418;border-radius:14px;text-decoration:none;margin:6px 0 8px;transition:opacity .15s}
+.port-pie:active{opacity:0.85}
+.port-pie-izq{font-size:11px;color:#B8AB94}
+.port-pie-der{font-size:11px;font-weight:500;color:#FFB85C}
+
+/* ===== MODAL INFO PROCESIONARIA ===== */
+.proc-info-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:4500;align-items:flex-start;justify-content:center;padding:0;overflow-y:auto}
+.proc-info-modal.open{display:flex}
+.proc-info-card{background:#111;width:100%;max-width:500px;min-height:100vh;padding:0;display:flex;flex-direction:column}
+.proc-info-header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#111;border-bottom:1px solid #2a2a2a;z-index:1}
+.proc-info-header h2{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;letter-spacing:.5px;margin:0}
+.proc-info-close{background:none;border:none;color:#888;font-size:22px;cursor:pointer;padding:4px 8px;line-height:1;min-width:44px;min-height:44px}
+.proc-info-close:active{color:#fff}
+.proc-info-body{padding:14px 16px 30px;color:#f0f0f0;flex:1}
+
+/* ===== SIDE MENU (hamburguesa) ===== */
+.side-menu-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:4600;justify-content:flex-end}
+.side-menu-modal.open{display:flex}
+.side-menu-card{width:80%;max-width:300px;height:100%;background:#FFFAF3;padding:20px 18px;display:flex;flex-direction:column;gap:6px;box-shadow:-4px 0 16px rgba(0,0,0,0.2)}
+.side-menu-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #EDE0CC}
+.side-menu-header h3{font-size:14px;font-weight:500;letter-spacing:0.8px;color:#3a2e1e;margin:0}
+.side-menu-close{background:none;border:none;color:#8a7c63;font-size:20px;cursor:pointer;padding:4px 8px;line-height:1;min-width:44px;min-height:44px}
+.side-menu-item{background:transparent;border:none;text-align:left;padding:14px 12px;border-radius:10px;font-size:14px;color:#3a2e1e;cursor:pointer;display:flex;align-items:center;gap:12px;transition:background .15s;font-family:'Inter',sans-serif;min-height:48px}
+.side-menu-item:hover{background:#FFF3D6}
+.side-menu-item:active{background:#FFE9A8}
+.side-menu-item-emoji{font-size:18px}

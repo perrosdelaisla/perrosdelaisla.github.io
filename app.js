@@ -154,6 +154,8 @@ function getProfile(){const p=localStorage.getItem('pdi_profile');return p?JSON.
 document.addEventListener('DOMContentLoaded',()=>{
   const profile=getProfile();
   if(profile){document.getElementById('onboarding').classList.add('hidden');updateProfileBtn();}
+  document.body.classList.add('tab-info');
+  if(typeof loadPortada==='function') loadPortada();
 
   const im=document.getElementById('imgModal');
   if(im){
@@ -569,7 +571,7 @@ function filterVets(zone,btn){document.querySelectorAll('.filtro').forEach(b=>b.
 renderVets(vets);
 
 // NAV
-function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);window.scrollTo({top:0,behavior:'smooth'});}
+function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');document.body.classList.toggle('tab-info',id==='info');if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='info'&&typeof loadPortada==='function') loadPortada();window.scrollTo({top:0,behavior:'smooth'});}
 
 // MAP MODE TOGGLE
 let currentMapMode='avistamientos';
@@ -1551,7 +1553,7 @@ document.addEventListener('touchend',e=>{
   // Bloqueado si el toque empezó en una zona interactiva
   if(swipeBlocked) return;
   // No hacer swipe si hay un modal abierto
-  if(document.querySelector('.modal.open,.profile-modal.open,.ranking-modal.open,#misReportesModal.open')) return;
+  if(document.querySelector('.modal.open,.profile-modal.open,.ranking-modal.open,#misReportesModal.open,.proc-info-modal.open,.side-menu-modal.open')) return;
   const dx=e.changedTouches[0].clientX-swipeStartX;
   const dy=e.changedTouches[0].clientY-swipeStartY;
   if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)) return;
@@ -1573,6 +1575,8 @@ window.addEventListener('popstate',()=>{
   if(miniPerfil&&miniPerfil.classList.contains('open')){cerrarMiniPerfil();history.pushState({pdi:true},'','');return;}
   if(document.getElementById('imgModal').style.display==='flex'){closeImage();history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.modal.open')){document.querySelector('.modal.open').classList.remove('open');history.pushState({pdi:true},'','');return;}
+  if(document.querySelector('.proc-info-modal.open')){closeProcesionariaInfo();history.pushState({pdi:true},'','');return;}
+  if(document.querySelector('.side-menu-modal.open')){closeSideMenu();history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.ranking-modal.open')){closeRanking();history.pushState({pdi:true},'','');return;}
   const misRep=document.getElementById('misReportesModal');
   if(misRep&&misRep.classList.contains('open')){closeMisReportes();history.pushState({pdi:true},'','');return;}
@@ -1732,6 +1736,69 @@ async function abrirMiniPerfil(userId) {
 
 function cerrarMiniPerfil() {
   document.getElementById('miniPerfilModal').classList.remove('open');
+}
+
+// ===== PORTADA HOME =====
+function showTabByName(id){
+  const idx=TABS.indexOf(id);
+  if(idx<0) return;
+  const btn=document.querySelectorAll('.nav button')[idx];
+  if(btn) showTab(id,btn);
+}
+function switchMapModeByName(mode){
+  const btn=document.querySelector(mode==='rutas'?'.toggle-rutas':'.toggle-avistamientos');
+  if(btn) switchMapMode(mode,btn);
+}
+function openSideMenu(){document.getElementById('sideMenuModal').classList.add('open');}
+function closeSideMenu(){document.getElementById('sideMenuModal').classList.remove('open');}
+function openProcesionariaInfo(){document.getElementById('procesionariaInfoModal').classList.add('open');}
+function closeProcesionariaInfo(){document.getElementById('procesionariaInfoModal').classList.remove('open');}
+
+async function loadPortada(){
+  const profile=getProfile();
+  const holaEl=document.getElementById('portHola');
+  const pregEl=document.getElementById('portPregunta');
+  const avatarEl=document.getElementById('portAvatar');
+  if(holaEl) holaEl.textContent=profile?.nombre?`Hola ${profile.nombre}`:'Hola, tutor';
+  if(pregEl) pregEl.textContent=profile?.nombre_perro?`¿qué hacemos hoy con ${profile.nombre_perro}?`:'¿qué hacemos hoy?';
+  if(avatarEl){
+    if(profile?.foto) avatarEl.innerHTML=`<img src="${profile.foto}" alt="">`;
+    else avatarEl.innerHTML='🐾';
+  }
+
+  const subEl=document.getElementById('portCtaPeligrosSub');
+  if(subEl){
+    try{
+      const r=await fetch(SUPA_URL+'/rest/v1/avistamientos?select=id&status=eq.activo',{headers:HEADERS});
+      const data=await r.json();
+      const n=Array.isArray(data)?data.length:0;
+      subEl.textContent=n===0?'todo tranquilo por aquí':`${n} reporte${n===1?'':'s'} activo${n===1?'':'s'} cerca`;
+    }catch(e){
+      subEl.textContent='ver mapa';
+    }
+  }
+
+  const ganadorEl=document.getElementById('portGanador');
+  const centroEl=document.getElementById('portGanadorCentro');
+  if(ganadorEl&&centroEl){
+    try{
+      const r=await fetch(SUPA_URL+'/rest/v1/usuarios?select=nombre,nombre_perro,visible,foto,shares_reto&order=shares_reto.desc&limit=1',{headers:HEADERS});
+      const[w]=await r.json();
+      if(!w||!w.shares_reto||w.shares_reto===0){
+        ganadorEl.style.display='none';
+      }else{
+        ganadorEl.style.display='inline-block';
+        if(w.foto&&w.visible){
+          centroEl.innerHTML=`<img src="${w.foto}" alt="">`;
+        }else{
+          const name=w.visible?(w.nombre+(w.nombre_perro?' Y '+w.nombre_perro:'')).toUpperCase():'GANADOR';
+          centroEl.innerHTML=`🏆<div class="ganador-nombre">${escapeHtml(name)}</div>`;
+        }
+      }
+    }catch(e){
+      ganadorEl.style.display='none';
+    }
+  }
 }
 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{});}

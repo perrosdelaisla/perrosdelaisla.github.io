@@ -139,18 +139,6 @@ async function gatherReferencedPaths(url, headers) {
     console.warn(`   ⚠️  avistamientos: ${e.message}`);
   }
 
-  // intercambios.foto (si la tabla existe)
-  try {
-    const inter = await fetchTable(url, headers, 'intercambios', 'foto');
-    for (const i of inter) {
-      const p = extractPath(i.foto);
-      if (p) paths.add(p);
-    }
-    console.log(`   ✓ intercambios: ${inter.length} filas`);
-  } catch (e) {
-    console.log(`   – intercambios: no leída (${e.message.split('\n')[0]})`);
-  }
-
   // usuarios.foto
   try {
     const users = await fetchTable(url, headers, 'usuarios', 'foto');

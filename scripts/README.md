@@ -44,7 +44,7 @@ Supabase Dashboard → Settings → API → **service_role**. Tiene permisos com
 
 ## `limpieza-huerfanos.js`
 
-Detecta archivos del bucket `avistamientos` que **no están referenciados** en ninguna fila de la BD (`avistamientos.foto`, `avistamientos.fotos[]`, `usuarios.foto`, `rutas.foto`, `intercambios.foto`).
+Detecta archivos del bucket `avistamientos` que **no están referenciados** en ninguna fila de la BD (`avistamientos.foto`, `avistamientos.fotos[]`, `usuarios.foto`, `rutas.foto`).
 
 Causas típicas de huérfanos:
 - Reportes archivados que ya nadie referencia.
@@ -75,6 +75,6 @@ Tras la tabla, pide escribir literal `BORRAR` (en mayúsculas) para confirmar. S
 
 ### Dependencias del script
 
-- Lee `avistamientos`, `usuarios`, `rutas`, `intercambios` (esta última es opcional — si no existe, la salta sin error).
+- Lee `avistamientos`, `usuarios`, `rutas`.
 - Filtra "carpetas" del bucket (entradas con `id: null`).
 - Soporta tanto URLs completas (`https://...supabase.co/storage/v1/object/public/avistamientos/foo.jpg`) como paths sueltos (`foo.jpg`) en los campos de la BD.

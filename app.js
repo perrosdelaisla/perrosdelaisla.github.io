@@ -154,8 +154,7 @@ function getProfile(){const p=localStorage.getItem('pdi_profile');return p?JSON.
 document.addEventListener('DOMContentLoaded',()=>{
   const profile=getProfile();
   if(profile){document.getElementById('onboarding').classList.add('hidden');updateProfileBtn();}
-  document.body.classList.add('tab-info');
-  if(typeof loadPortada==='function') loadPortada();
+  if(typeof loadInicio==='function') loadInicio();
 
   const im=document.getElementById('imgModal');
   if(im){
@@ -571,7 +570,7 @@ function filterVets(zone,btn){document.querySelectorAll('.filtro').forEach(b=>b.
 renderVets(vets);
 
 // NAV
-function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');document.body.classList.toggle('tab-info',id==='info');if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='info'&&typeof loadPortada==='function') loadPortada();window.scrollTo({top:0,behavior:'smooth'});}
+function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='inicio'&&typeof loadInicio==='function') loadInicio();window.scrollTo({top:0,behavior:'smooth'});}
 
 // MAP MODE TOGGLE
 let currentMapMode='avistamientos';
@@ -589,9 +588,9 @@ let traceMode=false,traceWaypoints=[],traceMarkers=[],tracePolyline=null;
 
 async function loadNamesCache(ids){const toFetch=ids.filter(id=>id&&!namesCache[id]);if(toFetch.length===0) return;try{const qs=toFetch.map(id=>`"${id}"`).join(',');const res=await fetch(SUPA_URL+`/rest/v1/usuarios?id=in.(${qs})&select=id,nombre,nombre_perro,zona,visible,foto`,{headers:HEADERS});const users=await res.json();users.forEach(u=>{namesCache[u.id]=u.visible?{name:u.nombre+' y '+u.nombre_perro+' 🐕',foto:u.foto||null}:{name:'Un vecino de '+u.zona,foto:null};});toFetch.forEach(id=>{if(!namesCache[id]) namesCache[id]={name:'Un vecino de Mallorca',foto:null};});}catch(e){}}
 
-// CAMBIO 4: capas de mapa — orden de ciclo y etiquetas
-const MAP_LAYERS_ORDER=['topo','street','satellite','dark'];
-const MAP_LAYER_NEXT_LABELS={topo:'🗺️ Callejero',street:'🛰️ Satélite',satellite:'🌑 Oscuro',dark:'🥾 Senderos'};
+// Capas de mapa: 2 estados alternables (callejero ↔ satélite). Toggle 🗺️/🛰️
+const MAP_LAYERS_ORDER=['street','satellite'];
+const MAP_LAYER_NEXT_LABELS={street:'🛰️',satellite:'🗺️'};
 
 function initMap(){
   if(mapInit) return;mapInit=true;
@@ -601,16 +600,14 @@ function initMap(){
   window.map=L.map('map',{zoomControl:false,maxZoom:19}).setView([39.65,2.95],9);
   markersLayer.addTo(window.map);rutasLayer.addTo(window.map);
 
-  // CAMBIO 4 PASO 1: 4 capas de mapa
-  window.topoLayer=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{attribution:'© OpenTopoMap',maxZoom:17,maxNativeZoom:17});
-  window.darkLayer=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB',maxZoom:19});
+  // 2 capas: callejero (default) y satélite
   window.streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19});
   window.satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
 
-  // CAMBIO 4 PASO 3: capa inicial topo, botón muestra siguiente (Callejero)
-  window.currentLayer='topo';
-  window.topoLayer.addTo(window.map);
-  document.getElementById('layerToggleBtn').innerHTML='🗺️ Callejero';
+  // Capa inicial: callejero. El botón muestra el icono de la capa siguiente.
+  window.currentLayer='street';
+  window.streetLayer.addTo(window.map);
+  document.getElementById('layerToggleBtn').innerHTML='🛰️';
 
   window.rIcon=createRiskIcon('#c0392b');
   const bIcon=L.divIcon({html:'<div style="background:#2980b9;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>',iconSize:[13,13],iconAnchor:[6,6],className:''});
@@ -655,21 +652,17 @@ function initMap(){
   loadAvistamientos();
 }
 
-// CAMBIO 4 PASO 4: función toggleMapLayer cicla entre 4 capas
+// Alterna entre callejero y satélite (2 capas)
 function toggleMapLayer(e){
   if(e){e.stopPropagation();e.preventDefault();}
   const btn=document.getElementById('layerToggleBtn');
-  if(window.currentLayer==='topo') window.map.removeLayer(window.topoLayer);
-  else if(window.currentLayer==='street') window.map.removeLayer(window.streetLayer);
+  if(window.currentLayer==='street') window.map.removeLayer(window.streetLayer);
   else if(window.currentLayer==='satellite') window.map.removeLayer(window.satelliteLayer);
-  else if(window.currentLayer==='dark') window.map.removeLayer(window.darkLayer);
   const idx=MAP_LAYERS_ORDER.indexOf(window.currentLayer);
   const next=MAP_LAYERS_ORDER[(idx+1)%MAP_LAYERS_ORDER.length];
   window.currentLayer=next;
-  if(next==='topo') window.topoLayer.addTo(window.map);
-  else if(next==='street') window.streetLayer.addTo(window.map);
+  if(next==='street') window.streetLayer.addTo(window.map);
   else if(next==='satellite') window.satelliteLayer.addTo(window.map);
-  else if(next==='dark') window.darkLayer.addTo(window.map);
   btn.innerHTML=MAP_LAYER_NEXT_LABELS[next];
 }
 
@@ -1538,32 +1531,140 @@ function installApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.
 function closeBanner(){document.getElementById('installBanner').style.display='none';}
 document.addEventListener('DOMContentLoaded',()=>{setTimeout(showInstallBanner,3000);});
 
-// ===== SWIPE ENTRE PESTAÑAS =====
-const TABS=['info','mapa','vets','adiestramiento'];
-let swipeStartX=0,swipeStartY=0,swipeBlocked=false;
+// ===== SWIPE ENTRE PESTAÑAS (siguiendo el dedo) =====
+const TABS=['inicio','info','mapa','vets','adiestramiento'];
+const SWIPE_THRESHOLD_PCT=0.25;
+const SWIPE_MIN_HORIZ=10;
+let swipeStartX=0,swipeStartY=0,swipeBlocked=false,swipeStarted=false,swipePreviewSection=null,swipeDirection=0,swipeActiveDelta=0;
+
+function shouldInterceptSwipe(target){
+  if(!target||!target.closest) return false;
+  if(target.closest('#map')||target.closest('.leaflet-container')) return false;
+  if(target.closest('[data-horizontal-scroll]')) return false;
+  if(target.closest('.nav')||target.closest('header')) return false;
+  if(target.closest('#traceToolbar')||target.closest('#gpsToolbar')||target.closest('#locationPickerToolbar')) return false;
+  if(document.querySelector('.modal.open,.profile-modal.open,.ranking-modal.open,#misReportesModal.open')) return false;
+  const mp=document.getElementById('miniPerfilModal');
+  if(mp&&mp.classList.contains('open')) return false;
+  const im=document.getElementById('imgModal');
+  if(im&&im.style.display==='flex') return false;
+  let el=target;
+  while(el&&el!==document.body){
+    const style=getComputedStyle(el);
+    if((style.overflowX==='auto'||style.overflowX==='scroll')&&el.scrollWidth>el.clientWidth) return false;
+    el=el.parentElement;
+  }
+  return true;
+}
+
+function getActiveSection(){return document.querySelector('.section.active');}
+
+function setupSwipePreview(direction){
+  const active=getActiveSection();
+  if(!active) return false;
+  const activeIdx=TABS.indexOf(active.id);
+  const nextIdx=activeIdx+direction;
+  if(nextIdx<0||nextIdx>=TABS.length) return false;
+  const nextSection=document.getElementById(TABS[nextIdx]);
+  if(!nextSection) return false;
+  swipePreviewSection=nextSection;
+  swipeDirection=direction;
+  nextSection.style.display='block';
+  nextSection.style.position='absolute';
+  nextSection.style.top='0';
+  nextSection.style.left=direction>0?'100%':'-100%';
+  nextSection.style.width='100%';
+  nextSection.style.zIndex='1';
+  nextSection.style.transition='none';
+  active.style.transition='none';
+  return true;
+}
+
+function applySwipeTransform(dx){
+  const active=getActiveSection();
+  if(active) active.style.transform=`translateX(${dx}px)`;
+  if(swipePreviewSection) swipePreviewSection.style.transform=`translateX(${dx}px)`;
+}
+
+function clearSwipeStyles(section){
+  if(!section) return;
+  section.style.transition='';
+  section.style.transform='';
+  section.style.position='';
+  section.style.top='';
+  section.style.left='';
+  section.style.width='';
+  section.style.zIndex='';
+  section.style.display='';
+}
+
+function completeSwipe(toIdx){
+  const active=getActiveSection();
+  const preview=swipePreviewSection;
+  const target=swipeDirection>0?-window.innerWidth:window.innerWidth;
+  if(active){active.style.transition='transform 250ms ease-out';active.style.transform=`translateX(${target}px)`;}
+  if(preview){preview.style.transition='transform 250ms ease-out';preview.style.transform=`translateX(${target}px)`;}
+  setTimeout(()=>{
+    clearSwipeStyles(active);
+    clearSwipeStyles(preview);
+    swipePreviewSection=null;
+    swipeDirection=0;
+    const navBtns=document.querySelectorAll('.nav button');
+    showTab(TABS[toIdx],navBtns[toIdx]);
+  },260);
+}
+
+function cancelSwipe(){
+  const active=getActiveSection();
+  const preview=swipePreviewSection;
+  if(active){active.style.transition='transform 250ms ease-out';active.style.transform='translateX(0)';}
+  if(preview){preview.style.transition='transform 250ms ease-out';preview.style.transform='translateX(0)';}
+  setTimeout(()=>{
+    clearSwipeStyles(active);
+    clearSwipeStyles(preview);
+    swipePreviewSection=null;
+    swipeDirection=0;
+  },260);
+}
+
 document.addEventListener('touchstart',e=>{
   swipeStartX=e.touches[0].clientX;
   swipeStartY=e.touches[0].clientY;
-  // Bloquear swipe si el toque empieza dentro de zonas interactivas
-  // (mapa, toolbars de trazado/GPS, banner del reto, mini perfil a pantalla completa)
-  const target=e.target;
-  swipeBlocked = !!target.closest('#map, #traceToolbar, #gpsToolbar, .reto-banner, #miniPerfilModal');
+  swipeStarted=false;
+  swipeActiveDelta=0;
+  swipeBlocked=!shouldInterceptSwipe(e.target);
 },{passive:true});
-document.addEventListener('touchend',e=>{
-  // Bloqueado si el toque empezó en una zona interactiva
+
+document.addEventListener('touchmove',e=>{
   if(swipeBlocked) return;
-  // No hacer swipe si hay un modal abierto
-  if(document.querySelector('.modal.open,.profile-modal.open,.ranking-modal.open,#misReportesModal.open,.proc-info-modal.open,.side-menu-modal.open')) return;
-  const dx=e.changedTouches[0].clientX-swipeStartX;
-  const dy=e.changedTouches[0].clientY-swipeStartY;
-  if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)) return;
-  const activeSection=document.querySelector('.section.active');
-  if(!activeSection) return;
-  const currentIdx=TABS.indexOf(activeSection.id);
-  const nextIdx=dx<0?Math.min(currentIdx+1,TABS.length-1):Math.max(currentIdx-1,0);
-  if(nextIdx===currentIdx) return;
-  const navBtns=document.querySelectorAll('.nav button');
-  showTab(TABS[nextIdx],navBtns[nextIdx]);
+  const t=e.touches[0];
+  const dx=t.clientX-swipeStartX;
+  const dy=t.clientY-swipeStartY;
+  if(!swipeStarted){
+    if(Math.abs(dy)>Math.abs(dx)){swipeBlocked=true;return;}
+    if(Math.abs(dx)<SWIPE_MIN_HORIZ) return;
+    const direction=dx<0?1:-1;
+    setupSwipePreview(direction);
+    swipeStarted=true;
+  }
+  let appliedDx=swipePreviewSection?dx:dx*0.3;
+  swipeActiveDelta=appliedDx;
+  applySwipeTransform(appliedDx);
+},{passive:true});
+
+document.addEventListener('touchend',()=>{
+  if(!swipeStarted){swipeBlocked=false;return;}
+  const width=window.innerWidth||380;
+  const threshold=width*SWIPE_THRESHOLD_PCT;
+  const active=getActiveSection();
+  const activeIdx=active?TABS.indexOf(active.id):-1;
+  if(swipePreviewSection&&Math.abs(swipeActiveDelta)>threshold){
+    completeSwipe(activeIdx+swipeDirection);
+  }else{
+    cancelSwipe();
+  }
+  swipeStarted=false;
+  swipeBlocked=false;
 },{passive:true});
 
 // ===== BOTÓN ATRÁS =====
@@ -1575,8 +1676,6 @@ window.addEventListener('popstate',()=>{
   if(miniPerfil&&miniPerfil.classList.contains('open')){cerrarMiniPerfil();history.pushState({pdi:true},'','');return;}
   if(document.getElementById('imgModal').style.display==='flex'){closeImage();history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.modal.open')){document.querySelector('.modal.open').classList.remove('open');history.pushState({pdi:true},'','');return;}
-  if(document.querySelector('.proc-info-modal.open')){closeProcesionariaInfo();history.pushState({pdi:true},'','');return;}
-  if(document.querySelector('.side-menu-modal.open')){closeSideMenu();history.pushState({pdi:true},'','');return;}
   if(document.querySelector('.ranking-modal.open')){closeRanking();history.pushState({pdi:true},'','');return;}
   const misRep=document.getElementById('misReportesModal');
   if(misRep&&misRep.classList.contains('open')){closeMisReportes();history.pushState({pdi:true},'','');return;}
@@ -1738,7 +1837,7 @@ function cerrarMiniPerfil() {
   document.getElementById('miniPerfilModal').classList.remove('open');
 }
 
-// ===== PORTADA HOME =====
+// ===== INICIO HOME =====
 function showTabByName(id){
   const idx=TABS.indexOf(id);
   if(idx<0) return;
@@ -1749,50 +1848,61 @@ function switchMapModeByName(mode){
   const btn=document.querySelector(mode==='rutas'?'.toggle-rutas':'.toggle-avistamientos');
   if(btn) switchMapMode(mode,btn);
 }
-function openSideMenu(){document.getElementById('sideMenuModal').classList.add('open');}
-function closeSideMenu(){document.getElementById('sideMenuModal').classList.remove('open');}
-function openProcesionariaInfo(){document.getElementById('procesionariaInfoModal').classList.add('open');}
-function closeProcesionariaInfo(){document.getElementById('procesionariaInfoModal').classList.remove('open');}
+function toggleMapFabMenu(e){
+  if(e){e.stopPropagation();}
+  const menu=document.getElementById('mapFabMenu');
+  if(menu) menu.classList.toggle('open');
+}
+function closeMapFabMenu(){
+  const menu=document.getElementById('mapFabMenu');
+  if(menu) menu.classList.remove('open');
+}
+document.addEventListener('click',e=>{
+  const menu=document.getElementById('mapFabMenu');
+  if(!menu||!menu.classList.contains('open')) return;
+  if(!e.target.closest('.map-fab-stack')) closeMapFabMenu();
+});
 
-async function loadPortada(){
+async function loadInicio(){
   const profile=getProfile();
-  const holaEl=document.getElementById('portHola');
-  const pregEl=document.getElementById('portPregunta');
-  const avatarEl=document.getElementById('portAvatar');
+  const holaEl=document.getElementById('iniHola');
+  const pregEl=document.getElementById('iniPregunta');
   if(holaEl) holaEl.textContent=profile?.nombre?`Hola ${profile.nombre}`:'Hola, tutor';
   if(pregEl) pregEl.textContent=profile?.nombre_perro?`¿qué hacemos hoy con ${profile.nombre_perro}?`:'¿qué hacemos hoy?';
-  if(avatarEl){
-    if(profile?.foto) avatarEl.innerHTML=`<img src="${profile.foto}" alt="">`;
-    else avatarEl.innerHTML='🐾';
-  }
 
-  const subEl=document.getElementById('portCtaPeligrosSub');
+  const subEl=document.getElementById('iniCtaAlertasSub');
   if(subEl){
     try{
       const r=await fetch(SUPA_URL+'/rest/v1/avistamientos?select=id&status=eq.activo',{headers:HEADERS});
       const data=await r.json();
       const n=Array.isArray(data)?data.length:0;
-      subEl.textContent=n===0?'todo tranquilo por aquí':`${n} reporte${n===1?'':'s'} activo${n===1?'':'s'} cerca`;
+      subEl.textContent=n===0?'Todo tranquilo':`${n} reporte${n===1?'':'s'} activo${n===1?'':'s'}`;
     }catch(e){
-      subEl.textContent='ver mapa';
+      subEl.textContent='Ver alertas';
     }
   }
 
-  const ganadorEl=document.getElementById('portGanador');
-  const centroEl=document.getElementById('portGanadorCentro');
+  const ganadorEl=document.getElementById('iniGanador');
+  const centroEl=document.getElementById('iniGanadorCentro');
+  const trophyEl=centroEl?centroEl.querySelector('.ini-ganador-trophy'):null;
+  const nameEl=document.getElementById('iniGanadorName');
   if(ganadorEl&&centroEl){
     try{
-      const r=await fetch(SUPA_URL+'/rest/v1/usuarios?select=nombre,nombre_perro,visible,foto,shares_reto&order=shares_reto.desc&limit=1',{headers:HEADERS});
+      const r=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,visible,foto,shares_reto&order=shares_reto.desc&limit=1',{headers:HEADERS});
       const[w]=await r.json();
       if(!w||!w.shares_reto||w.shares_reto===0){
         ganadorEl.style.display='none';
       }else{
-        ganadorEl.style.display='inline-block';
-        if(w.foto&&w.visible){
-          centroEl.innerHTML=`<img src="${w.foto}" alt="">`;
+        ganadorEl.style.display='block';
+        const visible=w.visible!==false;
+        if(w.foto&&visible){
+          centroEl.innerHTML=`<img src="${w.foto}" alt="${escapeHtml(w.nombre||'')}">`;
         }else{
-          const name=w.visible?(w.nombre+(w.nombre_perro?' Y '+w.nombre_perro:'')).toUpperCase():'GANADOR';
-          centroEl.innerHTML=`🏆<div class="ganador-nombre">${escapeHtml(name)}</div>`;
+          if(trophyEl) trophyEl.style.display='block';
+          if(nameEl){
+            const name=visible?(w.nombre+(w.nombre_perro?' Y '+w.nombre_perro:'')).toUpperCase():'GANADOR';
+            nameEl.textContent=name;
+          }
         }
       }
     }catch(e){

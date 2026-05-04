@@ -1,13 +1,15 @@
 // Service Worker — Perros de la Isla
 // Estrategia: network-first para archivos propios (HTML/CSS/JS), cache-first para externos
-const CACHE_VERSION = 'pdi-v15';
+const CACHE_VERSION = 'pdi-v16';
 const CACHE_NAME = CACHE_VERSION;
 const OWN_ASSETS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
-  './manifest.json'
+  './manifest.json',
+  './assets/logo-paseos-seguros.png',
+  './assets/logo-paseos-seguros-icon.png'
 ];
 self.addEventListener('install', event => {
   self.skipWaiting();

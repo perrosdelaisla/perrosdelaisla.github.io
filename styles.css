@@ -598,104 +598,84 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .location-picker-done:active{background:#a02d22}
 #modal.hidden-temporarily{display:none !important}
 
-/* ===== PORTADA HOME (rediseño casual game) ===== */
-body.tab-info > .app{background:#FFFAF3}
-body.tab-info > .app > header{display:none}
-body.tab-info > .app > .nav{background:#FFFAF3;border-color:#EDE0CC;top:0}
-body.tab-info > .app > .nav button{color:#8a7c63}
-body.tab-info > .app > .nav button.active{color:#c0392b;border-bottom-color:#c0392b}
-body.tab-info > .app > .nav button.nav-training.active{color:#9cb64b;border-bottom-color:#9cb64b}
+/* ===== PESTAÑA INICIO ===== */
+.section-inicio{padding:0;background:#0A0A0A;color:#f0f0f0;position:relative;overflow-x:hidden}
 
-.section-portada{padding:0 16px 90px;color:#3a2e1e;font-family:'Inter',sans-serif}
+.ini-hero{padding:24px 16px 8px;display:flex;flex-direction:column;align-items:center}
+.ini-hero-logo{width:118px;height:auto;display:block}
+.ini-hero-label{margin-top:6px;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1.5px;color:#C8231A;font-weight:500;text-align:center}
 
-.port-header{display:flex;align-items:center;gap:12px;padding:16px 0 14px;border-bottom:1px solid #EDE0CC;margin-bottom:18px}
-.port-logo-placeholder{width:38px;height:38px;background:#000;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.port-logo-rect{width:18px;height:6px;background:#c0392b;border-radius:1px}
-.port-brand{flex:1;min-width:0}
-.port-brand-name{font-size:14px;font-weight:500;letter-spacing:0.8px;color:#3a2e1e}
-.port-brand-sub{font-size:11px;color:#8a7c63;margin-top:2px}
-.port-menu-btn{width:36px;height:36px;border-radius:50%;background:#FFF3D6;border:none;font-size:16px;color:#5C3F0E;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s}
-.port-menu-btn:active{transform:scale(0.94)}
+.ini-saludo-wrap{position:relative;padding:14px 16px 8px;text-align:center}
+.ini-saludo-hola{font-family:'Inter',sans-serif;font-size:22px;font-weight:500;color:#fff;line-height:1.2}
+.ini-saludo-pregunta{font-size:13px;color:#B8AB94;margin-top:4px;line-height:1.3}
 
-.port-saludo-wrap{display:flex;align-items:center;gap:14px;margin-bottom:20px}
-.port-saludo{flex:1;display:flex;align-items:center;gap:12px;min-width:0}
-.port-avatar{width:52px;height:52px;border-radius:50%;background:#D4E8B8;border:3px solid #FFF;box-shadow:0 2px 6px rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;overflow:hidden}
-.port-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.port-saludo-text{flex:1;min-width:0}
-.port-saludo-hola{font-size:19px;font-weight:500;color:#3a2e1e;line-height:1.2}
-.port-saludo-pregunta{font-size:13px;color:#8a7c63;margin-top:3px;line-height:1.3}
+.ini-ganador{position:absolute;top:20px;right:16px;width:76px;height:76px;background:none;border:none;padding:0;cursor:pointer;transform:rotate(12deg);transition:transform .15s}
+.ini-ganador:active{transform:rotate(12deg) scale(0.96)}
+.ini-ganador-halo{position:absolute;inset:0;border-radius:50%;background:#FFD978;opacity:0.25;filter:blur(2px)}
+.ini-ganador-medalla{position:absolute;top:4px;left:4px;width:68px;height:68px;border-radius:50%;background:linear-gradient(180deg,#F4C962 0%,#E8A833 100%);box-shadow:0 3px 0 #B8821E,0 0 12px rgba(244,201,98,0.3);display:flex;align-items:center;justify-content:center}
+.ini-ganador-centro{width:56px;height:56px;border-radius:50%;background:#2C2418;border:2px solid #F4C962;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;text-align:center;line-height:1;color:#F4C962}
+.ini-ganador-centro img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.ini-ganador-trophy{font-size:22px;line-height:1}
+.ini-ganador-name{font-size:7px;font-weight:500;letter-spacing:0.3px;margin-top:2px;padding:0 4px;line-height:1.1;color:#F4C962}
+.ini-conf{position:absolute;border-radius:50%;background:#F4C962}
+.ini-conf.c1{top:-2px;right:4px;width:5px;height:5px}
+.ini-conf.c2{bottom:4px;left:-8px;width:6px;height:6px;background:#FFD978}
+.ini-conf.c3{top:18px;left:-10px;width:4px;height:4px;background:#FFE9A8}
+.ini-conf.c4{bottom:-2px;right:18px;width:5px;height:5px;background:#F4C962}
 
-.port-ganador{position:relative;width:78px;height:78px;background:none;border:none;padding:0;cursor:pointer;flex-shrink:0;transition:transform .15s}
-.port-ganador:active{transform:scale(0.96)}
-.port-ganador-halo{position:absolute;inset:0;border-radius:50%;background:#FFD978;opacity:0.35}
-.port-ganador-medalla{position:absolute;top:4px;left:4px;width:70px;height:70px;border-radius:50%;background:linear-gradient(180deg,#E8A833 0%,#F4C962 100%);box-shadow:0 2px 0 #B8821E,0 4px 10px rgba(184,130,30,0.3);display:flex;align-items:center;justify-content:center}
-.port-ganador-centro{width:56px;height:56px;border-radius:50%;background:#FFF3D6;border:2px solid #FFE9A8;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;color:#5C3F0E;overflow:hidden;text-align:center;line-height:1}
-.port-ganador-centro img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.port-ganador-centro .ganador-nombre{font-size:8px;font-weight:600;margin-top:2px;letter-spacing:0.3px;padding:0 2px;line-height:1.1}
-.port-ganador-conf{position:absolute;border-radius:50%;background:#FFD978}
-.port-ganador-conf.conf-1{top:0;right:4px;width:8px;height:8px;background:#F4C962}
-.port-ganador-conf.conf-2{bottom:4px;left:0;width:7px;height:7px;background:#FFE9A8}
-.port-ganador-conf.conf-3{top:36px;left:-2px;width:6px;height:6px;background:#FFD978}
+.ini-microcopy{padding:0 20px;font-size:12px;color:#8a7c63;line-height:1.5;text-align:center;margin:14px 0 16px}
 
-body.tab-info .reto-banner{margin-bottom:20px}
-body.tab-info .reto-banner:empty{display:none}
+.section-inicio .reto-banner{margin:0 16px 16px}
+.section-inicio .reto-banner:empty{display:none}
 
-.port-cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
-.port-cta{position:relative;border:none;border-radius:22px;min-height:130px;padding:18px 14px;text-align:left;cursor:pointer;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .15s;font-family:'Inter',sans-serif}
-.port-cta:active{transform:scale(0.98)}
-.port-cta-circle{position:absolute;top:-20px;right:-20px;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.25)}
-.port-cta-emoji{font-size:30px;line-height:1;margin-bottom:6px;position:relative;z-index:1}
-.port-cta-titulo{font-size:15px;font-weight:500;line-height:1.2;position:relative;z-index:1}
-.port-cta-sub{font-size:11px;font-weight:500;margin-top:4px;line-height:1.2;position:relative;z-index:1}
-.port-cta-peligros{background:linear-gradient(180deg,#FFE0D6 0%,#FFCAB8 100%);box-shadow:0 3px 0 #E89976,0 6px 12px rgba(232,153,118,0.25);color:#5C1A0B}
-.port-cta-peligros .port-cta-sub{color:#8C2D14}
-.port-cta-rutas{background:linear-gradient(180deg,#DCEDB8 0%,#BBDB7E 100%);box-shadow:0 3px 0 #8FB544,0 6px 12px rgba(143,181,68,0.25);color:#2D3F0F}
-.port-cta-rutas .port-cta-sub{color:#4A5F1F}
+.ini-section-label{padding:0 16px;font-size:10px;font-weight:500;color:#6b6b6b;letter-spacing:1px;margin-bottom:10px}
 
-.port-section-title{font-size:12px;font-weight:500;color:#6b5a44;margin-bottom:10px;letter-spacing:0.3px}
-.port-carrusel{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 16px 6px;margin:0 -16px;scrollbar-width:none}
-.port-carrusel::-webkit-scrollbar{display:none}
-.port-tarjeta{flex:0 0 92px;width:92px;height:92px;border-radius:18px;border:none;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding:8px;scroll-snap-align:start;transition:transform .15s;position:relative;overflow:hidden;font-family:'Inter',sans-serif}
-.port-tarjeta:active{transform:scale(0.96)}
-.port-tarjeta-label{font-size:11px;font-weight:500;color:#fff;text-align:center;line-height:1.1}
-.tarjeta-procesionaria{background:linear-gradient(180deg,#F4A88A 0%,#E8825E 100%);box-shadow:0 2px 0 #C9684A}
-.tarjeta-cristales{background:linear-gradient(180deg,#C9C4B8 0%,#A8A296 100%);box-shadow:0 2px 0 #87816F}
-.tarjeta-veneno{background:linear-gradient(180deg,#C8DD9A 0%,#A8C470 100%);box-shadow:0 2px 0 #87A356}
-.tarjeta-garrapatas{background:linear-gradient(180deg,#FAD78A 0%,#F4BD52 100%);box-shadow:0 2px 0 #C49232}
-.tarjeta-garrapatas .port-tarjeta-label{color:#5C3F0E}
-.tarjeta-otros{background:linear-gradient(180deg,#BFD9F2 0%,#92BCE4 100%);box-shadow:0 2px 0 #6896C2}
+.ini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:18px}
+.ini-cta{position:relative;border:1px solid rgba(255,255,255,0.06);border-radius:14px;min-height:92px;padding:16px 12px;text-align:left;cursor:pointer;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;font-family:'Inter',sans-serif;color:#fff;transition:transform .15s}
+.ini-cta:active{transform:scale(0.97)}
+.ini-cta-circle{position:absolute;top:-15px;right:-15px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.1)}
+.ini-cta-emoji{font-size:24px;line-height:1;margin-bottom:8px;position:relative;z-index:1}
+.ini-cta-titulo{font-size:13px;font-weight:500;letter-spacing:0.5px;line-height:1.1;position:relative;z-index:1;text-transform:uppercase}
+.ini-cta-sub{font-size:10px;font-weight:400;margin-top:3px;line-height:1.2;position:relative;z-index:1}
+.ini-cta-alertas{background:#C8231A;box-shadow:0 3px 0 #821510}
+.ini-cta-alertas .ini-cta-sub{color:#FFD2CC}
+.ini-cta-mapa{background:#1F6FB2;box-shadow:0 3px 0 #134672}
+.ini-cta-mapa .ini-cta-sub{color:#C5DDF1}
+.ini-cta-urgencias{background:#8B1A1A;box-shadow:0 3px 0 #4d0e0e}
+.ini-cta-urgencias .ini-cta-sub{color:#F4C5C5}
+.ini-cta-rutas{background:#2D7A4F;box-shadow:0 3px 0 #1a4a2f}
+.ini-cta-rutas .ini-cta-sub{color:#C5E4D2}
+.ini-cta-ranking{background:#C4922A;box-shadow:0 3px 0 #7a5a18}
+.ini-cta-ranking .ini-cta-sub{color:#F4DCAB}
+.ini-cta-invitar{background:#6B3FA0;box-shadow:0 3px 0 #422660}
+.ini-cta-invitar .ini-cta-sub{color:#DCC9F0}
 
-.port-carrusel-microcopy{font-size:11px;color:#8a7c63;margin-top:10px;margin-bottom:22px;line-height:1.4}
+.ini-pie{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#1A1410;border-top:0.5px solid #2C2418;text-decoration:none;margin-top:6px;transition:opacity .15s}
+.ini-pie:active{opacity:0.85}
+.ini-pie-izq{font-size:11px;color:#8a7c63}
+.ini-pie-der{font-size:11px;font-weight:500;color:#C4922A}
 
-.port-quick-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
-.port-quick{background:#FFF;border:none;border-radius:18px;padding:14px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 2px 0 #EFE6D6,0 1px 8px rgba(0,0,0,0.04);transition:transform .15s;font-family:'Inter',sans-serif;min-height:64px}
-.port-quick:active{transform:scale(0.96)}
-.port-quick-emoji{font-size:22px;line-height:1}
-.port-quick-label{font-size:11px;font-weight:500;color:#6b5a44}
+/* ===== ICONOS FLOTANTES DEL MAPA (FAB) ===== */
+.map-fab-stack{position:absolute;bottom:12px;right:12px;z-index:999;display:flex;flex-direction:column;gap:8px}
+.map-fab{width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.7);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:transform .15s,background .15s}
+.map-fab:active{transform:scale(0.92);background:rgba(0,0,0,0.9)}
+.map-fab-menu{position:absolute;bottom:100%;right:0;margin-bottom:8px;background:rgba(0,0,0,0.85);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:6px;display:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);min-width:160px}
+.map-fab-menu.open{display:block}
+.map-fab-menu button{display:block;width:100%;background:none;border:none;color:#fff;text-align:left;padding:10px 12px;font-size:13px;cursor:pointer;border-radius:6px;font-family:'Inter',sans-serif}
+.map-fab-menu button:hover{background:rgba(255,255,255,0.1)}
 
-.port-pie{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#2C2418;border-radius:14px;text-decoration:none;margin:6px 0 8px;transition:opacity .15s}
-.port-pie:active{opacity:0.85}
-.port-pie-izq{font-size:11px;color:#B8AB94}
-.port-pie-der{font-size:11px;font-weight:500;color:#FFB85C}
+/* ===== CARRUSEL OTROS PELIGROS (en pestaña ALERTA) ===== */
+.otros-peligros-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.5px;color:#fff;margin:18px 0 12px;text-transform:uppercase}
+.peligros-carrusel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 16px 8px;margin:0 -16px;scrollbar-width:none}
+.peligros-carrusel::-webkit-scrollbar{display:none}
+.peligro-card{flex:0 0 140px;width:140px;height:180px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;scroll-snap-align:start;color:#fff;text-align:center}
+.peligro-card-emoji{font-size:48px;line-height:1;margin-bottom:14px}
+.peligro-card-titulo{font-size:13px;font-weight:500;line-height:1.25}
+.peligro-cristales{background:#4A6878;box-shadow:0 2px 0 #2C4252}
+.peligro-garrapatas{background:#6B5840;box-shadow:0 2px 0 #3F3424}
+.peligro-veneno{background:#5C2424;box-shadow:0 2px 0 #3A1414}
+.peligro-otros{background:#C4922A;box-shadow:0 2px 0 #7a5a18}
+.peligros-microcopy{font-size:12px;color:#8a7c63;line-height:1.5;margin-top:10px;margin-bottom:18px}
 
-/* ===== MODAL INFO PROCESIONARIA ===== */
-.proc-info-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:4500;align-items:flex-start;justify-content:center;padding:0;overflow-y:auto}
-.proc-info-modal.open{display:flex}
-.proc-info-card{background:#111;width:100%;max-width:500px;min-height:100vh;padding:0;display:flex;flex-direction:column}
-.proc-info-header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#111;border-bottom:1px solid #2a2a2a;z-index:1}
-.proc-info-header h2{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;letter-spacing:.5px;margin:0}
-.proc-info-close{background:none;border:none;color:#888;font-size:22px;cursor:pointer;padding:4px 8px;line-height:1;min-width:44px;min-height:44px}
-.proc-info-close:active{color:#fff}
-.proc-info-body{padding:14px 16px 30px;color:#f0f0f0;flex:1}
-
-/* ===== SIDE MENU (hamburguesa) ===== */
-.side-menu-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:4600;justify-content:flex-end}
-.side-menu-modal.open{display:flex}
-.side-menu-card{width:80%;max-width:300px;height:100%;background:#FFFAF3;padding:20px 18px;display:flex;flex-direction:column;gap:6px;box-shadow:-4px 0 16px rgba(0,0,0,0.2)}
-.side-menu-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #EDE0CC}
-.side-menu-header h3{font-size:14px;font-weight:500;letter-spacing:0.8px;color:#3a2e1e;margin:0}
-.side-menu-close{background:none;border:none;color:#8a7c63;font-size:20px;cursor:pointer;padding:4px 8px;line-height:1;min-width:44px;min-height:44px}
-.side-menu-item{background:transparent;border:none;text-align:left;padding:14px 12px;border-radius:10px;font-size:14px;color:#3a2e1e;cursor:pointer;display:flex;align-items:center;gap:12px;transition:background .15s;font-family:'Inter',sans-serif;min-height:48px}
-.side-menu-item:hover{background:#FFF3D6}
-.side-menu-item:active{background:#FFE9A8}
-.side-menu-item-emoji{font-size:18px}
+/* Sección activa con scroll vertical preserva el flujo natural */
+.section{will-change:transform}

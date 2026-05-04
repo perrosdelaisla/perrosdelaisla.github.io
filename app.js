@@ -1443,7 +1443,7 @@ async function shareApp(){
   let shareSucceeded = false;
   if(navigator.share){
     try{
-      await navigator.share({title:'Perros de la Isla — Paseos Seguros',text:SHARE_TEXT,url:SHARE_URL});
+      await navigator.share({title:'Paseos Seguros',text:SHARE_TEXT,url:SHARE_URL});
       shareSucceeded = true;
     }catch(e){
       if(e.name !== 'AbortError'){console.error('Error al compartir:',e);}

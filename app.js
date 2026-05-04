@@ -1212,82 +1212,6 @@ function stopGpsRecording(){
 // ===== RETO COUNTDOWN =====
 const RETO_END=new Date('2026-04-26T23:59:59').getTime();
 const RETO_ID = 'reto_bienvenida';
-let retoBannerInterval=null;
-
-function updateRetoBanner(){
-  const banner=document.getElementById('retoBanner');
-  if(!banner) return;
-  const now=Date.now();
-  const diff=RETO_END-now;
-
-  if(diff>0){
-    const d=Math.floor(diff/86400000);
-    const h=Math.floor((diff%86400000)/3600000);
-    const m=Math.floor((diff%3600000)/60000);
-    const s=Math.floor((diff%60000)/1000);
-    banner.className='reto-banner';
-    banner.innerHTML=`
-      <div class="reto-gift">🎁</div>
-      <div class="reto-title">Reto: ¡Comparte y Gana!</div>
-      <div class="reto-desc">Quien más comparta la app se lleva un <strong style="color:#f9ca24">arnés + juguete + premio sorpresa 🎁</strong> para su perro</div>
-      <div class="reto-countdown">
-        <div class="reto-time-box"><div class="reto-time-num">${d}</div><div class="reto-time-label">Días</div></div>
-        <div class="reto-time-box"><div class="reto-time-num">${h}</div><div class="reto-time-label">Horas</div></div>
-        <div class="reto-time-box"><div class="reto-time-num">${m}</div><div class="reto-time-label">Min</div></div>
-        <div class="reto-time-box"><div class="reto-time-num">${s}</div><div class="reto-time-label">Seg</div></div>
-      </div>
-      <div class="reto-prize">🏆 Toca aquí para ver el ranking</div>`;
-  } else {
-    if(retoBannerInterval){clearInterval(retoBannerInterval);retoBannerInterval=null;}
-    loadRetoWinner();
-  }
-}
-
-async function loadRetoWinner(){
-  const banner=document.getElementById('retoBanner');
-  if(!banner) return;
-  try{
-    const r=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto,shares_reto&order=shares_reto.desc&limit=1',{headers:HEADERS});
-    const[winner]=await r.json();
-    if(!winner||!winner.shares_reto||winner.shares_reto===0){
-      banner.innerHTML=`<div class="reto-gift-open">📦</div><div class="reto-title">El reto ha terminado</div><div class="reto-winner-sub">No hubo participantes esta vez. ¡Pronto lanzaremos un nuevo reto!</div>`;
-      banner.className='reto-banner revealed';
-      return;
-    }
-    const name=winner.visible?winner.nombre:'Un vecino de '+winner.zona;
-    const dog=winner.visible&&winner.nombre_perro?winner.nombre_perro:'su perro';
-    const isMe=winner.id===USER_ID;
-    let confetti='';
-    const colors=['#f9ca24','#e74c3c','#27ae60','#3498db','#9b59b6','#e67e22'];
-    for(let i=0;i<20;i++){
-      const c=colors[i%colors.length];
-      const left=Math.random()*100;
-      const delay=Math.random()*2;
-      const size=4+Math.random()*4;
-      confetti+=`<div class="confetti" style="background:${c};left:${left}%;animation-delay:${delay}s;width:${size}px;height:${size}px"></div>`;
-    }
-    banner.className='reto-banner revealed';
-    let claimSection = '';
-    if(isMe){
-      const alreadyClaimed = await checkAlreadyClaimed();
-      if(alreadyClaimed){
-        claimSection = `<div class="claim-confirmed">✅ Datos enviados · Carlos te contactará pronto</div>`;
-      } else {
-        claimSection = `<button class="btn-claim-prize" onclick="event.stopPropagation();openClaimPrizeModal()">🎁 Reclamar mi premio</button>`;
-      }
-    }
-    banner.innerHTML=`${confetti}
-      <div class="reto-gift-open">🎉</div>
-      <div class="reto-title">${isMe?'¡¡GANASTE!!':'¡Tenemos ganador!'}</div>
-      <div class="reto-winner-name">${escapeHtml(name)}</div>
-      <div class="reto-winner-sub">${isMe?`¡Felicidades! Tú y ${escapeHtml(dog)} os lleváis el arnés + juguete + premio sorpresa 🎁`:`${escapeHtml(name)} y ${escapeHtml(dog)} se llevan el premio 🐕`}<br>Compartió ${winner.shares_reto} veces · ¡Gracias por mover la comunidad!</div>
-      ${claimSection}
-      <div class="reto-prize" style="margin-top:12px">🏆 Toca para ver el ranking completo</div>`;
-  }catch(e){
-    banner.innerHTML=`<div class="reto-gift-open">🎉</div><div class="reto-title">¡El reto ha terminado!</div><div class="reto-winner-sub">Toca para ver quién ganó</div>`;
-    banner.className='reto-banner revealed';
-  }
-}
 
 async function checkAlreadyClaimed(){
   try{
@@ -1379,7 +1303,7 @@ async function submitClaimPrize(){
 
     closeClaimPrizeModal();
     showToast('Datos enviados! Carlos te contactara pronto','success');
-    setTimeout(()=>{ updateRetoBanner(); }, 800);
+    setTimeout(()=>{ if(typeof loadInicioContextBanner==='function') loadInicioContextBanner(); }, 800);
 
   } catch(err){
     showToast('Error de conexion','error');
@@ -1387,10 +1311,6 @@ async function submitClaimPrize(){
     btn.innerHTML='Enviar datos';
   }
 }
-
-if(retoBannerInterval) clearInterval(retoBannerInterval);
-retoBannerInterval=setInterval(updateRetoBanner,1000);
-document.addEventListener('DOMContentLoaded',()=>{setTimeout(updateRetoBanner,500);});
 
 // ===== SHARE APP =====
 const SHARE_URL='https://perrosdelaisla.github.io';

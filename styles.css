@@ -601,7 +601,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 #modal.hidden-temporarily{display:none !important}
 
 /* ===== PESTAÑA INICIO ===== */
-.section-inicio{padding:0;background:#0A0A0A;color:#f0f0f0;position:relative;overflow-x:hidden}
+.section-inicio{padding:0;background:#1F1F1F;color:#f0f0f0;position:relative;overflow-x:hidden}
 
 /* Tab bar oculta solo en INICIO; el botón de Inicio nunca aparece en la nav */
 body.tab-inicio .nav{display:none}

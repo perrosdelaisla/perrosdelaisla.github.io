@@ -8,7 +8,7 @@
 <title>Procesionaria Mallorca · Perros de la Isla</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<link rel="stylesheet" href="styles.css?v=14">
+<link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
 
@@ -105,12 +105,12 @@
 <!-- APP -->
 <div class="app">
   <header>
-    <div class="logo-circle"><img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" alt="Perros de la Isla" style="width:44px;height:44px;object-fit:contain;border-radius:50%"/></div>
-    <div class="header-text"><h1>Perros de la Isla</h1><p>Por paseos felices y seguros</p></div>
+    <div class="logo-circle" onclick="showTabByName('inicio')" role="button" aria-label="Volver a inicio"><img src="assets/logo-paseos-seguros-icon.png" alt="Paseos Seguros"/></div>
+    <div class="header-text"><h1>PASEOS SEGUROS</h1><p>una iniciativa de Perros de la Isla</p></div>
     <div class="profile-btn" id="headerProfileBtn" onclick="openProfile()">👤</div>
   </header>
   <nav class="nav">
-    <button class="active" onclick="showTab('inicio',this)"><span>🏠</span>Inicio</button>
+    <button class="nav-inicio-btn active" onclick="showTab('inicio',this)" aria-hidden="true"><span>🏠</span>Inicio</button>
     <button onclick="showTab('info',this)"><span>⚠️</span>Alerta</button>
     <button onclick="showTab('mapa',this)"><span>🗺️</span>Mapa</button>
     <button onclick="showTab('vets',this)"><span>🏥</span>Urgencias</button>
@@ -118,13 +118,9 @@
   </nav>
 
   <div id="inicio" class="section section-inicio active">
-    <div class="ini-hero">
-      <img src="assets/logo-paseos-seguros.png" alt="Paseos Seguros" class="ini-hero-logo">
-      <div class="ini-hero-label">PASEOS SEGUROS</div>
-    </div>
-    <div class="ini-saludo-wrap">
-      <div class="ini-saludo-hola" id="iniHola">Hola, tutor</div>
-      <div class="ini-saludo-pregunta" id="iniPregunta">¿qué hacemos hoy?</div>
+    <div class="ini-perfil-protag">
+      <div class="ini-perfil-foto" id="iniPerfilFoto"></div>
+      <a class="ini-subir-foto" id="iniSubirFoto" style="display:none" onclick="event.preventDefault();editProfile()">✨ Subí tu foto</a>
       <button class="ini-ganador" id="iniGanador" onclick="openRanking()" style="display:none" aria-label="Ver ganador del reto">
         <div class="ini-ganador-halo"></div>
         <div class="ini-ganador-medalla">
@@ -139,9 +135,11 @@
         <div class="ini-conf c4"></div>
       </button>
     </div>
+    <div class="ini-saludo-wrap">
+      <div class="ini-saludo-hola" id="iniHola">Hola, tutor</div>
+      <div class="ini-saludo-pregunta" id="iniPregunta">¿qué hacemos hoy?</div>
+    </div>
     <p class="ini-microcopy">Reportá peligros, descubrí rutas seguras y formá parte de la comunidad de tutores de Mallorca.</p>
-    <!-- RETO COUNTDOWN (oculto si no hay reto, manejado por updateRetoBanner) -->
-    <div class="reto-banner" id="retoBanner" onclick="openRanking()"></div>
     <div class="ini-section-label">¿QUÉ HACEMOS HOY?</div>
     <div class="ini-grid">
       <button class="ini-cta ini-cta-alertas" onclick="showTabByName('info')" aria-label="Ver alertas">
@@ -181,6 +179,8 @@
         <div class="ini-cta-sub">Hacé crecer la manada</div>
       </button>
     </div>
+    <!-- Banner contextual del reto: poblado por loadInicioContextBanner() según haya reto activo, ganador previo o nada -->
+    <div class="ini-context-banner" id="iniContextBanner" style="display:none"></div>
     <!-- TODO: cuando exista pestaña interna de servicios PDLI, redirigir ahí en lugar de a web externa -->
     <a class="ini-pie" href="https://perrosdelaisla.com" target="_blank" rel="noopener">
       <span class="ini-pie-izq">servicios de adiestramiento</span>
@@ -189,6 +189,8 @@
   </div>
 
   <div id="info" class="section">
+    <!-- RETO COUNTDOWN (oculto si no hay reto, manejado por updateRetoBanner) -->
+    <div class="reto-banner" id="retoBanner" onclick="openRanking()"></div>
     <div class="alerta-banner"><div class="icon">🚨</div><div><h3>Temporada de alto riesgo activa</h3><p>Enero – Abril: máxima precaución en pinares de Mallorca</p></div></div>
     <div class="season-card"><h3>Riesgo por meses</h3><div class="months"><div class="month risk">E</div><div class="month high-risk">F</div><div class="month high-risk">M</div><div class="month high-risk">A</div><div class="month risk">M</div><div class="month safe">J</div><div class="month safe">J</div><div class="month safe">A</div><div class="month safe">S</div><div class="month safe">O</div><div class="month risk">N</div><div class="month risk">D</div></div><p style="font-size:11px;color:#555;margin-top:9px">🔴 Alto riesgo · 🟡 Riesgo moderado · 🟢 Bajo riesgo</p></div>
     <div class="info-card"><h3>¿Qué es la procesionaria?</h3><p>La procesionaria del pino (<em>Thaumetopoea pityocampa</em>) es una oruga muy común en los pinares de Mallorca. Sus pelos urticantes son <strong>extremadamente peligrosos</strong> para los perros: pueden causar necrosis en la lengua e incluso la muerte si no se actúa rápido.</p></div>
@@ -397,6 +399,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=20"></script>
+<script src="app.js?v=21"></script>
 </body>
 </html>

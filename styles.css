@@ -3,10 +3,12 @@
 body{background:#111;color:#f0f0f0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
 .app{max-width:480px;margin:0 auto;background:#111;min-height:100vh}
 header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #222;position:sticky;top:0;z-index:1000}
-.logo-circle{width:48px;height:48px;border-radius:50%;background:#000;border:2px solid #c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
-.header-text{flex:1}
-.header-text h1{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:#fff;line-height:1}
-.header-text p{font-size:11px;color:#c0392b;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.logo-circle{width:38px;height:38px;border-radius:50%;background:#000;border:2px solid #c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;cursor:pointer;transition:transform .15s}
+.logo-circle:active{transform:scale(0.94)}
+.logo-circle img{width:100%;height:100%;object-fit:contain;border-radius:50%}
+.header-text{flex:1;min-width:0}
+.header-text h1{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:#fff;line-height:1}
+.header-text p{font-size:10px;color:#FFD2CC;font-weight:500;letter-spacing:0.8px;margin-top:3px}
 .profile-btn{width:36px;height:36px;border-radius:50%;background:#1a1a1a;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;transition:all .2s;overflow:hidden}
 .profile-btn:active{background:#333}
 .profile-btn.has-profile{border-color:#9cb64b;background:#1a2a1a}
@@ -601,15 +603,23 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 /* ===== PESTAÑA INICIO ===== */
 .section-inicio{padding:0;background:#0A0A0A;color:#f0f0f0;position:relative;overflow-x:hidden}
 
-.ini-hero{padding:24px 16px 8px;display:flex;flex-direction:column;align-items:center}
-.ini-hero-logo{width:118px;height:auto;display:block}
-.ini-hero-label{margin-top:6px;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1.5px;color:#C8231A;font-weight:500;text-align:center}
+/* Tab bar oculta solo en INICIO; el botón de Inicio nunca aparece en la nav */
+body.tab-inicio .nav{display:none}
+.nav .nav-inicio-btn{display:none}
 
-.ini-saludo-wrap{position:relative;padding:14px 16px 8px;text-align:center}
+.ini-perfil-protag{position:relative;padding:24px 16px 8px;display:flex;flex-direction:column;align-items:center}
+.ini-perfil-foto{width:160px;height:160px;border-radius:50%;border:4px solid #C4922A;box-shadow:0 4px 20px rgba(196,146,42,0.25);overflow:hidden;background:#1a1a1a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ini-perfil-foto img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.ini-perfil-foto.ini-perfil-fallback{background:linear-gradient(135deg,#2D7A4F,#C4922A)}
+.ini-perfil-inicial{font-family:'Bebas Neue',sans-serif;font-size:64px;color:#fff;font-weight:500;line-height:1}
+.ini-subir-foto{display:block;margin-top:10px;font-size:11px;color:#C4922A;text-align:center;cursor:pointer;text-decoration:none}
+.ini-subir-foto:active{opacity:0.7}
+
+.ini-saludo-wrap{padding:14px 16px 4px;text-align:center}
 .ini-saludo-hola{font-family:'Inter',sans-serif;font-size:22px;font-weight:500;color:#fff;line-height:1.2}
 .ini-saludo-pregunta{font-size:13px;color:#B8AB94;margin-top:4px;line-height:1.3}
 
-.ini-ganador{position:absolute;top:20px;right:16px;width:76px;height:76px;background:none;border:none;padding:0;cursor:pointer;transform:rotate(12deg);transition:transform .15s}
+.ini-ganador{position:absolute;top:20px;right:16px;width:76px;height:76px;background:none;border:none;padding:0;cursor:pointer;transform:rotate(12deg);transition:transform .15s;z-index:2}
 .ini-ganador:active{transform:rotate(12deg) scale(0.96)}
 .ini-ganador-halo{position:absolute;inset:0;border-radius:50%;background:#FFD978;opacity:0.25;filter:blur(2px)}
 .ini-ganador-medalla{position:absolute;top:4px;left:4px;width:68px;height:68px;border-radius:50%;background:linear-gradient(180deg,#F4C962 0%,#E8A833 100%);box-shadow:0 3px 0 #B8821E,0 0 12px rgba(244,201,98,0.3);display:flex;align-items:center;justify-content:center}
@@ -654,6 +664,24 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .ini-pie:active{opacity:0.85}
 .ini-pie-izq{font-size:11px;color:#8a7c63}
 .ini-pie-der{font-size:11px;font-weight:500;color:#C4922A}
+
+/* Banner contextual del reto (debajo de los 6 botones) */
+.ini-context-banner{margin:8px 16px 12px;padding:14px 16px;border-radius:14px;cursor:pointer;display:none;align-items:center;gap:12px;text-decoration:none;transition:transform .15s}
+.ini-context-banner:active{transform:scale(0.98)}
+.ini-context-active{background:#2D7A4F;border:1px solid rgba(255,255,255,0.1);box-shadow:0 2px 0 #1a4a2f}
+.ini-context-active .ini-cb-title{color:#fff}
+.ini-context-active .ini-cb-sub{color:#C5E4D2}
+.ini-context-past{background:#1A1410;border:0.5px solid #C4922A;padding:12px 16px}
+.ini-context-past .ini-cb-title{color:#C4922A}
+.ini-context-past .ini-cb-sub{color:#8a7c63}
+.ini-cb-emoji{font-size:22px;line-height:1;flex-shrink:0}
+.ini-cb-text{flex:1;min-width:0}
+.ini-cb-title{font-size:13px;font-weight:500;line-height:1.25}
+.ini-context-past .ini-cb-title{font-size:12px}
+.ini-cb-sub{font-size:11px;margin-top:2px;line-height:1.2}
+.ini-context-past .ini-cb-sub{font-size:10px}
+.ini-cb-arrow{font-size:18px;color:rgba(255,255,255,0.6);flex-shrink:0;font-weight:300}
+.ini-context-past .ini-cb-arrow{color:#C4922A}
 
 /* ===== ICONOS FLOTANTES DEL MAPA (FAB) ===== */
 .map-fab-stack{position:absolute;bottom:12px;right:12px;z-index:999;display:flex;flex-direction:column;gap:8px}

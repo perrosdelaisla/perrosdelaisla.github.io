@@ -154,6 +154,7 @@ function getProfile(){const p=localStorage.getItem('pdi_profile');return p?JSON.
 document.addEventListener('DOMContentLoaded',()=>{
   const profile=getProfile();
   if(profile){document.getElementById('onboarding').classList.add('hidden');updateProfileBtn();}
+  document.body.classList.add('tab-inicio');
   if(typeof loadInicio==='function') loadInicio();
 
   const im=document.getElementById('imgModal');
@@ -570,7 +571,7 @@ function filterVets(zone,btn){document.querySelectorAll('.filtro').forEach(b=>b.
 renderVets(vets);
 
 // NAV
-function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='inicio'&&typeof loadInicio==='function') loadInicio();window.scrollTo({top:0,behavior:'smooth'});}
+function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');document.body.classList.remove('tab-inicio','tab-info','tab-mapa','tab-vets','tab-adiestramiento');document.body.classList.add('tab-'+id);if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='inicio'&&typeof loadInicio==='function') loadInicio();window.scrollTo({top:0,behavior:'smooth'});}
 
 // MAP MODE TOGGLE
 let currentMapMode='avistamientos';
@@ -1870,6 +1871,23 @@ async function loadInicio(){
   if(holaEl) holaEl.textContent=profile?.nombre?`Hola ${profile.nombre}`:'Hola, tutor';
   if(pregEl) pregEl.textContent=profile?.nombre_perro?`¿qué hacemos hoy con ${profile.nombre_perro}?`:'¿qué hacemos hoy?';
 
+  const fotoEl=document.getElementById('iniPerfilFoto');
+  const subirFotoEl=document.getElementById('iniSubirFoto');
+  if(fotoEl){
+    if(profile?.foto){
+      fotoEl.innerHTML=`<img src="${profile.foto}" alt="${escapeHtml(profile.nombre||'')}">`;
+      fotoEl.classList.remove('ini-perfil-fallback');
+      if(subirFotoEl) subirFotoEl.style.display='none';
+    }else{
+      const initial=profile?.nombre?profile.nombre.charAt(0).toUpperCase():'?';
+      fotoEl.innerHTML=`<span class="ini-perfil-inicial">${escapeHtml(initial)}</span>`;
+      fotoEl.classList.add('ini-perfil-fallback');
+      if(subirFotoEl) subirFotoEl.style.display=profile?'block':'none';
+    }
+  }
+
+  loadInicioContextBanner();
+
   const subEl=document.getElementById('iniCtaAlertasSub');
   if(subEl){
     try{
@@ -1909,6 +1927,41 @@ async function loadInicio(){
       ganadorEl.style.display='none';
     }
   }
+}
+
+async function loadInicioContextBanner(){
+  const banner=document.getElementById('iniContextBanner');
+  if(!banner) return;
+  const now=Date.now();
+  if(RETO_END>now){
+    const diff=RETO_END-now;
+    const dias=Math.max(1,Math.ceil(diff/86400000));
+    let participantes=0;
+    try{
+      const r=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id&shares_reto=gt.0',{headers:HEADERS});
+      const data=await r.json();
+      participantes=Array.isArray(data)?data.length:0;
+    }catch(e){}
+    banner.className='ini-context-banner ini-context-active';
+    banner.innerHTML=`<div class="ini-cb-emoji">📢</div><div class="ini-cb-text"><div class="ini-cb-title">¡Reto activo! Compartí y participá</div><div class="ini-cb-sub">Quedan ${dias} día${dias===1?'':'s'} · ${participantes} participante${participantes===1?'':'s'}</div></div><div class="ini-cb-arrow">›</div>`;
+    banner.onclick=()=>showTabByName('info');
+    banner.style.display='flex';
+    return;
+  }
+  try{
+    const r=await fetch(SUPA_URL+'/rest/v1/usuarios?select=nombre,nombre_perro,visible,shares_reto&order=shares_reto.desc&limit=1',{headers:HEADERS});
+    const[w]=await r.json();
+    if(w&&w.shares_reto>0){
+      const visible=w.visible!==false;
+      const txt=visible?`${w.nombre}${w.nombre_perro?' y '+w.nombre_perro:''} se llevaron el último reto`:'Tenemos ganador del último reto';
+      banner.className='ini-context-banner ini-context-past';
+      banner.innerHTML=`<div class="ini-cb-emoji">🏆</div><div class="ini-cb-text"><div class="ini-cb-title">${escapeHtml(txt)}</div><div class="ini-cb-sub">El próximo reto llega pronto</div></div><div class="ini-cb-arrow">›</div>`;
+      banner.onclick=()=>openRanking();
+      banner.style.display='flex';
+      return;
+    }
+  }catch(e){}
+  banner.style.display='none';
 }
 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{});}

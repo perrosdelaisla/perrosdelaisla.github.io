@@ -243,8 +243,18 @@ async function finalizeSaveProfile(nombre, perro, zona, visible){
     } catch(e){}
   }
   const profile={nombre,nombre_perro:perro,zona,visible,foto:fotoUrl,created_at:getProfile()?.created_at||new Date().toISOString()};
+  const previousProfile=localStorage.getItem('pdi_profile');
   localStorage.setItem('pdi_profile',JSON.stringify(profile));
-  fetch(SUPA_URL+"/rest/v1/usuarios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal,resolution=merge-duplicates"},body:JSON.stringify({id:USER_ID,nombre,nombre_perro:perro,zona,visible,foto:fotoUrl})}).catch(()=>{});
+  try{
+    const res=await fetch(SUPA_URL+"/rest/v1/usuarios",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal,resolution=merge-duplicates"},body:JSON.stringify({id:USER_ID,nombre,nombre_perro:perro,zona,visible,foto:fotoUrl})});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  }catch(e){
+    if(previousProfile) localStorage.setItem('pdi_profile',previousProfile);
+    else localStorage.removeItem('pdi_profile');
+    console.error('Error guardando perfil en BD:',e);
+    showToast('No hemos podido guardar tu perfil. Revisa tu conexión e inténtalo de nuevo.','error');
+    return;
+  }
   document.getElementById('onboarding').classList.add('hidden');
   updateProfileBtn();
   showToast(`¡Bienvenido/a ${nombre}! 🐾`,'success');
@@ -1206,6 +1216,7 @@ function stopGpsRecording(){
 // ===== RETO COUNTDOWN =====
 const RETO_END=new Date('2026-04-26T23:59:59').getTime();
 const RETO_ID = 'reto_bienvenida';
+let retoBannerInterval=null;
 
 function updateRetoBanner(){
   const banner=document.getElementById('retoBanner');
@@ -1231,6 +1242,7 @@ function updateRetoBanner(){
       </div>
       <div class="reto-prize">🏆 Toca aquí para ver el ranking</div>`;
   } else {
+    if(retoBannerInterval){clearInterval(retoBannerInterval);retoBannerInterval=null;}
     loadRetoWinner();
   }
 }
@@ -1239,9 +1251,9 @@ async function loadRetoWinner(){
   const banner=document.getElementById('retoBanner');
   if(!banner) return;
   try{
-    const r=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto,shares&order=shares.desc&limit=1',{headers:HEADERS});
+    const r=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto,shares_reto&order=shares_reto.desc&limit=1',{headers:HEADERS});
     const[winner]=await r.json();
-    if(!winner||!winner.shares||winner.shares===0){
+    if(!winner||!winner.shares_reto||winner.shares_reto===0){
       banner.innerHTML=`<div class="reto-gift-open">📦</div><div class="reto-title">El reto ha terminado</div><div class="reto-winner-sub">No hubo participantes esta vez. ¡Pronto lanzaremos un nuevo reto!</div>`;
       banner.className='reto-banner revealed';
       return;
@@ -1272,7 +1284,7 @@ async function loadRetoWinner(){
       <div class="reto-gift-open">🎉</div>
       <div class="reto-title">${isMe?'¡¡GANASTE!!':'¡Tenemos ganador!'}</div>
       <div class="reto-winner-name">${escapeHtml(name)}</div>
-      <div class="reto-winner-sub">${isMe?`¡Felicidades! Tú y ${escapeHtml(dog)} os lleváis el arnés + juguete + premio sorpresa 🎁`:`${escapeHtml(name)} y ${escapeHtml(dog)} se llevan el premio 🐕`}<br>Compartió ${winner.shares} veces · ¡Gracias por mover la comunidad!</div>
+      <div class="reto-winner-sub">${isMe?`¡Felicidades! Tú y ${escapeHtml(dog)} os lleváis el arnés + juguete + premio sorpresa 🎁`:`${escapeHtml(name)} y ${escapeHtml(dog)} se llevan el premio 🐕`}<br>Compartió ${winner.shares_reto} veces · ¡Gracias por mover la comunidad!</div>
       ${claimSection}
       <div class="reto-prize" style="margin-top:12px">🏆 Toca para ver el ranking completo</div>`;
   }catch(e){
@@ -1380,7 +1392,8 @@ async function submitClaimPrize(){
   }
 }
 
-setInterval(updateRetoBanner,1000);
+if(retoBannerInterval) clearInterval(retoBannerInterval);
+retoBannerInterval=setInterval(updateRetoBanner,1000);
 document.addEventListener('DOMContentLoaded',()=>{setTimeout(updateRetoBanner,500);});
 
 // ===== SHARE APP =====
@@ -1396,14 +1409,16 @@ async function shareApp(){
 
   // CAPA 1: obtener estado actual del usuario
   let currentShares = 0;
+  let currentSharesReto = 0;
   let lastShareAt = null;
   let sharesToday = 0;
   let sharesTodayDate = null;
   try{
-    const r = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=shares,last_share_at,shares_today,shares_today_date`,{headers:HEADERS});
+    const r = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=shares,shares_reto,last_share_at,shares_today,shares_today_date`,{headers:HEADERS});
     const[u] = await r.json();
     if(u){
       currentShares = u.shares || 0;
+      currentSharesReto = u.shares_reto || 0;
       lastShareAt = u.last_share_at ? new Date(u.last_share_at).getTime() : null;
       sharesToday = u.shares_today || 0;
       sharesTodayDate = u.shares_today_date || null;
@@ -1447,6 +1462,7 @@ async function shareApp(){
 
   // Todo OK: incrementar contadores
   const newCount = currentShares + 1;
+  const newCountReto = currentSharesReto + 1;
   const newSharesToday = isNewDay ? 1 : (sharesToday + 1);
   try{
     await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}`,{
@@ -1454,6 +1470,7 @@ async function shareApp(){
       headers:{...HEADERS,'Prefer':'return=minimal'},
       body:JSON.stringify({
         shares: newCount,
+        shares_reto: newCountReto,
         last_share_at: new Date().toISOString(),
         shares_today: newSharesToday,
         shares_today_date: today

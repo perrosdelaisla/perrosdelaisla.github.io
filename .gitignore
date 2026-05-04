@@ -1,0 +1,25 @@
+# Variables de entorno (NUNCA commitear)
+.env
+.env.local
+.env.*.local
+
+# Dependencias (si en algún momento se añade npm)
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporales
+*.tmp
+*.bak

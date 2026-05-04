@@ -1453,23 +1453,57 @@ function closeBanner(){document.getElementById('installBanner').style.display='n
 document.addEventListener('DOMContentLoaded',()=>{setTimeout(showInstallBanner,3000);});
 
 // ===== SWIPE ENTRE PESTAÑAS (siguiendo el dedo) =====
-const TABS=['inicio','info','mapa','vets','adiestramiento'];
-const SWIPE_THRESHOLD_PCT=0.10;
-const SWIPE_VELOCITY_THRESHOLD=0.2;
-const SWIPE_MIN_HORIZ=10;
-let swipeStartX=0,swipeStartY=0,swipeBlocked=false,swipeStarted=false,swipePreviewSection=null,swipeDirection=0,swipeActiveDelta=0,swipeStartTime=0,swipeLastTime=0,swipeLastDelta=0,swipeLastVelocity=0;
+// TABS se construye dinámicamente desde la nav para evitar desfases con los ids reales
+let TABS=[];
+function buildTabsList(){
+  TABS=Array.from(document.querySelectorAll('.nav button'))
+            .map(b=>{
+              const m=(b.getAttribute('onclick')||'').match(/showTab\(['"]([^'"]+)['"]/);
+              return m?m[1]:null;
+            })
+            .filter(Boolean);
+  // Fallback: si los onclick no coinciden con el patrón, usar los ids de las secciones
+  if(TABS.length===0){
+    TABS=Array.from(document.querySelectorAll('.section'))
+              .map(s=>s.id)
+              .filter(Boolean);
+  }
+  console.log('[swipe] TABS detectados:',TABS);
+}
+document.addEventListener('DOMContentLoaded',buildTabsList);
+
+const SWIPE_THRESHOLD_PCT=0.20;
+const SWIPE_VELOCITY_THRESHOLD=0.4; // px/ms, sobre dx CRUDO
+const SWIPE_MIN_HORIZ=12;
+const SWIPE_EDGE_RESISTANCE=0.3;
+
+let swipeStartX=0,swipeStartY=0,swipeBlocked=false,swipeStarted=false;
+let swipePreviewSection=null,swipeDirection=0;
+let swipeRawDx=0,swipeAppliedDx=0;
+let swipeStartTime=0,swipeLastTime=0,swipeLastRawDx=0,swipeLastVelocity=0;
 
 function shouldInterceptSwipe(target){
   if(!target||!target.closest) return false;
+  // Mapa Leaflet
   if(target.closest('#map')||target.closest('.leaflet-container')) return false;
+  // Carruseles horizontales marcados explícitamente
   if(target.closest('[data-horizontal-scroll]')) return false;
-  if(target.closest('.nav')||target.closest('header')) return false;
+  // Tab bar (nav) — el tap normal debe funcionar sin swipe.
+  // Antes bloqueábamos también 'header', pero el header es una franja pequeña
+  // y el bloqueo causaba que el swipe solo se activara en zonas muy específicas.
+  if(target.closest('.nav')) return false;
+  // Toolbars del mapa (trace, gps, location picker)
   if(target.closest('#traceToolbar')||target.closest('#gpsToolbar')||target.closest('#locationPickerToolbar')) return false;
+  // Modales abiertos
   if(document.querySelector('.modal.open,.profile-modal.open,.ranking-modal.open,#misReportesModal.open')) return false;
   const mp=document.getElementById('miniPerfilModal');
   if(mp&&mp.classList.contains('open')) return false;
   const im=document.getElementById('imgModal');
   if(im&&im.style.display==='flex') return false;
+  // Onboarding visible
+  const onb=document.getElementById('onboarding');
+  if(onb&&!onb.classList.contains('hidden')) return false;
+  // Cualquier elemento con scroll horizontal real
   let el=target;
   while(el&&el!==document.body){
     const style=getComputedStyle(el);
@@ -1485,6 +1519,10 @@ function setupSwipePreview(direction){
   const active=getActiveSection();
   if(!active) return false;
   const activeIdx=TABS.indexOf(active.id);
+  if(activeIdx<0){
+    console.warn('[swipe] pestaña activa no está en TABS:',active.id,TABS);
+    return false;
+  }
   const nextIdx=activeIdx+direction;
   if(nextIdx<0||nextIdx>=TABS.length) return false;
   const nextSection=document.getElementById(TABS[nextIdx]);
@@ -1526,7 +1564,6 @@ function completeSwipe(toIdx){
   const target=swipeDirection>0?-window.innerWidth:window.innerWidth;
   if(active){active.style.transition='transform 250ms ease-out';active.style.transform=`translateX(${target}px)`;}
   if(preview){preview.style.transition='transform 250ms ease-out';preview.style.transform=`translateX(${target}px)`;}
-  // replaceState inmediato — swipe es navegación lateral exploratoria, no infla el historial
   const newId=TABS[toIdx];
   if(newId&&newId!=='inicio'){
     history.replaceState({tab:newId},'','#'+newId);
@@ -1538,7 +1575,6 @@ function completeSwipe(toIdx){
     swipePreviewSection=null;
     swipeDirection=0;
     const navBtns=document.querySelectorAll('.nav button');
-    // fromPopstate=true para no duplicar el state que ya escribimos arriba; source='swipe' por trazabilidad
     showTab(TABS[toIdx],navBtns[toIdx],true,'swipe');
   },260);
 }
@@ -1560,14 +1596,14 @@ document.addEventListener('touchstart',e=>{
   swipeStartX=e.touches[0].clientX;
   swipeStartY=e.touches[0].clientY;
   swipeStarted=false;
-  swipeActiveDelta=0;
+  swipeRawDx=0;
+  swipeAppliedDx=0;
   swipeStartTime=Date.now();
   swipeLastTime=swipeStartTime;
-  swipeLastDelta=0;
+  swipeLastRawDx=0;
   swipeLastVelocity=0;
   swipeBlocked=!shouldInterceptSwipe(e.target);
-  // TODO: quitar logs cuando esté validado
-  if(!swipeBlocked) console.log('[swipe] start',{x:swipeStartX,y:swipeStartY});
+  if(!swipeBlocked) console.log('[swipe] start',{x:swipeStartX,y:swipeStartY,target:e.target.tagName});
 },{passive:true});
 
 document.addEventListener('touchmove',e=>{
@@ -1579,19 +1615,23 @@ document.addEventListener('touchmove',e=>{
     if(Math.abs(dy)>Math.abs(dx)){swipeBlocked=true;return;}
     if(Math.abs(dx)<SWIPE_MIN_HORIZ) return;
     const direction=dx<0?1:-1;
-    setupSwipePreview(direction);
+    const setupOk=setupSwipePreview(direction);
+    if(!setupOk){swipeBlocked=true;return;}
     swipeStarted=true;
   }
-  let appliedDx=swipePreviewSection?dx:dx*0.3;
-  // velocidad instantánea (px/ms) basada en el último tick
+  // dx CRUDO para velocidad (no afectado por resistencia de borde)
+  swipeRawDx=dx;
+  // dx APLICADO con resistencia si no hay sección adyacente
+  const appliedDx=swipePreviewSection?dx:dx*SWIPE_EDGE_RESISTANCE;
+  swipeAppliedDx=appliedDx;
+  // Velocidad calculada sobre dx CRUDO (un flick en el borde sigue siendo rápido)
   const nowTime=Date.now();
   const dtTime=nowTime-swipeLastTime;
   if(dtTime>0){
-    swipeLastVelocity=(appliedDx-swipeLastDelta)/dtTime;
+    swipeLastVelocity=(swipeRawDx-swipeLastRawDx)/dtTime;
     swipeLastTime=nowTime;
-    swipeLastDelta=appliedDx;
+    swipeLastRawDx=swipeRawDx;
   }
-  swipeActiveDelta=appliedDx;
   applySwipeTransform(appliedDx);
 },{passive:true});
 
@@ -1601,11 +1641,18 @@ document.addEventListener('touchend',()=>{
   const threshold=width*SWIPE_THRESHOLD_PCT;
   const active=getActiveSection();
   const activeIdx=active?TABS.indexOf(active.id):-1;
-  const passedDistance=Math.abs(swipeActiveDelta)>threshold;
-  // Flick rápido en la misma dirección que el gesto
+  const passedDistance=Math.abs(swipeAppliedDx)>threshold;
   const flickConsistent=(swipeDirection===1&&swipeLastVelocity<-SWIPE_VELOCITY_THRESHOLD)||(swipeDirection===-1&&swipeLastVelocity>SWIPE_VELOCITY_THRESHOLD);
-  // TODO: quitar logs cuando esté validado
-  console.log('[swipe] end',{dx:Math.round(swipeActiveDelta),vel:swipeLastVelocity.toFixed(3),threshold:Math.round(threshold),passedDistance,flickConsistent,direction:swipeDirection,activeIdx});
+  console.log('[swipe] end',{
+    rawDx:Math.round(swipeRawDx),
+    appliedDx:Math.round(swipeAppliedDx),
+    vel:swipeLastVelocity.toFixed(3),
+    threshold:Math.round(threshold),
+    passedDistance,
+    flickConsistent,
+    direction:swipeDirection,
+    activeIdx
+  });
   if(swipePreviewSection&&(passedDistance||flickConsistent)){
     console.log('[swipe] -> completeSwipe to',TABS[activeIdx+swipeDirection]);
     completeSwipe(activeIdx+swipeDirection);

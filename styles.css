@@ -340,28 +340,6 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .btn-share:active{background:linear-gradient(135deg,#7a9a2a,#5a7a1a)}
 .btn-share .share-count{background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:12px;font-size:11px}
 
-/* COUNTDOWN RETO */
-.reto-banner{background:linear-gradient(135deg,#1a0a2a,#0a1a2a);border:1px solid #6c3483;border-radius:14px;padding:16px;margin-bottom:14px;text-align:center;cursor:pointer;overflow:hidden;position:relative}
-.reto-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 40%,rgba(155,89,182,0.08) 50%,transparent 60%);animation:retoShine 3s infinite}
-@keyframes retoShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.reto-gift{font-size:48px;display:inline-block;animation:giftShake 2s infinite;margin-bottom:8px}
-@keyframes giftShake{0%,100%{transform:rotate(0)}10%{transform:rotate(-8deg)}20%{transform:rotate(8deg)}30%{transform:rotate(-5deg)}40%{transform:rotate(5deg)}50%,100%{transform:rotate(0)}}
-.reto-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f9ca24;letter-spacing:1px;margin-bottom:4px}
-.reto-desc{font-size:12px;color:#bb99dd;line-height:1.5;margin-bottom:12px}
-.reto-countdown{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
-.reto-time-box{background:#111;border:1px solid #3a2a5a;border-radius:8px;padding:8px 12px;min-width:55px;text-align:center}
-.reto-time-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;line-height:1}
-.reto-time-label{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.reto-prize{font-size:11px;color:#9cb64b;font-weight:600;margin-top:6px}
-/* Winner reveal */
-.reto-banner.revealed{border-color:#f9ca24;background:linear-gradient(135deg,#1a1a00,#0a1a0a)}
-.reto-gift-open{font-size:56px;display:inline-block;animation:giftPop .6s ease-out;margin-bottom:8px}
-@keyframes giftPop{0%{transform:scale(0.3) rotate(-20deg);opacity:0}50%{transform:scale(1.3) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
-.reto-winner-name{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#f9ca24;letter-spacing:1px;margin:8px 0 4px}
-.reto-winner-sub{font-size:13px;color:#9cb64b;line-height:1.5}
-.confetti{position:absolute;width:6px;height:6px;border-radius:50%;animation:confettiFall 3s infinite}
-@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(200px) rotate(720deg);opacity:0}}
-
 /* GPS RECORDING */
 .gps-toolbar{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:1600;background:#1a0a0a;border:1px solid #c0392b;border-radius:14px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
 .gps-toolbar.active{display:block;animation:toastSlide .3s ease-out}
@@ -500,41 +478,6 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
   font-size:16px;
 }
 
-/* Botón Reclamar premio (solo visible para el ganador) */
-.btn-claim-prize{
-  display:block;
-  width:100%;
-  margin:14px 0 4px;
-  padding:14px;
-  background:linear-gradient(135deg,#9cb64b,#7a9a2a);
-  color:#fff;
-  border:none;
-  border-radius:10px;
-  font-family:'Bebas Neue',sans-serif;
-  font-size:18px;
-  letter-spacing:1px;
-  cursor:pointer;
-  box-shadow:0 4px 14px rgba(156,182,75,0.4);
-  transition:transform .2s;
-}
-.btn-claim-prize:active{
-  transform:scale(0.97);
-  background:linear-gradient(135deg,#7a9a2a,#5a7a1a);
-}
-
-/* Mensaje de confirmación tras reclamar */
-.claim-confirmed{
-  margin:14px 0 4px;
-  padding:12px;
-  background:#0a2a0a;
-  border:1px solid #1a4a1a;
-  color:#27ae60;
-  border-radius:10px;
-  font-size:13px;
-  font-weight:700;
-  text-align:center;
-}
-
 /* HUELLITAS */
 .btn-huellita{display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #333;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#aaa;transition:all .2s;font-family:'Inter',sans-serif;margin-top:8px;font-weight:600}
 .btn-huellita:active{transform:scale(0.95)}
@@ -634,9 +577,6 @@ body.tab-inicio .nav{display:none}
 .ini-conf.c4{bottom:-2px;right:18px;width:5px;height:5px;background:#F4C962}
 
 .ini-microcopy{padding:0 20px;font-size:12px;color:#8a7c63;line-height:1.5;text-align:center;margin:14px 0 16px}
-
-.section-inicio .reto-banner{margin:0 16px 16px}
-.section-inicio .reto-banner:empty{display:none}
 
 .ini-section-label{padding:0 16px;font-size:10px;font-weight:500;color:#6b6b6b;letter-spacing:1px;margin-bottom:10px}
 

@@ -571,7 +571,7 @@ function filterVets(zone,btn){document.querySelectorAll('.filtro').forEach(b=>b.
 renderVets(vets);
 
 // NAV
-function showTab(id,btn,fromPopstate){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');document.body.classList.remove('tab-inicio','tab-info','tab-mapa','tab-vets','tab-adiestramiento');document.body.classList.add('tab-'+id);if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='inicio'&&typeof loadInicio==='function') loadInicio();if(!fromPopstate&&id!=='inicio') history.pushState({tab:id},'','#'+id);window.scrollTo({top:0,behavior:'smooth'});}
+function showTab(id,btn,fromPopstate,source){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');document.body.classList.remove('tab-inicio','tab-info','tab-mapa','tab-vets','tab-adiestramiento');document.body.classList.add('tab-'+id);if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='inicio'&&typeof loadInicio==='function') loadInicio();if(!fromPopstate&&id!=='inicio'){if(source==='swipe') history.replaceState({tab:id},'','#'+id); else history.pushState({tab:id},'','#'+id);}window.scrollTo({top:0,behavior:'smooth'});}
 
 // MAP MODE TOGGLE
 let currentMapMode='avistamientos';
@@ -1454,8 +1454,8 @@ document.addEventListener('DOMContentLoaded',()=>{setTimeout(showInstallBanner,3
 
 // ===== SWIPE ENTRE PESTAÑAS (siguiendo el dedo) =====
 const TABS=['inicio','info','mapa','vets','adiestramiento'];
-const SWIPE_THRESHOLD_PCT=0.15;
-const SWIPE_VELOCITY_THRESHOLD=0.3;
+const SWIPE_THRESHOLD_PCT=0.10;
+const SWIPE_VELOCITY_THRESHOLD=0.2;
 const SWIPE_MIN_HORIZ=10;
 let swipeStartX=0,swipeStartY=0,swipeBlocked=false,swipeStarted=false,swipePreviewSection=null,swipeDirection=0,swipeActiveDelta=0,swipeStartTime=0,swipeLastTime=0,swipeLastDelta=0,swipeLastVelocity=0;
 
@@ -1526,13 +1526,20 @@ function completeSwipe(toIdx){
   const target=swipeDirection>0?-window.innerWidth:window.innerWidth;
   if(active){active.style.transition='transform 250ms ease-out';active.style.transform=`translateX(${target}px)`;}
   if(preview){preview.style.transition='transform 250ms ease-out';preview.style.transform=`translateX(${target}px)`;}
+  // replaceState inmediato — swipe es navegación lateral exploratoria, no infla el historial
+  const newId=TABS[toIdx];
+  if(newId&&newId!=='inicio'){
+    history.replaceState({tab:newId},'','#'+newId);
+    console.log('[swipe] replaceState ->',newId);
+  }
   setTimeout(()=>{
     clearSwipeStyles(active);
     clearSwipeStyles(preview);
     swipePreviewSection=null;
     swipeDirection=0;
     const navBtns=document.querySelectorAll('.nav button');
-    showTab(TABS[toIdx],navBtns[toIdx]);
+    // fromPopstate=true para no duplicar el state que ya escribimos arriba; source='swipe' por trazabilidad
+    showTab(TABS[toIdx],navBtns[toIdx],true,'swipe');
   },260);
 }
 

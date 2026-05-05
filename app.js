@@ -571,7 +571,7 @@ function filterVets(zone,btn){document.querySelectorAll('.filtro').forEach(b=>b.
 renderVets(vets);
 
 // NAV
-function showTab(id,btn,fromPopstate,source){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');document.body.classList.remove('tab-inicio','tab-info','tab-mapa','tab-vets','tab-adiestramiento');document.body.classList.add('tab-'+id);if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='inicio'&&typeof loadInicio==='function') loadInicio();if(!fromPopstate&&id!=='inicio'){if(source==='swipe') history.replaceState({tab:id},'','#'+id); else history.pushState({tab:id},'','#'+id);}window.scrollTo({top:0,behavior:'smooth'});}
+function showTab(id,btn,fromPopstate){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');document.body.classList.remove('tab-inicio','tab-info','tab-mapa','tab-vets','tab-adiestramiento');document.body.classList.add('tab-'+id);if(id==='mapa') setTimeout(()=>{initMap();if(window.map) window.map.invalidateSize();},100);if(id==='inicio'&&typeof loadInicio==='function') loadInicio();if(!fromPopstate&&id!=='inicio') history.pushState({tab:id},'','#'+id);window.scrollTo({top:0,behavior:'smooth'});}
 
 // MAP MODE TOGGLE
 let currentMapMode='avistamientos';
@@ -1565,10 +1565,12 @@ function completeSwipe(toIdx){
   const target=swipeDirection>0?-window.innerWidth:window.innerWidth;
   if(active){active.style.transition='transform 250ms ease-out';active.style.transform=`translateX(${target}px)`;}
   if(preview){preview.style.transition='transform 250ms ease-out';preview.style.transform=`translateX(${target}px)`;}
+  // pushState inmediato (igual que tap por botón) para que el botón atrás del móvil
+  // pueda volver a INICIO también cuando el usuario navegó vía swipe lateral.
   const newId=TABS[toIdx];
   if(newId&&newId!=='inicio'){
-    history.replaceState({tab:newId},'','#'+newId);
-    if(DEBUG_SWIPE) console.log('[swipe] replaceState ->',newId);
+    history.pushState({tab:newId},'','#'+newId);
+    if(DEBUG_SWIPE) console.log('[swipe] pushState ->',newId);
   }
   setTimeout(()=>{
     clearSwipeStyles(active);
@@ -1576,7 +1578,8 @@ function completeSwipe(toIdx){
     swipePreviewSection=null;
     swipeDirection=0;
     const navBtns=document.querySelectorAll('.nav button');
-    showTab(TABS[toIdx],navBtns[toIdx],true,'swipe');
+    // fromPopstate=true para no duplicar el state que ya escribimos arriba.
+    showTab(TABS[toIdx],navBtns[toIdx],true);
   },260);
 }
 
@@ -1882,11 +1885,15 @@ async function loadInicio(){
     if(profile?.foto){
       fotoEl.innerHTML=`<img src="${profile.foto}" alt="${escapeHtml(profile.nombre||'')}">`;
       fotoEl.classList.remove('ini-perfil-fallback');
+      fotoEl.classList.add('ini-perfil-clickable');
+      fotoEl.onclick=()=>openImage(profile.foto);
       if(subirFotoEl) subirFotoEl.style.display='none';
     }else{
       const initial=profile?.nombre?profile.nombre.charAt(0).toUpperCase():'?';
       fotoEl.innerHTML=`<span class="ini-perfil-inicial">${escapeHtml(initial)}</span>`;
       fotoEl.classList.add('ini-perfil-fallback');
+      fotoEl.classList.remove('ini-perfil-clickable');
+      fotoEl.onclick=null;
       if(subirFotoEl) subirFotoEl.style.display=profile?'block':'none';
     }
   }

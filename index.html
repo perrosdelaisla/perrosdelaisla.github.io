@@ -125,6 +125,12 @@
   </nav>
 
   <div id="inicio" class="section section-inicio active">
+    <!-- Tarjeta de bienvenida: saludo según hora + alertas activas en últimas 24h + slogan -->
+    <div class="ini-bienvenida" id="iniBienvenida" style="display:none">
+      <div class="ini-bienv-saludo"></div>
+      <div class="ini-bienv-stat"></div>
+      <div class="ini-bienv-slogan">Tu perro merece ser feliz hoy</div>
+    </div>
     <div class="ini-perfil-protag">
       <div class="ini-perfil-foto" id="iniPerfilFoto"></div>
       <a class="ini-subir-foto" id="iniSubirFoto" style="display:none" onclick="event.preventDefault();editProfile()">✨ Subí tu foto</a>
@@ -185,12 +191,6 @@
         <div class="ini-cta-titulo">INVITAR</div>
         <div class="ini-cta-sub">Hacé crecer la manada</div>
       </button>
-    </div>
-    <!-- Tarjeta de bienvenida: saludo según hora + alertas activas en últimas 24h + slogan -->
-    <div class="ini-bienvenida" id="iniBienvenida" style="display:none">
-      <div class="ini-bienv-saludo"></div>
-      <div class="ini-bienv-stat"></div>
-      <div class="ini-bienv-slogan">Tu perro merece ser feliz hoy</div>
     </div>
     <!-- Banner contextual del reto: poblado por loadInicioContextBanner() según haya reto activo, ganador previo o nada -->
     <div class="ini-context-banner" id="iniContextBanner" style="display:none"></div>

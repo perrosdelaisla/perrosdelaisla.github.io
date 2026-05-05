@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="assets/logo-paseos-seguros-icon.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous"/>
-<link rel="stylesheet" href="styles.css?v=20">
+<link rel="stylesheet" href="styles.css?v=21">
 </head>
 <body>
 
@@ -186,6 +186,12 @@
         <div class="ini-cta-sub">Hacé crecer la manada</div>
       </button>
     </div>
+    <!-- Tarjeta de bienvenida: saludo según hora + alertas activas en últimas 24h + slogan -->
+    <div class="ini-bienvenida" id="iniBienvenida" style="display:none">
+      <div class="ini-bienv-saludo"></div>
+      <div class="ini-bienv-stat"></div>
+      <div class="ini-bienv-slogan">Tu perro merece ser feliz hoy</div>
+    </div>
     <!-- Banner contextual del reto: poblado por loadInicioContextBanner() según haya reto activo, ganador previo o nada -->
     <div class="ini-context-banner" id="iniContextBanner" style="display:none"></div>
     <!-- TODO: cuando exista pestaña interna de servicios PDLI, redirigir ahí en lugar de a web externa -->
@@ -237,7 +243,7 @@
 
     <div class="avistamientos-content active" id="avistamientos-content">
       <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#8e44ad"></div>Garrapatas</div><div class="leyenda-item"><div class="dot" style="background:#e67e22"></div>Cristales</div><div class="leyenda-item"><div class="dot" style="background:#2c3e50"></div>Veneno</div><div class="leyenda-item"><div class="dot" style="background:#7f8c8d"></div>Otro</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
-      <div class="avist-list"><h3>Alertas recientes</h3><div id="avist-container"><p style="color:#555;font-size:13px">Cargando alertas...</p></div></div>
+      <div class="avist-list"><h3>Alertas recientes</h3><div id="avist-container"><div class="skeleton-feed"><div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="skeleton-bar skeleton-title"></div><div class="skeleton-bar skeleton-desc"></div></div></div><div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="skeleton-bar skeleton-title"></div><div class="skeleton-bar skeleton-desc"></div></div></div><div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="skeleton-bar skeleton-title"></div><div class="skeleton-bar skeleton-desc"></div></div></div></div></div></div>
       <button class="reportar-btn" onclick="activateReportMode()">📍 Reportar peligro</button>
     </div>
 
@@ -404,6 +410,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=29"></script>
+<script src="app.js?v=30"></script>
 </body>
 </html>

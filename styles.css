@@ -103,7 +103,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .btn-submit{flex:2;padding:12px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer}
 .btn-submit:disabled{background:#555;cursor:not-allowed}
 .confirm-actions{display:flex;gap:6px;margin-top:8px}
-.btn-confirm,.btn-deny{flex:1;padding:7px 10px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
+.btn-confirm,.btn-deny{flex:1;min-height:44px;padding:8px 10px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
 .btn-confirm{background:#0a2a0a;color:#27ae60;border:1px solid #1a4a1a}
 .btn-confirm:active{background:#1a4a1a}
 .btn-confirm:disabled{opacity:.4;cursor:not-allowed}
@@ -367,7 +367,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .gallery-dots{font-size:11px;color:#666;text-align:center;margin-top:4px}
 
 /* CAMBIO 3: edición de reportes propios */
-.btn-edit-own{margin-top:6px;padding:7px 14px;background:#1a1a1a;color:#9cb64b;border:1px solid #2a2a2a;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.3px;font-family:'Inter',sans-serif}
+.btn-edit-own{margin-top:6px;min-height:44px;padding:8px 14px;background:#1a1a1a;color:#9cb64b;border:1px solid #2a2a2a;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.3px;font-family:'Inter',sans-serif}
 .btn-edit-own:active{background:#222}
 .edited-mark{font-size:11px;color:#555;font-style:italic;margin-left:4px}
 
@@ -479,7 +479,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 }
 
 /* HUELLITAS */
-.btn-huellita{display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #333;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#aaa;transition:all .2s;font-family:'Inter',sans-serif;margin-top:8px;font-weight:600}
+.btn-huellita{display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #333;border-radius:22px;padding:10px 18px;min-height:44px;font-size:13px;cursor:pointer;color:#aaa;transition:all .2s;font-family:'Inter',sans-serif;margin-top:8px;font-weight:600}
 .btn-huellita:active{transform:scale(0.95)}
 .btn-huellita.ya-dado{background:#111a0a;border-color:#9cb64b;color:#9cb64b;box-shadow:0 0 0 2px rgba(156,182,75,0.2)}
 .btn-huellita-sm{padding:4px 10px;font-size:11px;margin-top:0;margin-left:6px}
@@ -531,7 +531,7 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .mis-rep-ubic{font-size:14px;color:#f0f0f0;margin-top:2px}
 .mis-rep-meta{font-size:11px;color:#888;margin-top:4px}
 .mis-rep-badge{background:#2a2a2a;color:#aaa;padding:2px 6px;border-radius:4px;font-size:10px;letter-spacing:.3px}
-.btn-reactivar{margin-top:8px;padding:7px 14px;background:#0a2a0a;color:#27ae60;border:1px solid #1a4a1a;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.3px;font-family:'Inter',sans-serif}
+.btn-reactivar{margin-top:8px;min-height:44px;padding:8px 14px;background:#0a2a0a;color:#27ae60;border:1px solid #1a4a1a;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.3px;font-family:'Inter',sans-serif}
 .btn-reactivar:active{background:#1a4a1a}
 #inp-ubicacion.location-clickable{cursor:pointer;padding-left:32px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='%23c0392b'><path d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'/></svg>");background-repeat:no-repeat;background-position:8px center;background-size:16px}
 #inp-ubicacion.location-clickable:hover{background-color:#1f1f1f}

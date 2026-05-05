@@ -1302,7 +1302,7 @@ async function submitClaimPrize(){
     } catch(e){ console.warn('Error notificando ntfy:',e); }
 
     closeClaimPrizeModal();
-    showToast('Datos enviados! Carlos te contactara pronto','success');
+    showToast('¡Datos enviados! Te contactaremos pronto 🐾','success');
     setTimeout(()=>{ if(typeof loadInicioContextBanner==='function') loadInicioContextBanner(); }, 800);
 
   } catch(err){
@@ -1468,7 +1468,7 @@ function buildTabsList(){
               .map(s=>s.id)
               .filter(Boolean);
   }
-  console.log('[swipe] TABS detectados:',TABS);
+  if(DEBUG_SWIPE) console.log('[swipe] TABS detectados:',TABS);
 }
 document.addEventListener('DOMContentLoaded',buildTabsList);
 
@@ -1476,6 +1476,7 @@ const SWIPE_THRESHOLD_PCT=0.20;
 const SWIPE_VELOCITY_THRESHOLD=0.4; // px/ms, sobre dx CRUDO
 const SWIPE_MIN_HORIZ=12;
 const SWIPE_EDGE_RESISTANCE=0.3;
+const DEBUG_SWIPE=false; // logs de diagnóstico del swipe; activar a true para debug
 
 let swipeStartX=0,swipeStartY=0,swipeBlocked=false,swipeStarted=false;
 let swipePreviewSection=null,swipeDirection=0;
@@ -1567,7 +1568,7 @@ function completeSwipe(toIdx){
   const newId=TABS[toIdx];
   if(newId&&newId!=='inicio'){
     history.replaceState({tab:newId},'','#'+newId);
-    console.log('[swipe] replaceState ->',newId);
+    if(DEBUG_SWIPE) console.log('[swipe] replaceState ->',newId);
   }
   setTimeout(()=>{
     clearSwipeStyles(active);
@@ -1603,7 +1604,7 @@ document.addEventListener('touchstart',e=>{
   swipeLastRawDx=0;
   swipeLastVelocity=0;
   swipeBlocked=!shouldInterceptSwipe(e.target);
-  if(!swipeBlocked) console.log('[swipe] start',{x:swipeStartX,y:swipeStartY,target:e.target.tagName});
+  if(DEBUG_SWIPE&&!swipeBlocked) console.log('[swipe] start',{x:swipeStartX,y:swipeStartY,target:e.target.tagName});
 },{passive:true});
 
 document.addEventListener('touchmove',e=>{
@@ -1643,7 +1644,7 @@ document.addEventListener('touchend',()=>{
   const activeIdx=active?TABS.indexOf(active.id):-1;
   const passedDistance=Math.abs(swipeAppliedDx)>threshold;
   const flickConsistent=(swipeDirection===1&&swipeLastVelocity<-SWIPE_VELOCITY_THRESHOLD)||(swipeDirection===-1&&swipeLastVelocity>SWIPE_VELOCITY_THRESHOLD);
-  console.log('[swipe] end',{
+  if(DEBUG_SWIPE) console.log('[swipe] end',{
     rawDx:Math.round(swipeRawDx),
     appliedDx:Math.round(swipeAppliedDx),
     vel:swipeLastVelocity.toFixed(3),
@@ -1654,10 +1655,10 @@ document.addEventListener('touchend',()=>{
     activeIdx
   });
   if(swipePreviewSection&&(passedDistance||flickConsistent)){
-    console.log('[swipe] -> completeSwipe to',TABS[activeIdx+swipeDirection]);
+    if(DEBUG_SWIPE) console.log('[swipe] -> completeSwipe to',TABS[activeIdx+swipeDirection]);
     completeSwipe(activeIdx+swipeDirection);
   }else{
-    console.log('[swipe] -> cancelSwipe');
+    if(DEBUG_SWIPE) console.log('[swipe] -> cancelSwipe');
     cancelSwipe();
   }
   swipeStarted=false;
@@ -1809,7 +1810,7 @@ async function abrirMiniPerfil(userId) {
 
     const displayName = u.visible ? u.nombre : 'Un vecino de '+u.zona;
     const displayDog = u.visible && u.nombre_perro ? ' y '+u.nombre_perro+' 🐕' : '';
-    const fotoSrc = u.foto || 'https://i.ibb.co/FbBcFvBQ/logo-png.png';
+    const fotoSrc = u.foto || 'assets/logo-paseos-seguros-icon.png';
 
     const insigniasHtml = insigniasDesbloqueadas.length > 0
       ? insigniasDesbloqueadas.map(b => `<span class="mini-insignia" title="${b.name}">${b.emoji}</span>`).join('')

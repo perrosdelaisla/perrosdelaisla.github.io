@@ -1478,10 +1478,9 @@ function buildTabsList(){
 }
 document.addEventListener('DOMContentLoaded',buildTabsList);
 
-const SWIPE_THRESHOLD_PCT=0.20;
-const SWIPE_VELOCITY_THRESHOLD=0.4; // px/ms, sobre dx CRUDO
-const SWIPE_MIN_HORIZ=12;
-const SWIPE_EDGE_RESISTANCE=0.3;
+const SWIPE_THRESHOLD_PCT=0.15;
+const SWIPE_VELOCITY_THRESHOLD=0.25; // px/ms, sobre dx CRUDO
+const SWIPE_MIN_HORIZ=8;
 const DEBUG_SWIPE=false; // logs de diagnóstico del swipe; activar a true para debug
 
 let swipeStartX=0,swipeStartY=0,swipeBlocked=false,swipeStarted=false;
@@ -1629,11 +1628,9 @@ document.addEventListener('touchmove',e=>{
     if(!setupOk){swipeBlocked=true;return;}
     swipeStarted=true;
   }
-  // dx CRUDO para velocidad (no afectado por resistencia de borde)
+  // dx CRUDO para velocidad (= dx aplicado: si llegamos aquí, swipePreviewSection siempre existe)
   swipeRawDx=dx;
-  // dx APLICADO con resistencia si no hay sección adyacente
-  const appliedDx=swipePreviewSection?dx:dx*SWIPE_EDGE_RESISTANCE;
-  swipeAppliedDx=appliedDx;
+  swipeAppliedDx=dx;
   // Velocidad calculada sobre dx CRUDO (un flick en el borde sigue siendo rápido)
   const nowTime=Date.now();
   const dtTime=nowTime-swipeLastTime;
@@ -1642,7 +1639,7 @@ document.addEventListener('touchmove',e=>{
     swipeLastTime=nowTime;
     swipeLastRawDx=swipeRawDx;
   }
-  applySwipeTransform(appliedDx);
+  applySwipeTransform(dx);
 },{passive:true});
 
 document.addEventListener('touchend',()=>{

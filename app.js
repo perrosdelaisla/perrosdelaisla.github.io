@@ -240,9 +240,17 @@ async function finalizeSaveProfile(nombre, perro, zona, visible){
         method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
         body: JSON.stringify({p_user_id: USER_ID})
       });
-      const aplicado = await r.json();
-      if(aplicado === true) showToast('+15 huellitas bonus por subir tu foto 🐾','success');
-    } catch(e){}
+      if(!r.ok){
+        console.error('[bonus_foto] RPC aplicar_bonus_foto falló', r.status, r.url);
+        showToast('Error al aplicar el bonus, inténtalo de nuevo','error');
+      } else {
+        const aplicado = await r.json();
+        if(aplicado === true) showToast('+15 huellitas bonus por subir tu foto 🐾','success');
+      }
+    } catch(e){
+      console.error('[bonus_foto] error de red', e);
+      showToast('Error al aplicar el bonus, inténtalo de nuevo','error');
+    }
   }
   const profile={nombre,nombre_perro:perro,zona,visible,foto:fotoUrl,created_at:getProfile()?.created_at||new Date().toISOString()};
   const previousProfile=localStorage.getItem('pdi_profile');
@@ -1742,25 +1750,45 @@ async function darHuellita(targetType, targetId, btnEl) {
 
     const today = new Date().toISOString().split('T')[0];
     // Atómico: incrementa huellitas_dadas y huellitas_hoy con reset diario.
-    await fetch(SUPA_URL+'/rest/v1/rpc/incrementar_huellitas_dadas_diario', {
+    const rd = await fetch(SUPA_URL+'/rest/v1/rpc/incrementar_huellitas_dadas_diario', {
       method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
       body: JSON.stringify({p_user_id: USER_ID, p_today: today})
     });
+    if(!rd.ok){
+      console.error('[huellita] RPC incrementar_huellitas_dadas_diario falló', rd.status, rd.url);
+      showToast('Error al actualizar, inténtalo de nuevo','error');
+      return;
+    }
 
     // Atómico: incrementa huellitas_recibidas del autor del target (perfil o reporte).
     if(targetType === 'perfil') {
-      await fetch(SUPA_URL+'/rest/v1/rpc/incrementar_huellitas_recibidas', {
+      const rp = await fetch(SUPA_URL+'/rest/v1/rpc/incrementar_huellitas_recibidas', {
         method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
         body: JSON.stringify({p_user_id: targetId})
       });
+      if(!rp.ok){
+        console.error('[huellita] RPC incrementar_huellitas_recibidas (perfil) falló', rp.status, rp.url);
+        showToast('Error al actualizar, inténtalo de nuevo','error');
+        return;
+      }
     } else if(targetType === 'reporte') {
       const ra = await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${targetId}&select=reporter_id`, {headers:HEADERS});
+      if(!ra.ok){
+        console.error('[huellita] SELECT avistamientos falló', ra.status, ra.url);
+        showToast('Error al actualizar, inténtalo de nuevo','error');
+        return;
+      }
       const [a] = await ra.json();
       if(a?.reporter_id && a.reporter_id !== USER_ID) {
-        await fetch(SUPA_URL+'/rest/v1/rpc/incrementar_huellitas_recibidas', {
+        const rr = await fetch(SUPA_URL+'/rest/v1/rpc/incrementar_huellitas_recibidas', {
           method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
           body: JSON.stringify({p_user_id: a.reporter_id})
         });
+        if(!rr.ok){
+          console.error('[huellita] RPC incrementar_huellitas_recibidas (reporte) falló', rr.status, rr.url);
+          showToast('Error al actualizar, inténtalo de nuevo','error');
+          return;
+        }
       }
     }
 

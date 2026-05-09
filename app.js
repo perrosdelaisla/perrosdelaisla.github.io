@@ -230,20 +230,18 @@ async function saveProfile(){
 }
 
 async function finalizeSaveProfile(nombre, perro, zona, visible){
-  const hadFotoAntes = getProfile()?.foto || null;
-  let fotoUrl=hadFotoAntes;
+  let fotoUrl=getProfile()?.foto || null;
+  const subioFotoNueva=!!profilePhotoFile;
   if(profilePhotoFile){showToast('Subiendo foto...','success');fotoUrl=await uploadProfilePhoto(profilePhotoFile);profilePhotoFile=null;}
-  // Bonus +15 huellitas por subir foto de perfil por primera vez
-  if(fotoUrl && !hadFotoAntes) {
+  // Bonus +15 la primera vez que se sube foto. La RPC es idempotente: devuelve false si ya se aplicó.
+  if(subioFotoNueva && fotoUrl) {
     try {
-      const r = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=huellitas_recibidas`,{headers:HEADERS});
-      const [u] = await r.json();
-      const current = u?.huellitas_recibidas || 0;
-      await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}`, {
-        method:'PATCH', headers:{...HEADERS,'Prefer':'return=minimal'},
-        body: JSON.stringify({huellitas_recibidas: current + 15})
+      const r = await fetch(SUPA_URL+'/rest/v1/rpc/aplicar_bonus_foto', {
+        method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
+        body: JSON.stringify({p_user_id: USER_ID})
       });
-      showToast('+15 huellitas bonus por subir tu foto 🐾','success');
+      const aplicado = await r.json();
+      if(aplicado === true) showToast('+15 huellitas bonus por subir tu foto 🐾','success');
     } catch(e){}
   }
   const profile={nombre,nombre_perro:perro,zona,visible,foto:fotoUrl,created_at:getProfile()?.created_at||new Date().toISOString()};
@@ -1743,25 +1741,27 @@ async function darHuellita(targetType, targetId, btnEl) {
     if(countEl) countEl.textContent = parseInt(countEl.textContent||'0') + 1;
 
     const today = new Date().toISOString().split('T')[0];
-    const r2 = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}&select=huellitas_dadas,huellitas_hoy,huellitas_hoy_fecha`, {headers:HEADERS});
-    const [u2] = await r2.json();
-    const isNewDay2 = !u2 || u2.huellitas_hoy_fecha !== today;
-    await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${USER_ID}`, {
-      method:'PATCH', headers:{...HEADERS,'Prefer':'return=minimal'},
-      body: JSON.stringify({
-        huellitas_dadas: (u2?.huellitas_dadas||0) + 1,
-        huellitas_hoy: isNewDay2 ? 1 : (u2?.huellitas_hoy||0) + 1,
-        huellitas_hoy_fecha: today
-      })
+    // Atómico: incrementa huellitas_dadas y huellitas_hoy con reset diario.
+    await fetch(SUPA_URL+'/rest/v1/rpc/incrementar_huellitas_dadas_diario', {
+      method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
+      body: JSON.stringify({p_user_id: USER_ID, p_today: today})
     });
 
+    // Atómico: incrementa huellitas_recibidas del autor del target (perfil o reporte).
     if(targetType === 'perfil') {
-      const r3 = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${targetId}&select=huellitas_recibidas`, {headers:HEADERS});
-      const [u3] = await r3.json();
-      await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${targetId}`, {
-        method:'PATCH', headers:{...HEADERS,'Prefer':'return=minimal'},
-        body: JSON.stringify({huellitas_recibidas: (u3?.huellitas_recibidas||0) + 1})
+      await fetch(SUPA_URL+'/rest/v1/rpc/incrementar_huellitas_recibidas', {
+        method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
+        body: JSON.stringify({p_user_id: targetId})
       });
+    } else if(targetType === 'reporte') {
+      const ra = await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${targetId}&select=reporter_id`, {headers:HEADERS});
+      const [a] = await ra.json();
+      if(a?.reporter_id && a.reporter_id !== USER_ID) {
+        await fetch(SUPA_URL+'/rest/v1/rpc/incrementar_huellitas_recibidas', {
+          method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
+          body: JSON.stringify({p_user_id: a.reporter_id})
+        });
+      }
     }
 
     showToast('+1 huellita dada 🐾','success');

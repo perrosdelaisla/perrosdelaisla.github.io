@@ -1602,6 +1602,8 @@ function cancelSwipe(){
 }
 
 document.addEventListener('touchstart',e=>{
+  // Multi-touch (pinch zoom): no es swipe, dejar el gesto al elemento (mapa Leaflet, etc.)
+  if(e.touches.length>1){swipeBlocked=true;swipeStarted=false;return;}
   swipeStartX=e.touches[0].clientX;
   swipeStartY=e.touches[0].clientY;
   swipeStarted=false;
@@ -1616,6 +1618,13 @@ document.addEventListener('touchstart',e=>{
 },{passive:true});
 
 document.addEventListener('touchmove',e=>{
+  // Si aparece un segundo dedo a media animación: cancelar swipe en curso y bloquear.
+  if(e.touches.length>1){
+    if(swipeStarted) cancelSwipe();
+    swipeBlocked=true;
+    swipeStarted=false;
+    return;
+  }
   if(swipeBlocked) return;
   const t=e.touches[0];
   const dx=t.clientX-swipeStartX;

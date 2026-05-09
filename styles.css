@@ -44,8 +44,9 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .card-urgente{background:#1a0a0a;border:1px solid #c0392b}
 .card-urgente h3{color:#c0392b}
 .zonas p{font-size:13px;color:#aaa;line-height:2}
-#map{height:270px;border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #2a2a2a;position:relative}
+#map{height:270px;border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #2a2a2a;position:relative;touch-action:none}
 #map.fullscreen{position:fixed;inset:0;height:100vh !important;width:100vw !important;z-index:2000;border-radius:0;margin:0}
+.leaflet-container{touch-action:none}
 .map-layer-btn{position:absolute;top:10px;left:10px;z-index:999;background:#1a1a1a;border:1px solid #333;color:#fff;padding:7px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,0.5);transition:all .2s;letter-spacing:.3px}
 .map-layer-btn:active{background:#333}
 .leyenda{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap}

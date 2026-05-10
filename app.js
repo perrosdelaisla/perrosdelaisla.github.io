@@ -609,8 +609,8 @@ function initMap(){
   window.map=L.map('map',{zoomControl:false,maxZoom:19}).setView([39.65,2.95],9);
   markersLayer.addTo(window.map);rutasLayer.addTo(window.map);
 
-  // 2 capas: callejero (default) y satélite
-  window.streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19});
+  // 2 capas: callejero (CartoDB Dark Matter, default) y satélite
+  window.streetLayer=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors &copy; CARTO',subdomains:'abcd',maxZoom:19});
   window.satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
 
   // Capa inicial: callejero. El botón muestra el icono de la capa siguiente.
@@ -2045,7 +2045,7 @@ async function loadInicioContextBanner(){
       participantes=Array.isArray(data)?data.length:0;
     }catch(e){}
     banner.className='ini-context-banner ini-context-active';
-    banner.innerHTML=`<div class="ini-cb-emoji">📢</div><div class="ini-cb-text"><div class="ini-cb-title">¡Reto activo! Compartí y participá</div><div class="ini-cb-sub">Quedan ${dias} día${dias===1?'':'s'} · ${participantes} participante${participantes===1?'':'s'}</div></div><div class="ini-cb-arrow">›</div>`;
+    banner.innerHTML=`<div class="ini-cb-emoji">📢</div><div class="ini-cb-text"><div class="ini-cb-title">¡Reto activo! Comparte y participa</div><div class="ini-cb-sub">Quedan ${dias} día${dias===1?'':'s'} · ${participantes} participante${participantes===1?'':'s'}</div></div><div class="ini-cb-arrow">›</div>`;
     banner.onclick=()=>showTabByName('info');
     banner.style.display='flex';
     return;

@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Paseos Seguros</title>
-<meta name="description" content="Reportá peligros y descubrí rutas seguras en tus paseos por Mallorca. Una iniciativa de Perros de la Isla.">
+<meta name="description" content="Reporta peligros y descubre rutas seguras en tus paseos por Mallorca. Una iniciativa de Perros de la Isla.">
 <meta name="application-name" content="Paseos Seguros">
 <meta name="apple-mobile-web-app-title" content="Paseos Seguros">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,7 +15,11 @@
 <link rel="apple-touch-icon" href="assets/logo-paseos-seguros-icon.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous"/>
-<link rel="stylesheet" href="styles.css?v=23">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="styles.css?v=24">
 </head>
 <body>
 
@@ -113,15 +117,15 @@
 <div class="app">
   <header>
     <div class="logo-circle" onclick="showTabByName('inicio')" role="button" aria-label="Volver a inicio"><img src="assets/logo-paseos-seguros-icon.png" alt="Paseos Seguros"/></div>
-    <div class="header-text"><h1>PASEOS SEGUROS</h1><p>una iniciativa de Perros de la Isla</p></div>
+    <div class="header-text"><h1>PASEOS SEGUROS</h1><p>POR PERROS DE LA ISLA</p></div>
     <div class="profile-btn" id="headerProfileBtn" onclick="openProfile()">👤</div>
   </header>
   <nav class="nav">
-    <button class="nav-inicio-btn active" onclick="showTab('inicio',this)" aria-hidden="true"><span>🏠</span>Inicio</button>
-    <button onclick="showTab('info',this)"><span>⚠️</span>Alerta</button>
-    <button onclick="showTab('mapa',this)"><span>🗺️</span>Mapa</button>
-    <button onclick="showTab('vets',this)"><span>🏥</span>Urgencias</button>
-    <button class="nav-training" onclick="showTab('adiestramiento',this)"><span>🐾</span>Servicios</button>
+    <button class="nav-inicio-btn active" onclick="showTab('inicio',this)" aria-hidden="true"><i class="ti ti-home"></i>Inicio</button>
+    <button onclick="showTab('info',this)"><i class="ti ti-alert-triangle"></i>Alerta</button>
+    <button onclick="showTab('mapa',this)"><i class="ti ti-map-2"></i>Mapa</button>
+    <button onclick="showTab('vets',this)"><i class="ti ti-stethoscope"></i>Urgencias</button>
+    <button class="nav-training" onclick="showTab('adiestramiento',this)"><i class="ti ti-paw"></i>Servicios</button>
   </nav>
 
   <div id="inicio" class="section section-inicio active">
@@ -133,7 +137,7 @@
     </div>
     <div class="ini-perfil-protag">
       <div class="ini-perfil-foto" id="iniPerfilFoto"></div>
-      <a class="ini-subir-foto" id="iniSubirFoto" style="display:none" onclick="event.preventDefault();editProfile()">✨ Subí tu foto</a>
+      <a class="ini-subir-foto" id="iniSubirFoto" style="display:none" onclick="event.preventDefault();editProfile()">✨ Sube tu foto</a>
       <button class="ini-ganador" id="iniGanador" onclick="openRanking()" style="display:none" aria-label="Ver ganador del reto">
         <div class="ini-ganador-halo"></div>
         <div class="ini-ganador-medalla">
@@ -152,7 +156,7 @@
       <div class="ini-saludo-hola" id="iniHola">Hola, tutor</div>
       <div class="ini-saludo-pregunta" id="iniPregunta">¿qué hacemos hoy?</div>
     </div>
-    <p class="ini-microcopy">Reportá peligros, descubrí rutas seguras y formá parte de la comunidad de tutores de Mallorca.</p>
+    <p class="ini-microcopy">Reporta peligros, descubre rutas seguras y forma parte de la comunidad de tutores de Mallorca.</p>
     <div class="ini-section-label">¿QUÉ HACEMOS HOY?</div>
     <div class="ini-grid">
       <button class="ini-cta ini-cta-alertas" onclick="showTabByName('info')" aria-label="Ver alertas">
@@ -189,7 +193,7 @@
         <div class="ini-cta-circle"></div>
         <div class="ini-cta-emoji">📤</div>
         <div class="ini-cta-titulo">INVITAR</div>
-        <div class="ini-cta-sub">Hacé crecer la manada</div>
+        <div class="ini-cta-sub">Haz crecer la manada</div>
       </button>
     </div>
     <!-- Banner contextual del reto: poblado por loadInicioContextBanner() según haya reto activo, ganador previo o nada -->
@@ -267,12 +271,12 @@
 
   <div id="adiestramiento" class="section">
     <div class="adi-wrap">
-      <div class="adi-hero"><img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" alt="Perros de la Isla" class="clickable-img" onclick="openImage('https://i.ibb.co/FbBcFvBQ/logo-png.png')" style="object-fit:contain;padding:30px;background:#3a0f0f"><div class="adi-hero-content"><div class="adi-name">Perros de la Isla</div><div class="adi-sub">Instructor Canino Profesional · Mallorca</div></div></div>
+      <div class="adi-hero"><img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" alt="Perros de la Isla" class="clickable-img" onclick="openImage('https://i.ibb.co/FbBcFvBQ/logo-png.png')" style="object-fit:contain;padding:30px;background:#3a0f0f"><div class="adi-hero-content"><div class="adi-name">Perros de la Isla</div><div class="adi-sub">Adiestramiento Canino Profesional · Mallorca</div></div></div>
       <div class="adi-text">En <strong>Perros de la Isla</strong> llevamos más de <strong>14 años</strong> dedicados al bienestar emocional de los perros y al vínculo con sus familias. Desde <strong>2019</strong> en Mallorca, trabajamos con pasión por cada perro que llega a nosotros.</div>
       <div class="adi-text">Trabajamos con métodos respetuosos para fortalecer la relación entre tú y tu perro, resolver lo que os cuesta y construir juntos una convivencia más feliz.</div>
       <div class="adi-note">💡 Si has visto una procesionaria, repórtala en la pestaña <strong>Mapa</strong>. Esta zona es solo para consultas de adiestramiento.</div>
       <div class="adi-title">Servicios Destacados</div>
-      <div class="srv-card"><div class="srv-name">Educación Canina Básica y Avanzada</div><div class="srv-text">Obediencia, modales en casa, paseo correcto, llamada y convivencia diaria.</div><a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=basica" target="_blank" rel="noopener">💬 Info y reservas</a></div>
+      <div class="srv-card"><div class="srv-name">Educación Canina Básica y Avanzada</div><div class="srv-text">Educación, modales en casa, paseo correcto, llamada y convivencia diaria.</div><a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=basica" target="_blank" rel="noopener">💬 Info y reservas</a></div>
       <div class="srv-card"><div class="srv-name">Control de Reactividad e Impulsividad</div><div class="srv-text">Para perros que reaccionan ante otros perros, personas o estímulos del entorno.</div><a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=reactividad" target="_blank" rel="noopener">💬 Info y reservas</a></div>
       <div class="srv-card"><div class="srv-name">Educación Temprana para Cachorros</div><div class="srv-text">Socialización, higiene, autocontrol y bases sólidas desde el principio.</div><a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=cachorros" target="_blank" rel="noopener">💬 Info y reservas</a></div>
       <div class="srv-card"><div class="srv-name">Gestión de Ansiedad y Miedos</div><div class="srv-text">Para perros con ansiedad por separación, miedos a ruidos, tormentas, entornos nuevos o inseguridades que afectan su bienestar emocional.</div><a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=ansiedad" target="_blank" rel="noopener">💬 Info y reservas</a></div>
@@ -281,7 +285,7 @@
       <a href="https://instagram.com/perrosdelaisla" target="_blank" rel="noopener" class="ig-card"><div class="ig-logo">📷</div><div><div class="ig-user">@perrosdelaisla</div><div class="ig-sub">Sígueme para novedades, consejos y actividades</div></div></a>
       <div class="adi-title">Contacto</div>
       <div class="contact-card"><a href="#" onclick="return openWhatsApp('general')" class="contact-row"><div class="contact-label">💬 WhatsApp · 622 922 173</div><div class="contact-value">Consultas de adiestramiento</div></a><a href="mailto:perrosdelaislapalma@gmail.com" class="contact-row"><div class="contact-label">✉️ Email</div><div class="contact-value">perrosdelaislapalma@gmail.com</div></a><a href="https://perrosdelaisla.com" target="_blank" rel="noopener" class="contact-row"><div class="contact-label">🌐 Web oficial</div><div class="contact-value">perrosdelaisla.com</div></a><div class="hours"><strong>Horario</strong><br>Lunes a Viernes · 10:00 a 13:00 · 17:00 a 20:00<br>Sábados · 10:00 a 13:00 · Domingos cerrado</div></div>
-      <div class="final-msg">TU PERRO MERECE<br>SER FELIZ, HOY.</div>
+      <div class="final-msg">TU PERRO MERECE<br>SER FELIZ HOY</div>
       <div class="final-sub">Perros de la Isla · Palma de Mallorca</div>
     </div>
   </div>
@@ -410,6 +414,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=34"></script>
+<script src="app.js?v=35"></script>
 </body>
 </html>

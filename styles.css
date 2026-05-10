@@ -1,14 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
+
+/* === Sistema visual PDLI · Paseos Seguros (Fase 1) === */
+/* Tokens disponibles para Fase 2. NO reemplazan colores actuales. */
+:root{
+  --pdli-rojo:#C8102E;
+  --pdli-oliva:#6B7A3A;
+  --pdli-oliva-claro:#9CB64B;
+  --pdli-negro:#1A1A1A;
+  --pdli-crema:#F5EFE0;
+  --pdli-amarillo:#E8B62D;
+  --pdli-marron:#5A4220;
+  --pdli-verde-oscuro:#1F2D17;
+  --pdli-coral:#E07A6E;
+  --bg-base:#1A1A1A;
+  --bg-surface-1:#242424;
+  --bg-surface-2:#2E2E2E;
+  --text-primary:#F5EFE0;
+  --text-secondary:#BFB9A8;
+  --text-tertiary:#8E8A82;
+  --text-disabled:#6E6A62;
+}
+
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#111;color:#f0f0f0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
 .app{max-width:480px;margin:0 auto;background:#111;min-height:100vh}
 header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #222;position:sticky;top:0;z-index:1000}
-.logo-circle{width:38px;height:38px;border-radius:50%;background:#000;border:2px solid #c0392b;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;cursor:pointer;transition:transform .15s}
+.logo-circle{width:44px;height:44px;border-radius:50%;background:var(--bg-surface-1);border:1px solid var(--bg-surface-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;cursor:pointer;transition:transform .15s;padding:6px}
 .logo-circle:active{transform:scale(0.94);opacity:0.7}
-.logo-circle img{width:100%;height:100%;object-fit:contain;border-radius:50%}
+.logo-circle img{width:100%;height:100%;object-fit:contain}
 .header-text{flex:1;min-width:0}
 .header-text h1{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:#fff;line-height:1}
-.header-text p{font-size:10px;color:#FFD2CC;font-weight:500;letter-spacing:0.8px;margin-top:3px}
+.header-text p{font-family:'Bebas Neue',sans-serif;font-size:10px;color:var(--text-tertiary);font-weight:400;letter-spacing:1.4px;margin-top:3px}
 .profile-btn{width:36px;height:36px;border-radius:50%;background:#1a1a1a;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;transition:all .2s;overflow:hidden}
 .profile-btn:active{background:#333}
 .profile-btn.has-profile{border-color:#9cb64b;background:#1a2a1a}
@@ -16,8 +38,9 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .nav{display:flex;background:#111;border-bottom:1px solid #222;position:sticky;top:74px;z-index:999}
 .nav button{flex:1;padding:11px 2px;border:none;background:none;font-size:9.5px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#555;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px}
 .nav button span{font-size:16px}
-.nav button.active{color:#c0392b;border-bottom-color:#c0392b}
-.nav button.nav-training.active{color:#9cb64b;border-bottom-color:#9cb64b}
+.nav button i.ti{font-size:18px}
+.nav button.active{color:var(--pdli-rojo);border-bottom-color:var(--pdli-rojo)}
+.nav button.nav-training.active{color:var(--pdli-oliva);border-bottom-color:var(--pdli-oliva)}
 .section{display:none;padding:16px;padding-bottom:90px;touch-action:pan-y}
 .section.active{display:block}
 .season-card,.info-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:12px}

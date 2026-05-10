@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=33">
+<link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
 
@@ -855,10 +855,19 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div id="installBanner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid #c0392b;color:#fff;padding:16px;border-radius:12px;z-index:9999;width:90%;max-width:380px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,0.5)">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><strong style="font-size:15px">📲 Instala la app en tu móvil</strong><button onclick="closeBanner()" style="background:none;border:none;color:#888;font-size:18px;cursor:pointer;padding:0 4px">✕</button></div>
-<p style="color:#aaa;line-height:1.5;margin-bottom:10px" id="installInstructions">Añade Perros de la Isla a tu pantalla de inicio para acceder más rápido.</p>
-<button onclick="installApp()" id="installBtn" style="width:100%;padding:12px;background:#c0392b;border:none;color:#fff;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer">Instalar ahora</button>
+<div id="installBanner" class="install-banner">
+  <div class="install-banner-header">
+    <div class="install-banner-header-left">
+      <div class="install-banner-eyebrow">PWA</div>
+      <h3 class="install-banner-title bebas"><i class="ti ti-device-mobile"></i>INSTALA LA APP</h3>
+    </div>
+    <button class="install-banner-close" onclick="closeBanner()" aria-label="Cerrar">
+      <i class="ti ti-x"></i>
+    </button>
+  </div>
+  <div class="install-banner-line"></div>
+  <p class="install-banner-text" id="installInstructions">Añade Perros de la Isla a tu pantalla de inicio para acceder más rápido.</p>
+  <button class="btn btn-primary install-banner-btn" id="installBtn" onclick="installApp()">INSTALAR AHORA</button>
 </div>
 
 <!-- MODAL RECLAMAR PREMIO -->
@@ -918,13 +927,14 @@
 
 <!-- MODAL DE IMAGEN -->
 <div id="imgModal">
-  <button class="img-close" onclick="closeImage()" aria-label="Cerrar imagen">✕</button>
+  <button class="img-close" onclick="closeImage()" aria-label="Cerrar imagen">
+    <i class="ti ti-x"></i>
+  </button>
   <div class="img-wrap" id="imgModalWrap">
     <img id="imgModalContent" alt="Foto">
   </div>
-  <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=44"></script>
+<script src="app.js?v=45"></script>
 </body>
 </html>

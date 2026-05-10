@@ -1474,20 +1474,20 @@ function showInstallBanner(){
   const btn=document.getElementById('installBtn');
   const ua=navigator.userAgent.toLowerCase();
   if(/iphone|ipad|ipod/.test(ua)&&/safari/.test(ua)&&!/crios|fxios/.test(ua)){
-    instructions.innerHTML='En Safari: toca el botón <strong style="color:#fff">Compartir</strong> (📤) de la barra inferior y luego <strong style="color:#fff">"Añadir a pantalla de inicio"</strong>.';
-    btn.textContent='Entendido';
+    instructions.innerHTML='En Safari: toca el botón <strong class="install-banner-strong">Compartir</strong> (📤) de la barra inferior y luego <strong class="install-banner-strong">"Añadir a pantalla de inicio"</strong>.';
+    btn.innerHTML='<i class="ti ti-check"></i> ENTENDIDO';
     btn.onclick=function(){closeBanner();};
   } else if(/iphone|ipad|ipod/.test(ua)){
-    instructions.innerHTML='Para instalar la app, ábrela en <strong style="color:#fff">Safari</strong>. Luego toca Compartir (📤) → "Añadir a pantalla de inicio".';
-    btn.textContent='Entendido';
+    instructions.innerHTML='Para instalar la app, ábrela en <strong class="install-banner-strong">Safari</strong>. Luego toca Compartir (📤) → "Añadir a pantalla de inicio".';
+    btn.innerHTML='<i class="ti ti-check"></i> ENTENDIDO';
     btn.onclick=function(){closeBanner();};
   } else if(deferredPrompt){
     instructions.textContent='Añade Perros de la Isla a tu pantalla de inicio para acceder más rápido.';
-    btn.textContent='Instalar ahora';
+    btn.innerHTML='<i class="ti ti-download"></i> INSTALAR AHORA';
     btn.onclick=function(){installApp();};
   } else {
-    instructions.innerHTML='Abre el menú de tu navegador (<strong style="color:#fff">⋮</strong> o <strong style="color:#fff">⋯</strong>) y selecciona <strong style="color:#fff">"Añadir a pantalla de inicio"</strong>.';
-    btn.textContent='Entendido';
+    instructions.innerHTML='Abre el menú de tu navegador (<strong class="install-banner-strong">⋮</strong> o <strong class="install-banner-strong">⋯</strong>) y selecciona <strong class="install-banner-strong">"Añadir a pantalla de inicio"</strong>.';
+    btn.innerHTML='<i class="ti ti-check"></i> ENTENDIDO';
     btn.onclick=function(){closeBanner();};
   }
   setTimeout(()=>{banner.style.display='block';},2000);

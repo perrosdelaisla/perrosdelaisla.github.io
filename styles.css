@@ -292,6 +292,21 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .toast.show{display:block;animation:toastSlide .3s ease-out}
 .toast.success{background:#27ae60}
 .toast.error{background:#c0392b}
+
+/* INSTALL BANNER */
+.install-banner{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg-base);border:1px solid var(--pdli-rojo);width:90%;max-width:380px;padding:18px 18px 16px;border-radius:12px;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+.install-banner-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.install-banner-header-left{flex:1;min-width:0}
+.install-banner-eyebrow{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:1.8px;color:var(--pdli-rojo)}
+.install-banner-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.4px;color:var(--text-primary);margin-top:3px;line-height:1;display:flex;align-items:center;gap:8px}
+.install-banner-title i{font-size:18px;color:var(--text-secondary)}
+.install-banner-close{width:32px;height:32px;background:transparent;border:1px solid var(--bg-surface-2);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;margin-top:2px}
+.install-banner-close i{font-size:16px}
+.install-banner-close:active{background:var(--bg-surface-1)}
+.install-banner-line{width:36px;height:1px;background:var(--pdli-rojo);margin:12px 0 12px}
+.install-banner-text{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:14px}
+.install-banner-strong{color:var(--text-primary);font-weight:600}
+.install-banner-btn{width:100%}
 @keyframes toastSlide{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -303,9 +318,9 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 #imgModal .img-wrap{max-width:100%;max-height:100%;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
 #imgModal img{max-width:100%;max-height:90vh;border-radius:10px;object-fit:contain;transition:transform .25s ease;transform-origin:center center;user-select:none;-webkit-user-drag:none}
 #imgModal img.zoomed{transform:scale(2.2);cursor:zoom-out}
-#imgModal .img-close{position:fixed;top:18px;right:18px;width:44px;height:44px;border-radius:50%;background:rgba(192,57,43,0.95);color:#fff;border:none;font-size:22px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:6010;box-shadow:0 4px 14px rgba(0,0,0,0.6);transition:all .2s}
-#imgModal .img-close:active{background:#a93226;transform:scale(0.92)}
-#imgModal .img-hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.55);font-size:11px;letter-spacing:.5px;background:rgba(0,0,0,0.5);padding:6px 14px;border-radius:20px;pointer-events:none;z-index:6010}
+#imgModal .img-close{position:fixed;top:18px;right:18px;width:40px;height:40px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.25);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:6010;padding:0;backdrop-filter:blur(6px)}
+#imgModal .img-close i{font-size:18px}
+#imgModal .img-close:active{background:rgba(0,0,0,0.85);transform:scale(0.94)}
 
 /* Cursor pointer en todas las imágenes clicables */
 .clickable-img{cursor:pointer;transition:opacity .15s}

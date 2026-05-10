@@ -43,30 +43,100 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .nav button.nav-training.active{color:var(--pdli-oliva);border-bottom-color:var(--pdli-oliva)}
 .section{display:none;padding:16px;padding-bottom:90px;touch-action:pan-y}
 .section.active{display:block}
-.season-card,.info-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:12px}
-.season-card h3{font-size:12px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
-.info-card h3{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.5px;color:#fff;margin-bottom:8px}
-.info-card p{font-size:13px;color:#aaa;line-height:1.65}
-.info-card p strong{color:#f0f0f0}
-.alerta-banner{background:#c0392b;border-radius:10px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
-.alerta-banner .icon{font-size:26px;flex-shrink:0}
-.alerta-banner h3{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.5px;color:#fff}
-.alerta-banner p{font-size:12px;color:rgba(255,255,255,0.85);margin-top:2px}
-.months{display:flex;gap:3px}
-.month{flex:1;text-align:center;padding:7px 2px;border-radius:5px;font-size:10px;font-weight:600}
-.month.high-risk{background:#c0392b;color:#fff}
-.month.risk{background:#b7950b;color:#fff}
-.month.safe{background:#1a3a1a;color:#6fcf6f}
-.sintomas{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
-.sintoma{background:#222;border:1px solid #333;border-radius:7px;padding:8px;font-size:12px;color:#e17055;text-align:center;font-weight:500}
-.protocolo{margin-top:4px}
-.paso{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
-.paso-num{background:#c0392b;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
-.paso p{font-size:13px;color:#aaa;line-height:1.5}
-.paso p strong{color:#f0f0f0}
-.card-urgente{background:#1a0a0a;border:1px solid #c0392b}
-.card-urgente h3{color:#c0392b}
-.zonas p{font-size:13px;color:#aaa;line-height:2}
+/* === Pantalla Alerta · Fase 2C === */
+/* Reemplaza .alerta-banner / .season-card / .info-card / .months / .month /
+   .sintomas / .protocolo / .paso-num / .card-urgente / .zonas y el bloque
+   viejo del carrusel "OTROS PELIGROS". */
+
+/* Utilities globales (reusables Fase 2D/2E) */
+.eyebrow{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:1.8px;color:var(--pdli-rojo)}
+.eyebrow.muted{color:var(--text-tertiary)}
+.divider{height:1px;background:var(--bg-surface-2);margin:0}
+
+/* Override .section solo para Alerta */
+#info.section{padding:0 0 90px}
+
+/* Hero dinámico: 3 estados de temporada via data-state */
+.alerta-hero{padding:32px 22px 28px;color:var(--pdli-crema)}
+.alerta-hero[data-state="alto"]{background:var(--pdli-rojo)}
+.alerta-hero[data-state="moderado"]{background:var(--pdli-marron)}
+.alerta-hero[data-state="bajo"]{background:var(--pdli-verde-oscuro)}
+.alerta-hero-eyebrow{font-size:10px;letter-spacing:2px;opacity:0.85}
+.alerta-hero-title{font-size:30px;line-height:1;letter-spacing:0.5px;margin-top:10px;text-wrap:balance}
+.alerta-hero-text{font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.55;margin-top:18px;opacity:0.92;text-wrap:pretty}
+.alerta-hero-footer{display:flex;align-items:center;gap:8px;margin-top:22px;padding-top:16px;border-top:1px solid rgba(245,239,224,0.25)}
+.alerta-hero-footer i{font-size:14px}
+.alerta-hero-footer .bebas{font-size:11px;letter-spacing:1.6px}
+
+/* Section editorial padding 22px */
+.alerta-section{padding:22px}
+.alerta-section-head{display:flex;align-items:baseline;justify-content:space-between}
+.alerta-section-tag{font-size:10px;letter-spacing:1.5px;color:var(--pdli-rojo)}
+
+/* Calendario meses (cells generadas por JS) */
+.alerta-meses{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:14px}
+.mes{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.5px}
+.mes-alto{background:var(--pdli-rojo);color:var(--pdli-crema)}
+.mes-mod{background:var(--pdli-marron);color:var(--pdli-crema)}
+.mes-bajo{background:var(--pdli-verde-oscuro);color:var(--pdli-oliva-claro)}
+.mes-current{box-shadow:inset 0 0 0 2px var(--pdli-crema)}
+.alerta-leyenda{display:flex;gap:14px;margin-top:14px;font-family:'Inter',sans-serif;font-size:11px;color:var(--text-tertiary)}
+.alerta-leyenda span{display:flex;align-items:center;gap:6px}
+.alerta-leyenda span i{width:8px;height:8px;display:inline-block;font-style:normal}
+.alerta-leyenda span:nth-child(1) i{background:var(--pdli-rojo)}
+.alerta-leyenda span:nth-child(2) i{background:var(--pdli-marron)}
+.alerta-leyenda span:nth-child(3) i{background:var(--pdli-verde-oscuro)}
+
+/* Fichas */
+.alerta-ficha-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.8px;line-height:1.1;color:var(--text-primary);margin-top:8px;text-wrap:balance}
+.alerta-ficha-body{font-family:'Inter',sans-serif;font-size:14px;line-height:1.65;color:var(--text-secondary);margin-top:14px;text-wrap:pretty}
+.alerta-ficha-body strong{color:var(--text-primary)}
+.alerta-ficha-body em{font-style:italic}
+
+/* Cita destacada (borde rojo lateral + icono + Bebas) */
+.alerta-quote{border-left:2px solid var(--pdli-rojo);padding-left:16px;margin-top:22px;display:flex;align-items:flex-start;gap:8px}
+.alerta-quote i.ti{font-size:16px;color:var(--pdli-rojo);margin-top:2px;flex-shrink:0}
+.alerta-quote p{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.6px;color:var(--text-primary);line-height:1.3;margin:0;text-wrap:balance}
+
+/* Modifier eyebrow color amarillo (caption del bolsón) */
+.alerta-eyebrow-amarillo{color:var(--pdli-amarillo)}
+
+/* Imagen + caption (mantiene clickable-img + onclick openImage) */
+.alerta-img-wrap{display:block}
+.alerta-img{display:block;width:100%;height:220px;object-fit:cover;cursor:pointer}
+.alerta-img-caption{padding:14px 22px;background:var(--bg-surface-1);border-top:1px solid var(--bg-surface-2);border-bottom:1px solid var(--bg-surface-2)}
+.alerta-img-caption-text{font-family:'Inter',sans-serif;font-size:11.5px;color:var(--text-secondary);line-height:1.5;margin-top:6px}
+
+/* Aviso microcopy con borde rojo lateral */
+.alerta-note{border-left:2px solid var(--pdli-rojo);padding-left:16px}
+.alerta-note p{font-family:'Inter',sans-serif;font-size:12.5px;color:var(--text-secondary);line-height:1.55;margin:0}
+
+/* Síntomas grid 2 col con dividers */
+.alerta-sintomas-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bg-surface-2);margin-top:18px;border:1px solid var(--bg-surface-2)}
+.alerta-sintoma{display:flex;align-items:center;gap:10px;padding:14px 12px;background:var(--bg-surface-1)}
+.alerta-sintoma i.ti{font-size:18px;color:var(--pdli-coral);flex-shrink:0}
+.alerta-sintoma span{font-family:'Inter',sans-serif;font-size:12.5px;color:var(--text-secondary);line-height:1.3}
+
+/* Protocolo emergencia: 4 pasos verticales con divider top */
+.alerta-pasos{margin-top:18px}
+.alerta-paso{display:flex;align-items:flex-start;gap:14px;padding:18px 0;border-top:1px solid var(--bg-surface-2)}
+.alerta-paso-num{font-size:28px;color:var(--pdli-rojo);width:40px;flex-shrink:0;line-height:1;letter-spacing:0.6px}
+.alerta-paso-text{font-family:'Inter',sans-serif;font-size:13.5px;color:var(--text-secondary);line-height:1.55;margin-top:4px}
+
+/* Zonas mayor riesgo: lista icono + texto */
+.alerta-zonas-list{margin-top:18px}
+.alerta-zona-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--bg-surface-2)}
+.alerta-zona-item i.ti{font-size:18px;color:var(--pdli-oliva);flex-shrink:0}
+.alerta-zona-item span{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-secondary);line-height:1.4}
+
+/* Carrusel "Otros peligros" — mantiene data-horizontal-scroll */
+.alerta-peligros-sub{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-tertiary);line-height:1.5;margin-top:6px}
+.alerta-peligros-grid{display:flex;gap:1px;overflow-x:auto;background:var(--bg-surface-2);scrollbar-width:none}
+.alerta-peligros-grid::-webkit-scrollbar{display:none}
+.alerta-peligro-card{flex:0 0 200px;display:flex;flex-direction:column;align-items:flex-start;padding:22px 20px;background:var(--bg-surface-1);min-height:140px}
+.alerta-peligro-card i.ti{font-size:28px;color:var(--text-primary);margin-bottom:14px}
+.alerta-peligro-card-titulo{font-size:14px;letter-spacing:1.4px;color:var(--text-primary);line-height:1.1}
+.alerta-peligro-card-sub{font-family:'Inter',sans-serif;font-size:11px;color:var(--text-tertiary);margin-top:6px;line-height:1.3}
 #map{height:270px;border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #2a2a2a;position:relative;touch-action:none}
 #map.fullscreen{position:fixed;inset:0;height:100vh !important;width:100vw !important;z-index:2000;border-radius:0;margin:0}
 .leaflet-container{touch-action:none}
@@ -747,18 +817,6 @@ body.tab-inicio .nav{display:none}
 .map-fab-menu button{display:block;width:100%;background:none;border:none;color:#fff;text-align:left;padding:10px 12px;font-size:13px;cursor:pointer;border-radius:6px;font-family:'Inter',sans-serif}
 .map-fab-menu button:hover{background:rgba(255,255,255,0.1)}
 
-/* ===== CARRUSEL OTROS PELIGROS (en pestaña ALERTA) ===== */
-.otros-peligros-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.5px;color:#fff;margin:18px 0 12px;text-transform:uppercase}
-.peligros-carrusel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 16px 8px;margin:0 -16px;scrollbar-width:none}
-.peligros-carrusel::-webkit-scrollbar{display:none}
-.peligro-card{flex:0 0 140px;width:140px;height:180px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px;scroll-snap-align:start;color:#fff;text-align:center}
-.peligro-card-emoji{font-size:48px;line-height:1;margin-bottom:14px}
-.peligro-card-titulo{font-size:13px;font-weight:500;line-height:1.25}
-.peligro-cristales{background:#4A6878;box-shadow:0 2px 0 #2C4252}
-.peligro-garrapatas{background:#6B5840;box-shadow:0 2px 0 #3F3424}
-.peligro-veneno{background:#5C2424;box-shadow:0 2px 0 #3A1414}
-.peligro-otros{background:#C4922A;box-shadow:0 2px 0 #7a5a18}
-.peligros-microcopy{font-size:12px;color:#8a7c63;line-height:1.5;margin-top:10px;margin-bottom:18px}
 
 /* Sección activa con scroll vertical preserva el flujo natural */
 .section{will-change:transform}

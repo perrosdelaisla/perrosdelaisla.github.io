@@ -159,6 +159,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.body.classList.add('tab-inicio');
   if(typeof loadInicio==='function') loadInicio();
   setTimeout(cargarClimaInicio,800);
+  setTimeout(renderAlertaHero,50);
+  setTimeout(renderAlertaMeses,50);
 
   const im=document.getElementById('imgModal');
   if(im){
@@ -2142,6 +2144,64 @@ async function cargarClimaInicio() {
   if (elUVNum) elUVNum.textContent = uv !== null ? uv : '--';
   if (elUV) elUV.style.color = uvColor;
   elBlock.style.display = 'flex';
+}
+
+// === Hero dinámico de Alerta por estado de temporada — Fase 2C ===
+function renderAlertaHero() {
+  const heroEl = document.getElementById('alertaHero');
+  const titleEl = document.getElementById('alertaHeroTitle');
+  const textEl = document.getElementById('alertaHeroText');
+  const footerEl = document.getElementById('alertaHeroFooter');
+  if (!heroEl || !titleEl || !textEl || !footerEl) return;
+
+  const mes = new Date().getMonth(); // 0 = Enero, 11 = Diciembre
+
+  // Alto: Ene, Feb, Mar, Abr, Dic · Moderado: May, Oct, Nov · Bajo: Jun-Sep
+  let state, title, text, footer;
+  if ([0, 1, 2, 3, 11].includes(mes)) {
+    state = 'alto';
+    title = 'TEMPORADA DE<br>ALTO RIESGO';
+    text = 'La oruga procesionaria del pino desciende de los nidos. Mantén a tu perro con correa corta y evita pinares.';
+    footer = 'VIGENTE · ENERO – ABRIL';
+  } else if ([4, 9, 10].includes(mes)) {
+    state = 'moderado';
+    title = 'ATENCIÓN<br>EN PASEOS';
+    text = 'La procesionaria baja de actividad pero los bolsones siguen activos. Mantente alerta a otros peligros del paseo: cristales, garrapatas, veneno y comida tóxica.';
+    footer = 'TODO EL AÑO · MÚLTIPLES PELIGROS';
+  } else {
+    state = 'bajo';
+    title = 'PELIGROS<br>DEL VERANO';
+    text = 'Procesionaria inactiva, pero el verano trae sus propios riesgos: garrapatas, calor extremo, cristales en playas y comida envenenada. La app cubre todo el año.';
+    footer = 'VIGENTE TODO EL AÑO';
+  }
+
+  heroEl.setAttribute('data-state', state);
+  titleEl.innerHTML = title;
+  textEl.textContent = text;
+  footerEl.textContent = footer;
+}
+
+// === Calendario meses con destaque mes actual — Fase 2C ===
+function renderAlertaMeses() {
+  const meses = ['E','F','M','A','M','J','J','A','S','O','N','D'];
+  const riesgos = ['alto','alto','alto','alto','mod','bajo','bajo','bajo','bajo','mod','mod','alto'];
+  const nombres = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+  const mesActual = new Date().getMonth();
+
+  const cont = document.getElementById('alertaMeses');
+  const tag = document.getElementById('alertaMesActualLabel');
+  if (!cont || !tag) return;
+
+  cont.innerHTML = '';
+  meses.forEach((letra, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'mes mes-' + riesgos[i];
+    if (i === mesActual) cell.classList.add('mes-current');
+    cell.textContent = letra;
+    cont.appendChild(cell);
+  });
+
+  tag.textContent = 'HOY · ' + nombres[mesActual];
 }
 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{});}

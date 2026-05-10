@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=32">
+<link rel="stylesheet" href="styles.css?v=33">
 </head>
 <body>
 
@@ -792,9 +792,19 @@
 <!-- RANKING MODAL -->
 <div class="ranking-modal" id="rankingModal">
   <div class="ranking-card">
-    <div class="ranking-header"><h2>🏆 Ranking de la Comunidad</h2><p>Los más activos protegiendo los paseos en Mallorca</p></div>
-    <div class="ranking-list" id="ranking-list"><p style="color:#555;font-size:13px;text-align:center">Cargando ranking...</p></div>
-    <button class="ranking-close" onclick="closeRanking()">Cerrar</button>
+    <button class="ranking-close-x" onclick="closeRanking()" aria-label="Cerrar">
+      <i class="ti ti-x"></i>
+    </button>
+    <div class="ranking-eyebrow">COMUNIDAD</div>
+    <h2 class="ranking-title bebas">RANKING ACTUAL</h2>
+    <div class="ranking-line"></div>
+    <p class="ranking-sub">Los más activos protegiendo los paseos en Mallorca</p>
+    <div class="ranking-list" id="ranking-list">
+      <p class="ranking-loading">Cargando ranking...</p>
+    </div>
+    <button class="btn btn-secondary ranking-btn-cerrar" onclick="closeRanking()">
+      <i class="ti ti-x"></i> CERRAR
+    </button>
   </div>
 </div>
 
@@ -802,11 +812,17 @@
 <div id="misReportesModal" class="mis-reportes-modal">
   <div class="mis-reportes-card">
     <div class="mis-reportes-header">
-      <h2>📋 Mis reportes</h2>
-      <button class="mis-reportes-close" onclick="closeMisReportes()">✕</button>
+      <div class="mis-reportes-header-left">
+        <div class="mis-reportes-eyebrow">HISTORIAL</div>
+        <h2 class="mis-reportes-title bebas">MIS REPORTES</h2>
+      </div>
+      <button class="mis-reportes-close" onclick="closeMisReportes()" aria-label="Cerrar">
+        <i class="ti ti-x"></i>
+      </button>
     </div>
+    <div class="mis-reportes-line"></div>
     <div id="mis-reportes-container" class="mis-reportes-container">
-      <p style="color:#888;text-align:center;padding:30px">Cargando...</p>
+      <p class="mis-reportes-loading">Cargando...</p>
     </div>
   </div>
 </div>
@@ -909,6 +925,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=43"></script>
+<script src="app.js?v=44"></script>
 </body>
 </html>

@@ -484,7 +484,7 @@ async function openMisReportes(){
   const modal = document.getElementById('misReportesModal');
   const container = document.getElementById('mis-reportes-container');
   modal.classList.add('open');
-  container.innerHTML = '<p style="color:#888;text-align:center;padding:30px">Cargando...</p>';
+  container.innerHTML = '<p class="mis-reportes-loading">Cargando...</p>';
   try {
     const r = await fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${USER_ID}&order=created_at.desc&select=*`, {headers:HEADERS});
     const data = await r.json();
@@ -494,7 +494,7 @@ async function openMisReportes(){
     }
     renderMisReportes(data);
   } catch(e){
-    container.innerHTML = '<p style="color:#c0392b;text-align:center;padding:30px">Error al cargar tus reportes</p>';
+    container.innerHTML = '<p class="mis-reportes-loading" style="color:var(--pdli-coral)"><i class="ti ti-alert-circle"></i> Error al cargar tus reportes</p>';
   }
 }
 
@@ -521,20 +521,21 @@ function renderMisReportes(data){
   container.innerHTML = data.map(a => {
     const archivado = a.status !== 'activo';
     const tipo = a.tipo_peligro || 'Procesionaria';
-    const tipoIcon = getPeligroIcon(tipo);
+    const tipoIcon = getPeligroTablerIcon(tipo);
     const tipoLabel = tipo === 'Otro' && a.otro_peligro ? a.otro_peligro : tipo;
     const fotoArr = (a.fotos && Array.isArray(a.fotos) && a.fotos.length > 0) ? a.fotos : (a.foto ? [a.foto] : []);
     const thumb = fotoArr.length > 0 ? `<img src="${fotoArr[0]}" class="mis-rep-thumb" onclick="event.stopPropagation();openImage('${fotoArr[0]}')">` : '';
     const accion = archivado
-      ? `<button class="btn-reactivar" onclick="reactivarReporte('${a.id}')">🔄 Reactivar</button>`
-      : `<button class="btn-edit-own" onclick='editarDesdeMisReportes(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>✏️ Editar</button>`;
+      ? `<button class="btn-reactivar" onclick="reactivarReporte('${a.id}')"><i class="ti ti-refresh"></i> REACTIVAR</button>`
+      : `<button class="btn-edit-own" onclick='editarDesdeMisReportes(${JSON.stringify(a).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'><i class="ti ti-pencil"></i> EDITAR</button>`;
+    const badgeArchivado = archivado ? ' · <span class="mis-rep-badge"><i class="ti ti-archive"></i> ARCHIVADO</span>' : '';
     return `
       <div class="mis-rep-item ${archivado ? 'archivado' : ''}">
         ${thumb}
         <div class="mis-rep-body">
-          <div class="mis-rep-tipo">${tipoIcon} ${escapeHtml(tipoLabel)}</div>
+          <div class="mis-rep-tipo"><i class="ti ${tipoIcon}"></i>${escapeHtml(tipoLabel)}</div>
           <div class="mis-rep-ubic">${escapeHtml(a.ubicacion || 'Sin ubicación')}</div>
-          <div class="mis-rep-meta">🕒 ${timeAgo(a.created_at)}${archivado ? ' · <span class="mis-rep-badge">📦 Archivado</span>' : ''}</div>
+          <div class="mis-rep-meta"><i class="ti ti-clock"></i>${timeAgo(a.created_at)}${badgeArchivado}</div>
           ${accion}
         </div>
       </div>`;
@@ -1139,7 +1140,7 @@ function closeImage(){
 async function openRanking(){
   document.getElementById('rankingModal').classList.add('open');
   const container=document.getElementById('ranking-list');
-  container.innerHTML='<p style="color:#555;font-size:13px;text-align:center">Cargando ranking...</p>';
+  container.innerHTML='<p class="ranking-loading">Cargando ranking...</p>';
   try{
     const ur=await fetch(SUPA_URL+'/rest/v1/usuarios?select=id,nombre,nombre_perro,zona,visible,foto,shares,huellitas_dadas,huellitas_recibidas',{headers:HEADERS});
     const users=await ur.json();
@@ -1164,9 +1165,10 @@ async function openRanking(){
         ? `<img src="${u.foto}" alt="" ${!isMe ? `onclick="event.stopPropagation();abrirMiniPerfil('${u.id}')"` : `class="clickable-img" onclick="event.stopPropagation();openImage('${u.foto}')"`}>`
         : (u.visible?u.nombre.charAt(0).toUpperCase():'?');
       const avatarClick=!isMe&&!hasPhoto?`onclick="event.stopPropagation();abrirMiniPerfil('${u.id}')"`:'' ;
-      return `<div class="ranking-item ${isMe?'is-me':''}"><div class="ranking-pos">${i+1}</div><div class="ranking-avatar ${!isMe?'clickable':''}" ${avatarClick}>${avatarInner}</div><div class="ranking-info"><div class="ranking-name">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div><div class="ranking-dog">${escapeHtml(u.zona)}</div></div><div class="ranking-score"><div class="ranking-pts">${u.score}</div><div class="ranking-label">puntos</div></div></div>`;
+      const trophy = i<3 ? '<i class="ti ti-trophy-filled"></i>' : '';
+      return `<div class="ranking-item ${isMe?'is-me':''}"><div class="ranking-pos">${i+1}${trophy}</div><div class="ranking-avatar ${!isMe?'clickable':''}" ${avatarClick}>${avatarInner}</div><div class="ranking-info"><div class="ranking-name">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div><div class="ranking-dog">${escapeHtml(u.zona)}</div></div><div class="ranking-score"><div class="ranking-pts">${u.score}</div><div class="ranking-label">PUNTOS</div></div></div>`;
     }).join('');
-  }catch(e){container.innerHTML='<p style="color:#c0392b;font-size:13px;text-align:center">Error cargando ranking.</p>';}
+  }catch(e){container.innerHTML='<p class="ranking-loading" style="color:var(--pdli-coral)"><i class="ti ti-alert-circle"></i> Error cargando ranking.</p>';}
 }
 function closeRanking(){document.getElementById('rankingModal').classList.remove('open');}
 

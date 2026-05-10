@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=25">
+<link rel="stylesheet" href="styles.css?v=26">
 </head>
 <body>
 
@@ -129,20 +129,39 @@
   </nav>
 
   <div id="inicio" class="section section-inicio active">
-    <!-- Tarjeta de bienvenida: saludo según hora + alertas activas en últimas 24h + slogan -->
+
+    <!-- Tarjeta bienvenida: saludo según hora + alertas activas en últimas 24h + slogan (display:none por JS) -->
     <div class="ini-bienvenida" id="iniBienvenida" style="display:none">
       <div class="ini-bienv-saludo"></div>
       <div class="ini-bienv-stat"></div>
       <div class="ini-bienv-slogan">Tu perro merece ser feliz hoy</div>
     </div>
+
+    <!-- Clima inline de Palma (Open-Meteo, cache 30min) -->
+    <div class="ini-clima" id="iniClima" style="display:none">
+      <i class="ti ti-sun ini-clima-icon"></i>
+      <div class="ini-clima-info">
+        <div class="ini-clima-temp" id="iniClimaTemp">--</div>
+        <div class="ini-clima-desc" id="iniClimaDesc">Cargando clima…</div>
+      </div>
+      <div class="ini-clima-uv">
+        <div class="ini-clima-uv-num" id="iniClimaUVNum">--</div>
+        <div class="ini-clima-uv-label">UV</div>
+      </div>
+    </div>
+
+    <!-- Eyebrow de sección -->
+    <div class="ini-eyebrow-hoy">HOY EN MALLORCA</div>
+
+    <!-- Bloque protagonista: foto + medallón -->
     <div class="ini-perfil-protag">
       <div class="ini-perfil-foto" id="iniPerfilFoto"></div>
-      <a class="ini-subir-foto" id="iniSubirFoto" style="display:none" onclick="event.preventDefault();editProfile()">✨ Sube tu foto</a>
+      <a class="ini-subir-foto" id="iniSubirFoto" style="display:none" onclick="event.preventDefault();editProfile()"><i class="ti ti-camera-plus"></i>Sube tu foto</a>
       <button class="ini-ganador" id="iniGanador" onclick="openRanking()" style="display:none" aria-label="Ver ganador del reto">
         <div class="ini-ganador-halo"></div>
         <div class="ini-ganador-medalla">
           <div class="ini-ganador-centro" id="iniGanadorCentro">
-            <div class="ini-ganador-trophy">🏆</div>
+            <i class="ti ti-trophy ini-ganador-trophy"></i>
             <div class="ini-ganador-name" id="iniGanadorName"></div>
           </div>
         </div>
@@ -152,57 +171,65 @@
         <div class="ini-conf c4"></div>
       </button>
     </div>
+
+    <!-- Saludo dinámico (lo puebla JS) -->
     <div class="ini-saludo-wrap">
       <div class="ini-saludo-hola" id="iniHola">Hola, tutor</div>
       <div class="ini-saludo-pregunta" id="iniPregunta">¿qué hacemos hoy?</div>
     </div>
+
     <p class="ini-microcopy">Reporta peligros, descubre rutas seguras y forma parte de la comunidad de tutores de Mallorca.</p>
+
     <div class="ini-section-label">¿QUÉ HACEMOS HOY?</div>
+
     <div class="ini-grid">
       <button class="ini-cta ini-cta-alertas" onclick="showTabByName('info')" aria-label="Ver alertas">
         <div class="ini-cta-circle"></div>
-        <div class="ini-cta-emoji">⚠️</div>
+        <i class="ti ti-alert-triangle"></i>
         <div class="ini-cta-titulo">ALERTAS</div>
         <div class="ini-cta-sub" id="iniCtaAlertasSub">cargando...</div>
       </button>
       <button class="ini-cta ini-cta-mapa" onclick="showTabByName('mapa')" aria-label="Abrir mapa">
         <div class="ini-cta-circle"></div>
-        <div class="ini-cta-emoji">🗺️</div>
+        <i class="ti ti-map-2"></i>
         <div class="ini-cta-titulo">MAPA</div>
         <div class="ini-cta-sub">Ver toda la isla</div>
       </button>
       <button class="ini-cta ini-cta-urgencias" onclick="showTabByName('vets')" aria-label="Urgencias veterinarias">
         <div class="ini-cta-circle"></div>
-        <div class="ini-cta-emoji">🚨</div>
+        <i class="ti ti-stethoscope"></i>
         <div class="ini-cta-titulo">URGENCIAS</div>
         <div class="ini-cta-sub">Veterinarios 24h</div>
       </button>
       <button class="ini-cta ini-cta-rutas" onclick="showTabByName('mapa');setTimeout(()=>switchMapModeByName('rutas'),200)" aria-label="Ver rutas seguras">
         <div class="ini-cta-circle"></div>
-        <div class="ini-cta-emoji">🌳</div>
+        <i class="ti ti-route"></i>
         <div class="ini-cta-titulo">RUTAS</div>
         <div class="ini-cta-sub">Paseos verificados</div>
       </button>
       <button class="ini-cta ini-cta-ranking" onclick="openRanking()" aria-label="Ver ranking de la comunidad">
         <div class="ini-cta-circle"></div>
-        <div class="ini-cta-emoji">🏆</div>
+        <i class="ti ti-trophy"></i>
         <div class="ini-cta-titulo">RANKING</div>
         <div class="ini-cta-sub">La manada</div>
       </button>
       <button class="ini-cta ini-cta-invitar" onclick="shareApp()" aria-label="Invitar amigos">
         <div class="ini-cta-circle"></div>
-        <div class="ini-cta-emoji">📤</div>
+        <i class="ti ti-share"></i>
         <div class="ini-cta-titulo">INVITAR</div>
         <div class="ini-cta-sub">Haz crecer la manada</div>
       </button>
     </div>
+
     <!-- Banner contextual del reto: poblado por loadInicioContextBanner() según haya reto activo, ganador previo o nada -->
     <div class="ini-context-banner" id="iniContextBanner" style="display:none"></div>
-    <!-- TODO: cuando exista pestaña interna de servicios PDLI, redirigir ahí en lugar de a web externa -->
-    <a class="ini-pie" href="https://perrosdelaisla.com" target="_blank" rel="noopener">
-      <span class="ini-pie-izq">servicios de adiestramiento</span>
-      <span class="ini-pie-der">Perros de la Isla ›</span>
+
+    <!-- Pie a pestaña Servicios interna (antes apuntaba a perrosdelaisla.com externo) -->
+    <a class="ini-pie" href="#" onclick="showTabByName('adiestramiento');return false;">
+      <span class="ini-pie-izq">SERVICIOS DE ADIESTRAMIENTO</span>
+      <span class="ini-pie-der">VER ›</span>
     </a>
+
   </div>
 
   <div id="info" class="section">
@@ -523,6 +550,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=35"></script>
+<script src="app.js?v=36"></script>
 </body>
 </html>

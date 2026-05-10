@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(profile){document.getElementById('onboarding').classList.add('hidden');updateProfileBtn();}
   document.body.classList.add('tab-inicio');
   if(typeof loadInicio==='function') loadInicio();
+  setTimeout(cargarClimaInicio,800);
 
   const im=document.getElementById('imgModal');
   if(im){
@@ -2064,6 +2065,83 @@ async function loadInicioContextBanner(){
     }
   }catch(e){}
   banner.style.display='none';
+}
+
+// === Clima inline (Open-Meteo) — Fase 2B ===
+async function cargarClimaInicio() {
+  const CLIMA_CACHE_KEY = 'pdli_clima_cache_v1';
+  const CACHE_MS = 30 * 60 * 1000; // 30 min
+
+  // Coordenadas de Palma (centro de la isla, suficiente)
+  const LAT = 39.5696;
+  const LON = 2.6502;
+
+  let cached = null;
+  try {
+    const raw = localStorage.getItem(CLIMA_CACHE_KEY);
+    if (raw) {
+      const obj = JSON.parse(raw);
+      if (Date.now() - obj.ts < CACHE_MS) cached = obj.data;
+    }
+  } catch(_) {}
+
+  let data = cached;
+  if (!data) {
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,wind_speed_10m,uv_index&timezone=auto`;
+      const r = await fetch(url);
+      if (!r.ok) throw new Error('weather fetch failed');
+      data = await r.json();
+      try {
+        localStorage.setItem(CLIMA_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+      } catch(_) {}
+    } catch(e) {
+      console.warn('Clima no disponible:', e);
+      return; // Si falla, el bloque queda display:none
+    }
+  }
+
+  const cur = data && data.current;
+  if (!cur) return;
+
+  const temp = Math.round(cur.temperature_2m);
+  const wc = cur.weather_code;
+  const uv = cur.uv_index !== undefined ? Math.round(cur.uv_index) : null;
+
+  // Mapeo weather_code → icono Tabler + descripción
+  let icon = 'ti-sun-filled';
+  let desc = 'Despejado';
+  if (wc === 0) { icon = 'ti-sun-filled'; desc = 'Despejado'; }
+  else if (wc <= 3) { icon = 'ti-cloud-filled'; desc = 'Parcialmente nublado'; }
+  else if (wc === 45 || wc === 48) { icon = 'ti-mist'; desc = 'Niebla'; }
+  else if (wc >= 51 && wc <= 67) { icon = 'ti-cloud-rain'; desc = 'Lluvia'; }
+  else if (wc >= 71 && wc <= 77) { icon = 'ti-snowflake'; desc = 'Nieve'; }
+  else if (wc >= 80 && wc <= 82) { icon = 'ti-cloud-storm'; desc = 'Chubascos'; }
+  else if (wc >= 95) { icon = 'ti-bolt'; desc = 'Tormenta'; }
+  else { icon = 'ti-cloud-filled'; desc = 'Nublado'; }
+
+  // Color UV
+  let uvColor = 'var(--pdli-oliva)';
+  if (uv !== null) {
+    if (uv >= 8) uvColor = 'var(--pdli-rojo)';
+    else if (uv >= 6) uvColor = 'var(--pdli-coral)';
+    else if (uv >= 3) uvColor = 'var(--pdli-amarillo)';
+  }
+
+  const elBlock = document.getElementById('iniClima');
+  const elIcon = document.querySelector('.ini-clima-icon');
+  const elTemp = document.getElementById('iniClimaTemp');
+  const elDesc = document.getElementById('iniClimaDesc');
+  const elUVNum = document.getElementById('iniClimaUVNum');
+  const elUV = document.querySelector('.ini-clima-uv-num');
+
+  if (!elBlock) return;
+  if (elIcon) elIcon.className = 'ti ' + icon + ' ini-clima-icon';
+  if (elTemp) elTemp.textContent = temp + '°';
+  if (elDesc) elDesc.textContent = desc + ' · Palma';
+  if (elUVNum) elUVNum.textContent = uv !== null ? uv : '--';
+  if (elUV) elUV.style.color = uvColor;
+  elBlock.style.display = 'flex';
 }
 
 if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js").catch(()=>{});}

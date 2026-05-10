@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=30">
+<link rel="stylesheet" href="styles.css?v=31">
 </head>
 <body>
 
@@ -87,28 +87,33 @@
 <!-- MODAL RECUPERAR PERFIL DUPLICADO -->
 <div class="modal" id="recoverModal">
   <div class="modal-box">
-    <h2>🐾 ¿Eres tú?</h2>
-    <p style="color:#ccc;font-size:14px;line-height:1.6;margin-bottom:16px">
-      Ya existe un perfil con estos datos:
-    </p>
-    <div id="recoverProfilePreview" style="background:#0d1520;border:1px solid #1a3555;border-radius:10px;padding:14px;margin-bottom:16px;display:flex;gap:12px;align-items:center">
-      <div id="recoverAvatar" style="width:50px;height:50px;border-radius:50%;background:#9cb64b;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#111;font-family:'Bebas Neue',sans-serif;overflow:hidden;flex-shrink:0"></div>
-      <div style="flex:1;min-width:0">
-        <div id="recoverName" style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:.3px"></div>
-        <div id="recoverDog" style="font-size:13px;color:#9cb64b;margin-top:2px"></div>
-        <div id="recoverZone" style="font-size:12px;color:#888;margin-top:2px"></div>
-        <div id="recoverStats" style="font-size:11px;color:#5dade2;margin-top:4px"></div>
+    <div class="modal-eyebrow">PERFIL EXISTENTE</div>
+    <h2>¿Es tuyo este perfil?</h2>
+    <p class="modal-hint">Encontramos un perfil con estos datos:</p>
+
+    <div id="recoverProfilePreview" class="recover-preview">
+      <div id="recoverAvatar" class="recover-avatar"></div>
+      <div class="recover-info">
+        <div id="recoverName" class="recover-name"></div>
+        <div id="recoverDog" class="recover-dog"></div>
+        <div id="recoverZone" class="recover-zone"></div>
+        <div id="recoverStats" class="recover-stats"></div>
       </div>
     </div>
-    <p style="color:#999;font-size:13px;line-height:1.6;margin-bottom:6px">
-      Si ya usabas la app y se te borró, puedes <strong style="color:#9cb64b">recuperar tu perfil</strong> con todo tu historial.
+
+    <p class="recover-text-main">
+      Si ya usabas la app y se te borró el perfil, podés
+      <strong>recuperarlo con todo tu historial.</strong>
     </p>
-    <p style="color:#888;font-size:12px;line-height:1.5;margin-bottom:16px">
-      Si no es tuyo, puedes crear uno nuevo (se añadirá un número para diferenciar).
+    <p class="recover-text-aux">
+      Si no es tuyo, creá uno nuevo (se añadirá un número para diferenciar).
     </p>
+
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="recoverDeclineProfile()">No, crear nuevo</button>
-      <button class="btn-submit" onclick="recoverAcceptProfile()" style="background:#9cb64b">✅ Sí, es mi perfil</button>
+      <button class="btn-cancel" onclick="recoverDeclineProfile()">NO, CREAR NUEVO</button>
+      <button class="btn-submit btn-submit--oliva" onclick="recoverAcceptProfile()">
+        <i class="ti ti-check"></i> SÍ, ES MI PERFIL
+      </button>
     </div>
   </div>
 </div>
@@ -600,34 +605,187 @@
 <!-- MODAL REPORTAR AVISTAMIENTO -->
 <div class="modal" id="modal">
   <div class="modal-box">
-    <h2>📍 Reportar peligro</h2>
-    <p style="font-size:12px;color:#888;margin-bottom:10px">👉 Primero toca el mapa para marcar la ubicación exacta</p>
-    <div class="form-group"><label>Tipo de peligro</label><select id="inp-tipo" onchange="updateRiesgoOptions()"><option value="Procesionaria">🐛 Procesionaria del pino</option><option value="Garrapatas">🕷️ Garrapatas / Pulgas</option><option value="Cristales">🔪 Cristales / Objetos cortantes</option><option value="Veneno">☠️ Comida envenenada / sospechosa</option><option value="Otro">⚠️ Otro peligro</option></select></div>
-    <div class="form-group" id="otro-peligro-group" style="display:none"><label>Describe el peligro</label><input type="text" id="inp-otro-peligro" placeholder="Ej: Alambre suelto, nido de avispas..."></div>
-    <div class="form-group"><label>Ubicación</label><input type="text" id="inp-ubicacion" placeholder="Ej: Pinar de Gènova, junto al camino principal"></div>
-    <div class="form-group"><label>Nivel de riesgo</label><select id="inp-riesgo"><option value="Alto">⚠️ Alto — Peligro activo e inmediato</option><option value="Medio">⚡ Medio — Visible, requiere precaución</option><option value="Bajo">🔍 Bajo — Indicios o rastros</option></select></div>
-    <div class="form-group"><label>Descripción</label><textarea id="inp-descripcion" placeholder="¿Qué viste? ¿Es un camino frecuentado por perros?"></textarea></div>
-    <div class="form-group"><label>Fotos (opcional, hasta 4)</label><input type="file" id="foto" accept="image/*" multiple onchange="previewPhotos(event)" style="display:none"><div style="display:flex;gap:8px;margin-top:8px"><button type="button" onclick="abrirCamara()" style="flex:1;padding:10px;background:#c0392b;color:#fff;border:none;border-radius:8px;cursor:pointer">📷 Cámara</button><button type="button" onclick="abrirGaleria()" style="flex:1;padding:10px;background:#222;color:#fff;border:1px solid #444;border-radius:8px;cursor:pointer">🖼️ Galería</button></div><p style="font-size:11px;color:#666;margin-top:5px"><span id="photoCount">0</span>/4 fotos · se comprimen automáticamente</p><div id="previewWrap" style="display:none;margin-top:10px"><div id="previewList" style="display:flex;gap:8px;overflow-x:auto;padding:4px 0"></div></div></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-submit" id="btn-submit" onclick="dispatchSubmit()">Enviar alerta</button></div>
-    <button id="btn-delete-own" class="btn-delete-own" onclick="deleteOwnReport()" style="display:none">🗑️ Eliminar reporte</button>
+    <div class="modal-eyebrow">REPORTAR PELIGRO</div>
+    <h2>Marca un punto en el mapa</h2>
+    <p class="modal-hint">
+      <i class="ti ti-map-pin"></i>
+      Primero toca el mapa para marcar la ubicación exacta
+    </p>
+
+    <div class="form-group">
+      <label>Tipo de peligro</label>
+      <select id="inp-tipo" onchange="updateRiesgoOptions()">
+        <option value="Procesionaria">Procesionaria del pino</option>
+        <option value="Garrapatas">Garrapatas o pulgas</option>
+        <option value="Cristales">Cristales u objetos cortantes</option>
+        <option value="Veneno">Comida envenenada o sospechosa</option>
+        <option value="Otro">Otro peligro</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="otro-peligro-group" style="display:none">
+      <label>Describe el peligro</label>
+      <input type="text" id="inp-otro-peligro" placeholder="Ej: alambre suelto, nido de avispas...">
+    </div>
+
+    <div class="form-group">
+      <label>Ubicación</label>
+      <input type="text" id="inp-ubicacion" placeholder="Ej: Pinar de Gènova, junto al camino principal">
+    </div>
+
+    <div class="form-group">
+      <label>Nivel de riesgo</label>
+      <select id="inp-riesgo">
+        <option value="Alto">Alto — peligro activo e inmediato</option>
+        <option value="Medio">Medio — visible, requiere precaución</option>
+        <option value="Bajo">Bajo — indicios o rastros</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Descripción</label>
+      <textarea id="inp-descripcion" placeholder="¿Qué viste? ¿Es un camino frecuentado por perros?"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Fotos <span class="form-label-aux">(opcional, hasta 4)</span></label>
+      <input type="file" id="foto" accept="image/*" multiple onchange="previewPhotos(event)" style="display:none">
+      <div class="form-photo-actions">
+        <button type="button" class="form-photo-btn form-photo-btn--primary" onclick="abrirCamara()">
+          <i class="ti ti-camera"></i> CÁMARA
+        </button>
+        <button type="button" class="form-photo-btn form-photo-btn--secondary" onclick="abrirGaleria()">
+          <i class="ti ti-photo"></i> GALERÍA
+        </button>
+      </div>
+      <p class="form-photo-hint">
+        <span id="photoCount">0</span>/4 fotos · se comprimen automáticamente
+      </p>
+      <div id="previewWrap" style="display:none">
+        <div id="previewList"></div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">CANCELAR</button>
+      <button class="btn-submit" id="btn-submit" onclick="dispatchSubmit()">
+        <i class="ti ti-send"></i> ENVIAR ALERTA
+      </button>
+    </div>
+
+    <button id="btn-delete-own" class="btn-delete-own" onclick="deleteOwnReport()" style="display:none">
+      <i class="ti ti-trash"></i> ELIMINAR MI REPORTE
+    </button>
   </div>
 </div>
 
 <!-- MODAL SUGERIR RUTA -->
 <div class="modal" id="rutaModal">
   <div class="modal-box">
-    <h2>🐕 Sugerir ruta de paseo</h2>
-    <p style="font-size:12px;color:#888;margin-bottom:10px">👉 Has trazado una ruta en el mapa. Ahora completa los detalles:</p>
-    <div class="form-group"><label>Nombre de la ruta</label><input type="text" id="ruta-nombre" placeholder="Ej: Paseo del Molinar, Ruta Son Hugo..."></div>
-    <div class="form-group"><label>Descripción</label><textarea id="ruta-descripcion" placeholder="Describe la ruta: recorrido, paisaje, puntos de interés..."></textarea></div>
-    <div class="form-group"><label>Distancia aproximada</label><select id="ruta-distancia"><option value="Corta (< 2 km)">Corta (menos de 2 km)</option><option value="Media (2-5 km)" selected>Media (2–5 km)</option><option value="Larga (> 5 km)">Larga (más de 5 km)</option></select></div>
-    <div class="form-group"><label>Dificultad</label><select id="ruta-dificultad"><option value="Fácil">Fácil — Llano, accesible</option><option value="Moderada" selected>Moderada — Algo de desnivel</option><option value="Difícil">Difícil — Montaña o terreno técnico</option></select></div>
-    <div class="form-group"><label>Tipo de suelo predominante</label><select id="ruta-suelo"><option value="Tierra">Tierra</option><option value="Asfalto">Asfalto</option><option value="Piedra">Piedra / Roca</option><option value="Arena">Arena</option><option value="Mixto" selected>Mixto</option></select></div>
-    <div style="display:flex;gap:10px"><div class="form-group" style="flex:1"><label>Sombra</label><select id="ruta-sombra"><option value="Mucha">Mucha</option><option value="Parcial" selected>Parcial</option><option value="Poca">Poca</option><option value="Nula">Nula</option></select></div><div class="form-group" style="flex:1"><label>Agua disponible</label><select id="ruta-agua"><option value="Sí">Sí, fuentes</option><option value="Natural">Torrente/mar</option><option value="No" selected>No</option></select></div></div>
-    <div class="form-group"><label>Ideal para</label><select id="ruta-tipo-perro"><option value="Todos" selected>Todos los perros</option><option value="Cachorros">Cachorros (suave, corta)</option><option value="Activos">Perros activos / deportistas</option><option value="Seniors">Perros senior (fácil, sin obstáculos)</option><option value="Reactivos">Perros reactivos (poca afluencia)</option></select></div>
-    <div class="form-group"><label>Foto de la ruta (opcional)</label><input type="file" id="ruta-foto" accept="image/*" onchange="previewRutaPhoto(event)" style="display:none"><div style="display:flex;gap:8px;margin-top:8px"><button type="button" onclick="document.getElementById('ruta-foto').setAttribute('capture','environment');document.getElementById('ruta-foto').click()" style="flex:1;padding:10px;background:#2980b9;color:#fff;border:none;border-radius:8px;cursor:pointer">📷 Cámara</button><button type="button" onclick="document.getElementById('ruta-foto').removeAttribute('capture');document.getElementById('ruta-foto').click()" style="flex:1;padding:10px;background:#222;color:#fff;border:1px solid #444;border-radius:8px;cursor:pointer">🖼️ Galería</button></div><div id="rutaPreviewWrap" style="display:none;margin-top:10px"><img id="rutaPreviewImg" class="clickable-img" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;border:1px solid #333"></div></div>
-    <div style="background:#0d1520;border:1px solid #1a3555;border-radius:8px;padding:10px 12px;margin-top:6px"><p style="font-size:12px;color:#5dade2;line-height:1.5">💡 <strong>Tu sugerencia será revisada por Perros de la Isla</strong> antes de recibir el sello de verificación. Las rutas pendientes ya aparecen en el mapa para la comunidad.</p></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeRutaModal()">Cancelar</button><button class="btn-submit" id="btn-submit-ruta" onclick="submitRuta()" style="background:#2980b9">Enviar sugerencia</button></div>
+    <div class="modal-eyebrow">SUGERIR RUTA</div>
+    <h2>Detalles de la ruta</h2>
+    <p class="modal-hint">
+      <i class="ti ti-route"></i>
+      Has trazado una ruta en el mapa. Completá los detalles abajo.
+    </p>
+
+    <div class="form-group">
+      <label>Nombre de la ruta</label>
+      <input type="text" id="ruta-nombre" placeholder="Ej: Paseo del Molinar, Ruta Son Hugo...">
+    </div>
+
+    <div class="form-group">
+      <label>Descripción</label>
+      <textarea id="ruta-descripcion" placeholder="Describe el recorrido, paisaje, puntos de interés..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Distancia aproximada</label>
+      <select id="ruta-distancia">
+        <option value="Corta (< 2 km)">Corta (menos de 2 km)</option>
+        <option value="Media (2-5 km)" selected>Media (2 a 5 km)</option>
+        <option value="Larga (> 5 km)">Larga (más de 5 km)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Dificultad</label>
+      <select id="ruta-dificultad">
+        <option value="Fácil">Fácil — llano, accesible</option>
+        <option value="Moderada" selected>Moderada — algo de desnivel</option>
+        <option value="Difícil">Difícil — montaña o terreno técnico</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo de suelo predominante</label>
+      <select id="ruta-suelo">
+        <option value="Tierra">Tierra</option>
+        <option value="Asfalto">Asfalto</option>
+        <option value="Piedra">Piedra o roca</option>
+        <option value="Arena">Arena</option>
+        <option value="Mixto" selected>Mixto</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Sombra</label>
+        <select id="ruta-sombra">
+          <option value="Mucha">Mucha</option>
+          <option value="Parcial" selected>Parcial</option>
+          <option value="Poca">Poca</option>
+          <option value="Nula">Nula</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Agua disponible</label>
+        <select id="ruta-agua">
+          <option value="Sí">Sí, fuentes</option>
+          <option value="Natural">Torrente o mar</option>
+          <option value="No" selected>No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Ideal para</label>
+      <select id="ruta-tipo-perro">
+        <option value="Todos" selected>Todos los perros</option>
+        <option value="Cachorros">Cachorros (suave, corta)</option>
+        <option value="Activos">Perros activos o deportistas</option>
+        <option value="Seniors">Perros senior (fácil, sin obstáculos)</option>
+        <option value="Reactivos">Perros reactivos (poca afluencia)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Foto de la ruta <span class="form-label-aux">(opcional)</span></label>
+      <input type="file" id="ruta-foto" accept="image/*" onchange="previewRutaPhoto(event)" style="display:none">
+      <div class="form-photo-actions">
+        <button type="button" class="form-photo-btn form-photo-btn--primary" onclick="document.getElementById('ruta-foto').setAttribute('capture','environment');document.getElementById('ruta-foto').click()">
+          <i class="ti ti-camera"></i> CÁMARA
+        </button>
+        <button type="button" class="form-photo-btn form-photo-btn--secondary" onclick="document.getElementById('ruta-foto').removeAttribute('capture');document.getElementById('ruta-foto').click()">
+          <i class="ti ti-photo"></i> GALERÍA
+        </button>
+      </div>
+      <div id="rutaPreviewWrap" style="display:none">
+        <img id="rutaPreviewImg" class="clickable-img" alt="Foto de la ruta">
+      </div>
+    </div>
+
+    <div class="modal-info-box">
+      <i class="ti ti-info-circle"></i>
+      <p><strong>Tu sugerencia será revisada por Perros de la Isla</strong> antes de recibir el sello de verificación. Las rutas pendientes ya aparecen en el mapa para la comunidad.</p>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeRutaModal()">CANCELAR</button>
+      <button class="btn-submit" id="btn-submit-ruta" onclick="submitRuta()">
+        <i class="ti ti-send"></i> ENVIAR SUGERENCIA
+      </button>
+    </div>
   </div>
 </div>
 
@@ -720,6 +878,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=41"></script>
+<script src="app.js?v=42"></script>
 </body>
 </html>

@@ -283,8 +283,8 @@ async function showRecoverModal(duplicate){
     avatar.textContent = duplicate.nombre.charAt(0).toUpperCase();
   }
   document.getElementById('recoverName').textContent = duplicate.nombre;
-  document.getElementById('recoverDog').textContent = '🐕 ' + duplicate.nombre_perro;
-  document.getElementById('recoverZone').textContent = '📍 ' + duplicate.zona;
+  document.getElementById('recoverDog').textContent = duplicate.nombre_perro;
+  document.getElementById('recoverZone').textContent = duplicate.zona;
 
   let statsText = '';
   try {
@@ -298,7 +298,7 @@ async function showRecoverModal(duplicate){
     if(Array.isArray(alerts) && alerts.length > 0) parts.push(`${alerts.length} alerta${alerts.length > 1 ? 's' : ''}`);
     if(Array.isArray(rutas) && rutas.length > 0) parts.push(`${rutas.length} ruta${rutas.length > 1 ? 's' : ''}`);
     if(duplicate.shares > 0) parts.push(`${duplicate.shares} share${duplicate.shares > 1 ? 's' : ''}`);
-    statsText = parts.length > 0 ? '📊 ' + parts.join(' · ') : '📊 Sin actividad aún';
+    statsText = parts.length > 0 ? parts.join(' · ') : 'Sin actividad aún';
   } catch(e){
     statsText = '';
   }
@@ -842,7 +842,7 @@ function openRutaModal(){if(!window.map){showToast('Abre primero el mapa','error
 
 function closeRutaModal(){document.getElementById('rutaModal').classList.remove('open');traceMarkers.forEach(mk=>window.map.removeLayer(mk));traceMarkers=[];if(tracePolyline){window.map.removeLayer(tracePolyline);tracePolyline=null;}traceWaypoints=[];traceMode=false;selectedLat=null;selectedLng=null;document.getElementById('traceToolbar').classList.remove('active');document.getElementById('ruta-nombre').value='';document.getElementById('ruta-descripcion').value='';document.getElementById('ruta-foto').value='';document.getElementById('rutaPreviewWrap').style.display='none';document.getElementById('rutaPreviewImg').src='';}
 
-async function submitRuta(){if(isSubmitting) return;isSubmitting=true;const btn=document.getElementById('btn-submit-ruta');const nombre=document.getElementById('ruta-nombre').value.trim();const descripcion=document.getElementById('ruta-descripcion').value.trim();const distancia=document.getElementById('ruta-distancia').value;const dificultad=document.getElementById('ruta-dificultad').value;const suelo=document.getElementById('ruta-suelo').value;const sombra=document.getElementById('ruta-sombra').value;const agua=document.getElementById('ruta-agua').value;const tipo_perro=document.getElementById('ruta-tipo-perro').value;const file=document.getElementById('ruta-foto').files[0];if(traceWaypoints.length<2){showToast('La ruta necesita al menos 2 puntos','error');isSubmitting=false;return;}if(!nombre){showToast('Escribe el nombre de la ruta','error');isSubmitting=false;return;}btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando...';try{let imageUrl=null;if(file){try{const compressed=await compressImage(file);const fn='ruta_'+Date.now()+'_'+Math.random().toString(36).substr(2,6)+'.jpg';const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}const startPt=traceWaypoints[0];const res=await fetch(SUPA_URL+"/rest/v1/rutas",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({nombre,descripcion,lat:startPt.lat,lng:startPt.lng,distancia,dificultad,suelo,sombra,agua,tipo_perro,foto:imageUrl,reporter_id:USER_ID,verificada:false,status:'activo',waypoints:traceWaypoints})});if(!res.ok){showToast('Error al guardar la ruta.','error');btn.disabled=false;btn.innerHTML='Enviar sugerencia';isSubmitting=false;return;}closeRutaModal();await loadRutas();showToast('🐕 ¡Ruta sugerida! Perros de la Isla la revisará pronto.','success');}catch(err){showToast('Error al guardar la ruta.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar sugerencia';}}
+async function submitRuta(){if(isSubmitting) return;isSubmitting=true;const btn=document.getElementById('btn-submit-ruta');const nombre=document.getElementById('ruta-nombre').value.trim();const descripcion=document.getElementById('ruta-descripcion').value.trim();const distancia=document.getElementById('ruta-distancia').value;const dificultad=document.getElementById('ruta-dificultad').value;const suelo=document.getElementById('ruta-suelo').value;const sombra=document.getElementById('ruta-sombra').value;const agua=document.getElementById('ruta-agua').value;const tipo_perro=document.getElementById('ruta-tipo-perro').value;const file=document.getElementById('ruta-foto').files[0];if(traceWaypoints.length<2){showToast('La ruta necesita al menos 2 puntos','error');isSubmitting=false;return;}if(!nombre){showToast('Escribe el nombre de la ruta','error');isSubmitting=false;return;}btn.disabled=true;btn.innerHTML='<span class="spinner"></span>ENVIANDO...';try{let imageUrl=null;if(file){try{const compressed=await compressImage(file);const fn='ruta_'+Date.now()+'_'+Math.random().toString(36).substr(2,6)+'.jpg';const ur=await fetch(SUPA_URL+"/storage/v1/object/avistamientos/"+fn,{method:"POST",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"image/jpeg"},body:compressed});if(ur.ok) imageUrl=SUPA_URL+"/storage/v1/object/public/avistamientos/"+fn;}catch(e){}}const startPt=traceWaypoints[0];const res=await fetch(SUPA_URL+"/rest/v1/rutas",{method:"POST",headers:{...HEADERS,"Prefer":"return=minimal"},body:JSON.stringify({nombre,descripcion,lat:startPt.lat,lng:startPt.lng,distancia,dificultad,suelo,sombra,agua,tipo_perro,foto:imageUrl,reporter_id:USER_ID,verificada:false,status:'activo',waypoints:traceWaypoints})});if(!res.ok){showToast('Error al guardar la ruta.','error');btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> ENVIAR SUGERENCIA';isSubmitting=false;return;}closeRutaModal();await loadRutas();showToast('🐕 ¡Ruta sugerida! Perros de la Isla la revisará pronto.','success');}catch(err){showToast('Error al guardar la ruta.','error');}finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> ENVIAR SUGERENCIA';}}
 
 // AVISTAMIENTOS ACTIONS
 async function confirmSighting(id,isConfirm){if(localStorage.getItem('pdi_conf_'+id)){showToast('Ya has votado en este avistamiento','error');return;}try{const r=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${id}&select=confirmations,denials`,{headers:HEADERS});const[c]=await r.json();if(!c) return;const nc=isConfirm?(c.confirmations||0)+1:c.confirmations||0;const nd=!isConfirm?(c.denials||0)+1:c.denials||0;const up={confirmations:nc,denials:nd};if(isConfirm) up.last_confirmed_at=new Date().toISOString();if(nd>=3) up.status='archivado';const res=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${id}`,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify(up)});if(res.ok){localStorage.setItem('pdi_conf_'+id,isConfirm?'confirm':'deny');showToast(isConfirm?'✅ Gracias por confirmar':'🚫 Gracias por avisar','success');loadAvistamientos();}else showToast('Error al votar','error');}catch(e){showToast('Error de conexión','error');}}
@@ -888,8 +888,8 @@ function openEditModal(a){
   document.getElementById('inp-ubicacion').value=a.ubicacion||'';
   document.getElementById('inp-riesgo').value=a.riesgo||'Alto';
   document.getElementById('inp-descripcion').value=a.descripcion||'';
-  document.querySelector('#modal .modal-box h2').textContent='✏️ Editar reporte';
-  document.getElementById('btn-submit').textContent='Guardar cambios';
+  document.querySelector('#modal .modal-box h2').innerHTML='<i class="ti ti-pencil"></i> EDITAR REPORTE';
+  document.getElementById('btn-submit').innerHTML='<i class="ti ti-device-floppy"></i> GUARDAR CAMBIOS';
   if(tempMarker) window.map.removeLayer(tempMarker);
   tempMarker=L.marker([selectedLat,selectedLng],{icon:window.rIcon,draggable:true}).addTo(window.map);
   tempMarker.on('dragend',ev=>{const ll=ev.target.getLatLng();selectedLat=ll.lat;selectedLng=ll.lng;});
@@ -927,8 +927,8 @@ function closeEditModal(){
   editingOriginalLat=null;editingOriginalLng=null;
   existingPhotos=[];selectedPhotos=[];
   const title=document.querySelector('#modal .modal-box h2');
-  if(title) title.textContent='📍 Reportar peligro';
-  document.getElementById('btn-submit').textContent='Enviar alerta';
+  if(title) title.textContent='Marca un punto en el mapa';
+  document.getElementById('btn-submit').innerHTML='<i class="ti ti-send"></i> ENVIAR ALERTA';
   const btnDelete=document.getElementById('btn-delete-own');
   if(btnDelete){btnDelete.style.display='none';}
   document.getElementById('inp-tipo').value='Procesionaria';
@@ -1001,7 +1001,7 @@ async function submitReport(){
     for(const r of nearby){if(!r.lat||!r.lng) continue;if(getDistance(selectedLat,selectedLng,parseFloat(r.lat),parseFloat(r.lng))<=0.08){showToast('Ya existe un reporte reciente muy cerca.','error');isSubmitting=false;return;}}
   }catch(e){}
   btn.disabled=true;
-  btn.innerHTML='<span class="spinner"></span>Enviando...';
+  btn.innerHTML='<span class="spinner"></span>ENVIANDO...';
   try{
     // Subir todas las fotos seleccionadas (Cambio 2)
     const imageUrls=[];
@@ -1020,13 +1020,13 @@ async function submitReport(){
       fotos:imageUrls,
       reporter_id:USER_ID,tipo_peligro,otro_peligro
     })});
-    if(!res.ok){showToast('Error al guardar.','error');btn.disabled=false;btn.innerHTML='Enviar alerta';isSubmitting=false;return;}
+    if(!res.ok){showToast('Error al guardar.','error');btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> ENVIAR ALERTA';isSubmitting=false;return;}
     userLat=selectedLat;userLng=selectedLng;
     closeModal();
     await loadAvistamientos();
     showToast('✅ Avistamiento reportado. ¡Gracias!','success');
   }catch(err){showToast('Error al guardar.','error');}
-  finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='Enviar alerta';}
+  finally{isSubmitting=false;btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> ENVIAR ALERTA';}
 }
 
 async function submitEdit(){
@@ -1048,7 +1048,7 @@ async function submitEdit(){
   }
   isSubmitting=true;
   btn.disabled=true;
-  btn.innerHTML='<span class="spinner"></span>Guardando...';
+  btn.innerHTML='<span class="spinner"></span>GUARDANDO...';
   try{
     const newUrls=[];
     for(const file of selectedPhotos){
@@ -1074,7 +1074,7 @@ async function submitEdit(){
       update.last_confirmed_at=null;
     }
     const res=await fetch(SUPA_URL+`/rest/v1/avistamientos?id=eq.${editingId}`,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify(update)});
-    if(!res.ok){showToast('Error al guardar los cambios','error');btn.disabled=false;btn.innerHTML='Guardar cambios';isSubmitting=false;return;}
+    if(!res.ok){showToast('Error al guardar los cambios','error');btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> GUARDAR CAMBIOS';isSubmitting=false;return;}
     closeEditModal();
     await loadAvistamientos();
     showToast(bigMove?'✅ Reporte actualizado (votos reiniciados)':'✅ Reporte actualizado','success');
@@ -1083,7 +1083,7 @@ async function submitEdit(){
   }finally{
     isSubmitting=false;
     btn.disabled=false;
-    btn.innerHTML='Guardar cambios';
+    btn.innerHTML='<i class="ti ti-device-floppy"></i> GUARDAR CAMBIOS';
   }
 }
 

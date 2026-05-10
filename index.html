@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=24">
+<link rel="stylesheet" href="styles.css?v=25">
 </head>
 <body>
 
@@ -270,24 +270,133 @@
   </div>
 
   <div id="adiestramiento" class="section">
-    <div class="adi-wrap">
-      <div class="adi-hero"><img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" alt="Perros de la Isla" class="clickable-img" onclick="openImage('https://i.ibb.co/FbBcFvBQ/logo-png.png')" style="object-fit:contain;padding:30px;background:#3a0f0f"><div class="adi-hero-content"><div class="adi-name">Perros de la Isla</div><div class="adi-sub">Adiestramiento Canino Profesional · Mallorca</div></div></div>
-      <div class="adi-text">En <strong>Perros de la Isla</strong> llevamos más de <strong>14 años</strong> dedicados al bienestar emocional de los perros y al vínculo con sus familias. Desde <strong>2019</strong> en Mallorca, trabajamos con pasión por cada perro que llega a nosotros.</div>
-      <div class="adi-text">Trabajamos con métodos respetuosos para fortalecer la relación entre tú y tu perro, resolver lo que os cuesta y construir juntos una convivencia más feliz.</div>
-      <div class="adi-note">💡 Si has visto una procesionaria, repórtala en la pestaña <strong>Mapa</strong>. Esta zona es solo para consultas de adiestramiento.</div>
-      <div class="adi-title">Servicios Destacados</div>
-      <div class="srv-card"><div class="srv-name">Educación Canina Básica y Avanzada</div><div class="srv-text">Educación, modales en casa, paseo correcto, llamada y convivencia diaria.</div><a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=basica" target="_blank" rel="noopener">💬 Info y reservas</a></div>
-      <div class="srv-card"><div class="srv-name">Control de Reactividad e Impulsividad</div><div class="srv-text">Para perros que reaccionan ante otros perros, personas o estímulos del entorno.</div><a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=reactividad" target="_blank" rel="noopener">💬 Info y reservas</a></div>
-      <div class="srv-card"><div class="srv-name">Educación Temprana para Cachorros</div><div class="srv-text">Socialización, higiene, autocontrol y bases sólidas desde el principio.</div><a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=cachorros" target="_blank" rel="noopener">💬 Info y reservas</a></div>
-      <div class="srv-card"><div class="srv-name">Gestión de Ansiedad y Miedos</div><div class="srv-text">Para perros con ansiedad por separación, miedos a ruidos, tormentas, entornos nuevos o inseguridades que afectan su bienestar emocional.</div><a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=ansiedad" target="_blank" rel="noopener">💬 Info y reservas</a></div>
-      <div class="adi-title">Actividades en Grupo</div>
-      <div class="group-card"><div class="badge-season">🌿 Actividad Estacional</div><div class="srv-name">Expediciones Caninas</div><div class="srv-text">Paseos grupales educativos y socialización en naturaleza. Fechas anunciadas en Instagram.</div><a class="ig-btn" href="https://instagram.com/perrosdelaisla" target="_blank" rel="noopener">📣 Ver anuncios en Instagram</a></div>
-      <a href="https://instagram.com/perrosdelaisla" target="_blank" rel="noopener" class="ig-card"><div class="ig-logo">📷</div><div><div class="ig-user">@perrosdelaisla</div><div class="ig-sub">Sígueme para novedades, consejos y actividades</div></div></a>
-      <div class="adi-title">Contacto</div>
-      <div class="contact-card"><a href="#" onclick="return openWhatsApp('general')" class="contact-row"><div class="contact-label">💬 WhatsApp · 622 922 173</div><div class="contact-value">Consultas de adiestramiento</div></a><a href="mailto:perrosdelaislapalma@gmail.com" class="contact-row"><div class="contact-label">✉️ Email</div><div class="contact-value">perrosdelaislapalma@gmail.com</div></a><a href="https://perrosdelaisla.com" target="_blank" rel="noopener" class="contact-row"><div class="contact-label">🌐 Web oficial</div><div class="contact-value">perrosdelaisla.com</div></a><div class="hours"><strong>Horario</strong><br>Lunes a Viernes · 10:00 a 13:00 · 17:00 a 20:00<br>Sábados · 10:00 a 13:00 · Domingos cerrado</div></div>
-      <div class="final-msg">TU PERRO MERECE<br>SER FELIZ HOY</div>
-      <div class="final-sub">Perros de la Isla · Palma de Mallorca</div>
+
+    <!-- HERO -->
+    <div class="svc-hero">
+      <img class="svc-hero-img clickable-img" src="https://i.ibb.co/FbBcFvBQ/logo-png.png" alt="Perros de la Isla" onclick="openImage('https://i.ibb.co/FbBcFvBQ/logo-png.png')">
+      <div class="svc-hero-text">
+        <div class="svc-eyebrow">PERROS DE LA ISLA · MÁS DE 14 AÑOS DE EXPERIENCIA<br>DESDE 2019 EN MALLORCA</div>
+        <div class="svc-hero-sub bebas">ADIESTRAMIENTO CANINO PROFESIONAL · MALLORCA</div>
+      </div>
     </div>
+
+    <!-- CUERPO EDITORIAL -->
+    <div class="svc-block">
+      <div class="svc-eyebrow-muted">QUIÉNES SOMOS</div>
+      <div class="svc-since">14 años de experiencia</div>
+      <p class="svc-body">En <strong>Perros de la Isla</strong> llevamos más de 14 años dedicados al bienestar emocional de los perros y al vínculo con sus familias. Desde 2019 en Mallorca, trabajamos con pasión por cada perro que llega a nosotros.</p>
+      <p class="svc-body">Trabajamos con métodos respetuosos para fortalecer la relación entre tú y tu perro, resolver lo que os cuesta y construir juntos una convivencia más feliz.</p>
+      <div class="svc-quote bebas">CUANDO LA COMUNICACIÓN FUNCIONA, EL PERRO VIVE MÁS TRANQUILO Y LA CONVIVENCIA MEJORA.</div>
+    </div>
+
+    <!-- AVISO PROCESIONARIA -->
+    <div class="svc-block">
+      <div class="svc-note">
+        <div class="svc-eyebrow">RECUERDA</div>
+        <p class="svc-note-body">Si has visto una procesionaria u otro peligro para los perros, repórtalo desde la pestaña <strong>Mapa</strong>. La app cubre cualquier amenaza que veas en el paseo, no solo procesionaria. Esta zona es para consultas de adiestramiento.</p>
+      </div>
+    </div>
+
+    <div class="svc-divider"></div>
+
+    <!-- 4 SERVICIOS -->
+    <div class="svc-block"><div class="svc-eyebrow-muted">NUESTROS SERVICIOS MÁS POPULARES</div></div>
+
+    <div class="svc-row">
+      <div class="svc-row-icon"><i class="ti ti-paw"></i></div>
+      <div class="svc-row-content">
+        <div class="svc-eyebrow">SERVICIO · 01</div>
+        <div class="svc-row-title bebas">EDUCACIÓN CANINA BÁSICA Y AVANZADA</div>
+        <p class="svc-body">Educación, modales en casa, paseo correcto, llamada y convivencia diaria.</p>
+        <a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=basica" target="_blank" rel="noopener"><i class="ti ti-message-circle"></i>INFO Y RESERVAS</a>
+      </div>
+    </div>
+
+    <div class="svc-row">
+      <div class="svc-row-icon"><i class="ti ti-shield-check"></i></div>
+      <div class="svc-row-content">
+        <div class="svc-eyebrow">SERVICIO · 02</div>
+        <div class="svc-row-title bebas">CONTROL DE REACTIVIDAD E IMPULSIVIDAD</div>
+        <p class="svc-body">Para perros que reaccionan ante otros perros, personas o estímulos del entorno.</p>
+        <a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=reactividad" target="_blank" rel="noopener"><i class="ti ti-message-circle"></i>INFO Y RESERVAS</a>
+      </div>
+    </div>
+
+    <div class="svc-row">
+      <div class="svc-row-icon"><i class="ti ti-bone"></i></div>
+      <div class="svc-row-content">
+        <div class="svc-eyebrow">SERVICIO · 03</div>
+        <div class="svc-row-title bebas">EDUCACIÓN TEMPRANA PARA CACHORROS</div>
+        <p class="svc-body">Socialización, higiene, autocontrol y bases sólidas desde el principio.</p>
+        <a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=cachorros" target="_blank" rel="noopener"><i class="ti ti-message-circle"></i>INFO Y RESERVAS</a>
+      </div>
+    </div>
+
+    <div class="svc-row">
+      <div class="svc-row-icon"><i class="ti ti-heart-handshake"></i></div>
+      <div class="svc-row-content">
+        <div class="svc-eyebrow">SERVICIO · 04</div>
+        <div class="svc-row-title bebas">GESTIÓN DE ANSIEDAD Y MIEDOS</div>
+        <p class="svc-body">Para perros con ansiedad por separación, miedos a ruidos, tormentas, entornos nuevos o inseguridades que afectan su bienestar emocional.</p>
+        <a class="wa-btn" href="https://perrosdelaisla.github.io/hola/?tema=ansiedad" target="_blank" rel="noopener"><i class="ti ti-message-circle"></i>INFO Y RESERVAS</a>
+      </div>
+    </div>
+
+    <div class="svc-divider"></div>
+
+    <!-- ACTIVIDADES EN GRUPO -->
+    <div class="svc-block"><div class="svc-eyebrow-muted">ACTIVIDADES EN GRUPO</div></div>
+    <div class="svc-block svc-group">
+      <div class="svc-eyebrow-oliva">ACTIVIDAD ESTACIONAL</div>
+      <div class="svc-row-title bebas">EXPEDICIÓN CANINA</div>
+      <p class="svc-body">Paseos grupales educativos y socialización en naturaleza. Fechas anunciadas en Instagram.</p>
+      <a class="svc-cta" href="https://instagram.com/perrosdelaisla" target="_blank" rel="noopener"><i class="ti ti-brand-instagram"></i>VER ANUNCIOS EN INSTAGRAM</a>
+    </div>
+
+    <div class="svc-divider"></div>
+
+    <!-- CONTACTO -->
+    <div class="svc-block"><div class="svc-eyebrow">¿HABLAMOS DE TU PERRO?</div></div>
+
+    <a class="svc-contact-row" href="#" onclick="return openWhatsApp('general')">
+      <i class="ti ti-brand-whatsapp"></i>
+      <div class="svc-contact-text">
+        <div class="svc-contact-label bebas">WHATSAPP · 622 922 173</div>
+        <div class="svc-contact-sub">Consultas de adiestramiento</div>
+      </div>
+      <i class="ti ti-chevron-right svc-contact-chev"></i>
+    </a>
+    <a class="svc-contact-row" href="mailto:perrosdelaislapalma@gmail.com">
+      <i class="ti ti-mail"></i>
+      <div class="svc-contact-text">
+        <div class="svc-contact-label bebas">EMAIL</div>
+        <div class="svc-contact-sub">perrosdelaislapalma@gmail.com</div>
+      </div>
+      <i class="ti ti-chevron-right svc-contact-chev"></i>
+    </a>
+    <a class="svc-contact-row" href="https://perrosdelaisla.com" target="_blank" rel="noopener">
+      <i class="ti ti-world"></i>
+      <div class="svc-contact-text">
+        <div class="svc-contact-label bebas">WEB OFICIAL</div>
+        <div class="svc-contact-sub">perrosdelaisla.com</div>
+      </div>
+      <i class="ti ti-chevron-right svc-contact-chev"></i>
+    </a>
+
+    <div class="svc-block svc-hours">
+      <div class="svc-eyebrow-muted">HORARIO</div>
+      <div class="svc-hours-line">Lunes a viernes · 10:00 a 13:00 · 17:00 a 20:00</div>
+      <div class="svc-hours-line">Sábados · 10:00 a 13:00</div>
+      <div class="svc-hours-line">Domingos cerrado</div>
+    </div>
+
+    <!-- FOOTER SLOGAN COMÚN -->
+    <div class="footer-slogan">
+      <div class="footer-line"></div>
+      <div class="footer-main bebas">TU PERRO MERECE SER FELIZ HOY</div>
+      <div class="footer-sub bebas">PERROS DE LA ISLA · MALLORCA</div>
+    </div>
+
   </div>
 </div>
 

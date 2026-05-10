@@ -577,7 +577,31 @@ function calcWaypointsDistance(wps){if(!wps||wps.length<2) return null;let total
 
 // VETS
 const vets=[{name:"Veterinary Hospital Canis",addr:"C/ Agnès de Pacs 12, Palma",phone:"+34971732100",rating:4.3,reviews:3123,h24:true,zone:"palma",lat:39.5956,lng:2.6529,maps:"https://maps.google.com/?q=39.5956,2.6529"},{name:"AniCura Aragó Hospital Veterinari",addr:"C/ Son Morro 4, Palma",phone:"+34971479354",rating:4.1,reviews:1612,h24:true,zone:"palma",lat:39.5741,lng:2.6872,maps:"https://maps.google.com/?q=39.5741,2.6872"},{name:"Hospital Veterinari Ciutat d'Inca",addr:"C/ dels Pagesos 14, Inca",phone:"+34971505483",rating:4.1,reviews:759,h24:true,zone:"inca",lat:39.7123,lng:2.9122,maps:"https://maps.google.com/?q=39.7123,2.9122"},{name:"MiVet Hospital Veterinario",addr:"Ctra. Palma-Artà km 47, Manacor",phone:"+34971845047",rating:3.9,reviews:331,h24:true,zone:"manacor",lat:39.5723,lng:3.1937,maps:"https://maps.google.com/?q=39.5723,3.1937"},{name:"Veterclinic Son Servera",addr:"Av. de la Constitució 19, Son Servera",phone:"+34971567474",rating:4.6,reviews:484,h24:true,zone:"manacor",lat:39.6183,lng:3.3633,maps:"https://maps.google.com/?q=39.6183,3.3633"},{name:"Clínica Veterinaria Peludets",addr:"C/ de Jesús 36, Palma",phone:"+34640377985",rating:4.6,reviews:387,h24:false,zone:"palma",lat:39.5822,lng:2.6438,maps:"https://maps.google.com/?q=39.5822,2.6438"},{name:"Calvià Veterinaris",addr:"Santa Ponça, Calvià",phone:"+34971690000",rating:4.5,reviews:210,h24:false,zone:"calvia",lat:39.5081,lng:2.4766,maps:"https://maps.google.com/?q=39.5081,2.4766"},{name:"Centre Veterinari Llucmajor",addr:"Av. Jaume III, Llucmajor",phone:"+34971660000",rating:4.4,reviews:168,h24:false,zone:"llucmajor",lat:39.4907,lng:2.8911,maps:"https://maps.google.com/?q=39.4907,2.8911"}];
-function renderVets(list){document.getElementById('vet-list').innerHTML=list.map(v=>`<div class="vet-card"><div class="vet-top"><div class="vet-ico">🏥</div><div style="flex:1"><div class="vet-name">${v.name}</div><div class="vet-addr">${v.addr}</div><div class="badges-row">${v.h24?'<span class="badge-24h">24H URGENCIAS</span>':''}</div><div style="font-size:11px;color:#aaa;margin-top:4px">${v.h24?"🟢 Abierto 24 horas":"🟠 Llamar para confirmar urgencia"}</div></div></div><div class="vet-rating"><span>⭐</span> ${v.rating} · ${v.reviews.toLocaleString()} reseñas</div><div class="vet-actions"><button class="btn-call" onclick="window.location.href='tel:${v.phone}'">📞 Llamar</button><button class="btn-nav" onclick="window.open('${v.maps}')">🧭 Cómo llegar</button></div></div>`).join('');}
+function renderVets(list){
+  document.getElementById('vet-list').innerHTML=list.map(v=>{
+    const statusClass = v.h24 ? '' : ' vet-card-status--alert';
+    const statusText  = v.h24 ? 'Abierto 24 horas' : 'Llamar para confirmar urgencia';
+    const badge       = v.h24 ? '<div class="vet-card-badge bebas">24H</div>' : '';
+    return `<div class="vet-card">
+  <div class="vet-card-top">
+    <div class="vet-card-icon"><i class="ti ti-stethoscope"></i></div>
+    <div class="vet-card-info">
+      <div class="vet-card-name">${v.name}</div>
+      <div class="vet-card-addr">${v.addr}</div>
+    </div>
+    ${badge}
+  </div>
+  <div class="vet-card-meta">
+    <div class="vet-card-status${statusClass}"><i class="ti ti-circle-filled"></i><span>${statusText}</span></div>
+    <div class="vet-card-rating"><i class="ti ti-star-filled"></i><span><strong>${v.rating}</strong> <span class="vet-card-reviews">(${v.reviews.toLocaleString()})</span></span></div>
+  </div>
+  <div class="vet-card-actions">
+    <a href="tel:${v.phone}" class="vet-action vet-action-primary bebas"><i class="ti ti-phone"></i>LLAMAR</a>
+    <button onclick="window.open('${v.maps}')" class="vet-action vet-action-secondary bebas"><i class="ti ti-compass"></i>CÓMO LLEGAR</button>
+  </div>
+</div>`;
+  }).join('');
+}
 function filterVets(zone,btn){document.querySelectorAll('.filtro').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderVets(zone==='all'?vets:zone==='24h'?vets.filter(v=>v.h24):vets.filter(v=>v.zone===zone));}
 renderVets(vets);
 

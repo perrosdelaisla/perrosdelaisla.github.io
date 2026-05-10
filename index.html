@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=27">
+<link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
 
@@ -410,9 +410,35 @@
   </div>
 
   <div id="vets" class="section">
-    <div class="filtros"><button class="filtro active" onclick="filterVets('all',this)">Todas</button><button class="filtro" onclick="filterVets('24h',this)">24h</button><button class="filtro" onclick="filterVets('palma',this)">Palma</button><button class="filtro" onclick="filterVets('inca',this)">Inca</button><button class="filtro" onclick="filterVets('manacor',this)">Manacor</button><button class="filtro" onclick="filterVets('calvia',this)">Calvià</button><button class="filtro" onclick="filterVets('llucmajor',this)">Llucmajor</button></div>
+
+    <!-- HERO INTRODUCTORIO -->
+    <div class="urg-hero">
+      <div class="eyebrow muted">VETERINARIAS DE URGENCIA · MALLORCA</div>
+      <h2 class="bebas urg-hero-title">SI HAY EMERGENCIA</h2>
+      <p class="urg-hero-text">Llama directamente a la clínica más cercana. Estos teléfonos van a la veterinaria, no a Perros de la Isla.</p>
+    </div>
+
+    <!-- FILTROS CHIPS (mantiene .filtro / .active / onclicks intactos) -->
+    <div class="filtros">
+      <button class="filtro active" onclick="filterVets('all',this)">TODAS</button>
+      <button class="filtro" onclick="filterVets('24h',this)">24H</button>
+      <button class="filtro" onclick="filterVets('palma',this)">PALMA</button>
+      <button class="filtro" onclick="filterVets('inca',this)">INCA</button>
+      <button class="filtro" onclick="filterVets('manacor',this)">MANACOR</button>
+      <button class="filtro" onclick="filterVets('calvia',this)">CALVIÀ</button>
+      <button class="filtro" onclick="filterVets('llucmajor',this)">LLUCMAJOR</button>
+    </div>
+
+    <!-- LISTA DE VETS (poblada por renderVets) -->
     <div id="vet-list"></div>
-    <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
+
+    <!-- FOOTER SLOGAN COMÚN -->
+    <div class="footer-slogan">
+      <div class="footer-line"></div>
+      <div class="footer-main bebas">TU PERRO MERECE SER FELIZ HOY</div>
+      <div class="footer-sub bebas">PERROS DE LA ISLA · MALLORCA</div>
+    </div>
+
   </div>
 
   <div id="adiestramiento" class="section">
@@ -669,6 +695,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=37"></script>
+<script src="app.js?v=38"></script>
 </body>
 </html>

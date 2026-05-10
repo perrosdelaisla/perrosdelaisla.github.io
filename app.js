@@ -1272,6 +1272,8 @@ function closeClaimPrizeModal(){
   document.getElementById('claim-direccion').value='';
   document.getElementById('claim-talla').value='';
   document.getElementById('claim-observaciones').value='';
+  const btn = document.getElementById('btn-claim-submit');
+  if(btn) { btn.disabled=false; btn.innerHTML='<i class="ti ti-check"></i> ENVIAR DATOS'; }
 }
 
 async function submitClaimPrize(){
@@ -1288,7 +1290,7 @@ async function submitClaimPrize(){
 
   const btn = document.getElementById('btn-claim-submit');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Enviando...';
+  btn.innerHTML = '<span class="spinner"></span>ENVIANDO...';
 
   try{
     const profile = getProfile();
@@ -1309,7 +1311,7 @@ async function submitClaimPrize(){
     if(!res.ok){
       showToast('Error al enviar los datos','error');
       btn.disabled=false;
-      btn.innerHTML='✅ Enviar datos';
+      btn.innerHTML='<i class="ti ti-check"></i> ENVIAR DATOS';
       return;
     }
 
@@ -1348,7 +1350,7 @@ async function submitClaimPrize(){
   } catch(err){
     showToast('Error de conexion','error');
     btn.disabled=false;
-    btn.innerHTML='Enviar datos';
+    btn.innerHTML='<i class="ti ti-check"></i> ENVIAR DATOS';
   }
 }
 
@@ -1852,12 +1854,12 @@ async function abrirMiniPerfil(userId) {
   const modal = document.getElementById('miniPerfilModal');
   const content = document.getElementById('miniPerfilContent');
   modal.classList.add('open');
-  content.innerHTML = '<p style="color:#888;text-align:center;padding:40px">Cargando...</p>';
+  content.innerHTML = '<div class="mini-perfil-loading">Cargando perfil...</div>';
 
   try {
     const r = await fetch(SUPA_URL+`/rest/v1/usuarios?id=eq.${userId}&select=*`, {headers:HEADERS});
     const [u] = await r.json();
-    if(!u) { content.innerHTML = '<p style="color:#c0392b;text-align:center;padding:40px">Usuario no encontrado</p>'; return; }
+    if(!u) { content.innerHTML = '<div class="mini-perfil-error">No pudimos cargar este perfil</div>'; return; }
 
     const [alertasRes, rutasRes] = await Promise.all([
       fetch(SUPA_URL+`/rest/v1/avistamientos?reporter_id=eq.${userId}&status=eq.activo&select=id`, {headers:HEADERS}),
@@ -1888,30 +1890,62 @@ async function abrirMiniPerfil(userId) {
     const displayDog = u.visible && u.nombre_perro ? ' y '+u.nombre_perro+' 🐕' : '';
     const fotoSrc = u.foto || 'assets/logo-paseos-seguros-icon.png';
 
-    const insigniasHtml = insigniasDesbloqueadas.length > 0
-      ? insigniasDesbloqueadas.map(b => `<span class="mini-insignia" title="${b.name}">${b.emoji}</span>`).join('')
-      : '<span style="color:#ddd;font-size:11px">Sin insignias aún</span>';
+    const insigniasHtml = insigniasDesbloqueadas.map(b => `<span class="mini-insignia" title="${b.name}">${b.emoji}</span>`).join('');
 
     content.innerHTML = `
-      <button class="mini-perfil-close" onclick="cerrarMiniPerfil()">✕</button>
-      <div class="mini-perfil-foto" style="background-image:url('${fotoSrc}')"></div>
-      <div class="mini-perfil-overlay">
-        <div class="mini-perfil-nombre">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div>
-        <div class="mini-perfil-zona">📍 ${escapeHtml(u.zona)}</div>
-        <div class="mini-perfil-stats">
-          <span>${reportCount} 🚨</span>
-          <span>${rutasTotal} 🗺️</span>
-          <span>${sharesCount} 📢</span>
-          <span>${huellitasRecibidas} 🐾</span>
-        </div>
-        <div class="mini-perfil-insignias">${insigniasHtml}</div>
-        <button class="mini-perfil-huellita ${yaDada?'ya-dado':''}" onclick="darHuellita('perfil','${userId}',this)" ${yaDada?'disabled':''}>
-          ${yaDada ? '✅ Ya le diste huellita' : '🐾 Dar huellita'}
+      <div class="mini-perfil-card">
+        <button class="mini-perfil-close" onclick="cerrarMiniPerfil()" aria-label="Cerrar">
+          <i class="ti ti-x"></i>
         </button>
+
+        <div class="mini-perfil-foto" style="background-image:url('${fotoSrc}')"></div>
+
+        <div class="mini-perfil-body">
+          <div class="mini-perfil-eyebrow">PERFIL</div>
+          <div class="mini-perfil-nombre">${escapeHtml(displayName)}${escapeHtml(displayDog)}</div>
+          <div class="mini-perfil-zona">
+            <i class="ti ti-map-pin"></i>
+            ${escapeHtml(u.zona)}
+          </div>
+
+          <div class="mini-perfil-stats">
+            <div class="mini-stat">
+              <i class="ti ti-alert-triangle"></i>
+              <span class="mini-stat-num">${reportCount}</span>
+              <span class="mini-stat-label">Alertas</span>
+            </div>
+            <div class="mini-stat">
+              <i class="ti ti-route"></i>
+              <span class="mini-stat-num">${rutasTotal}</span>
+              <span class="mini-stat-label">Rutas</span>
+            </div>
+            <div class="mini-stat">
+              <i class="ti ti-share"></i>
+              <span class="mini-stat-num">${sharesCount}</span>
+              <span class="mini-stat-label">Shares</span>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-stat-emoji">🐾</span>
+              <span class="mini-stat-num">${huellitasRecibidas}</span>
+              <span class="mini-stat-label">Huellitas</span>
+            </div>
+          </div>
+
+          ${insigniasDesbloqueadas.length > 0 ? `
+            <div class="mini-perfil-insignias-wrap">
+              <div class="mini-perfil-insignias-title">INSIGNIAS</div>
+              <div class="mini-perfil-insignias">${insigniasHtml}</div>
+            </div>
+          ` : ''}
+
+          <button class="mini-perfil-huellita ${yaDada ? 'ya-dado' : ''}" onclick="darHuellita('perfil','${userId}',this)" ${yaDada ? 'disabled' : ''}>
+            🐾 ${yaDada ? 'YA LE DISTE HUELLITA' : 'DARLE HUELLITA'}
+          </button>
+        </div>
       </div>
     `;
   } catch(e) {
-    content.innerHTML = '<p style="color:#c0392b;text-align:center;padding:40px">Error al cargar perfil</p>';
+    content.innerHTML = '<div class="mini-perfil-error">No pudimos cargar este perfil</div>';
   }
 }
 

@@ -1,6 +1,6 @@
 // Service Worker — Paseos Seguros (iniciativa de Perros de la Isla)
 // Estrategia: network-first para archivos propios (HTML/CSS/JS), cache-first para externos
-const CACHE_VERSION = 'pdi-v42';
+const CACHE_VERSION = 'pdi-v43';
 const CACHE_NAME = CACHE_VERSION;
 const OWN_ASSETS = [
   './',

@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=28">
+<link rel="stylesheet" href="styles.css?v=29">
 </head>
 <body>
 
@@ -374,39 +374,64 @@
   </div>
 
   <div id="mapa" class="section">
+
+    <!-- TOGGLE MODO (avistamientos / rutas) -->
     <div class="map-toggle">
-      <button class="toggle-avistamientos active" onclick="switchMapMode('avistamientos',this)"><span>⚠️</span> Avistamientos</button>
-      <button class="toggle-rutas" onclick="switchMapMode('rutas',this)"><span>🐕</span> Rutas seguras</button>
+      <button class="toggle-avistamientos active" onclick="switchMapMode('avistamientos',this)"><i class="ti ti-alert-triangle"></i> Avistamientos</button>
+      <button class="toggle-rutas" onclick="switchMapMode('rutas',this)"><i class="ti ti-route"></i> Rutas seguras</button>
     </div>
+
+    <!-- MAPA Leaflet con FABs flotantes -->
     <div id="map">
-      <button id="exitFullBtn" onclick="toggleMapFull(event)">❌ Salir</button>
-      <button class="map-layer-btn" id="layerToggleBtn" onclick="toggleMapLayer(event)" aria-label="Cambiar capa del mapa">🛰️</button>
+      <button id="exitFullBtn" onclick="toggleMapFull(event)"><i class="ti ti-x"></i> SALIR</button>
+      <button class="map-layer-btn" id="layerToggleBtn" onclick="toggleMapLayer(event)" aria-label="Cambiar capa del mapa"></button>
       <div class="map-fab-stack">
         <div class="map-fab-menu" id="mapFabMenu">
-          <button onclick="toggleMapFull(event);closeMapFabMenu()">🖥️ Pantalla completa</button>
+          <button onclick="toggleMapFull(event);closeMapFabMenu()"><i class="ti ti-arrows-maximize"></i> PANTALLA COMPLETA</button>
         </div>
-        <button class="map-fab" onclick="goToUserLocation()" aria-label="Usar mi ubicación">📍</button>
-        <button class="map-fab" onclick="toggleMapFabMenu(event)" aria-label="Más opciones">⚙️</button>
+        <button class="map-fab" onclick="goToUserLocation()" aria-label="Usar mi ubicación"><i class="ti ti-current-location"></i></button>
+        <button class="map-fab" onclick="toggleMapFabMenu(event)" aria-label="Más opciones"><i class="ti ti-adjustments"></i></button>
       </div>
     </div>
-    <div id="hotZoneBox" style="display:none;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:12px;font-size:13px;color:#f0f0f0">🔥 <strong id="hotZoneText"></strong></div>
 
+    <!-- HOT ZONE BOX (lo puebla checkHotZone() vía classList + textContent) -->
+    <div id="hotZoneBox" style="display:none">
+      <i class="ti ti-flame"></i>
+      <strong id="hotZoneText"></strong>
+    </div>
+
+    <!-- CONTENIDO MODO AVISTAMIENTOS -->
     <div class="avistamientos-content active" id="avistamientos-content">
-      <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#8e44ad"></div>Garrapatas</div><div class="leyenda-item"><div class="dot" style="background:#e67e22"></div>Cristales</div><div class="leyenda-item"><div class="dot" style="background:#2c3e50"></div>Veneno</div><div class="leyenda-item"><div class="dot" style="background:#7f8c8d"></div>Otro</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
-      <div class="avist-list"><h3>Alertas recientes</h3><div id="avist-container"><div class="skeleton-feed"><div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="skeleton-bar skeleton-title"></div><div class="skeleton-bar skeleton-desc"></div></div></div><div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="skeleton-bar skeleton-title"></div><div class="skeleton-bar skeleton-desc"></div></div></div><div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="skeleton-bar skeleton-title"></div><div class="skeleton-bar skeleton-desc"></div></div></div></div></div></div>
-      <button class="reportar-btn" onclick="activateReportMode()">📍 Reportar peligro</button>
+      <div class="map-section-head"><div class="eyebrow muted">ALERTAS RECIENTES</div></div>
+      <div id="avist-container"><div class="skeleton-feed"><div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="skeleton-bar skeleton-title"></div><div class="skeleton-bar skeleton-desc"></div></div></div><div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="skeleton-bar skeleton-title"></div><div class="skeleton-bar skeleton-desc"></div></div></div><div class="skeleton-card"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="skeleton-bar skeleton-title"></div><div class="skeleton-bar skeleton-desc"></div></div></div></div></div>
+      <button class="reportar-btn" onclick="activateReportMode()"><i class="ti ti-plus"></i>REPORTAR PELIGRO</button>
     </div>
 
+    <!-- CONTENIDO MODO RUTAS -->
     <div class="rutas-content" id="rutas-content">
-      <div class="leyenda"><div class="leyenda-item"><div class="dot" style="background:#27ae60"></div>Ruta verificada</div><div class="leyenda-item"><div class="dot" style="background:#b7950b"></div>Sugerencia pendiente</div><div class="leyenda-item"><div class="dot" style="background:#c0392b"></div>Alerta procesionaria</div><div class="leyenda-item"><div class="dot" style="background:#2980b9"></div>Veterinaria</div></div>
-      <div class="rutas-filtros"><button class="rutas-filtro active" onclick="filterRutas('all',this)">Todas</button><button class="rutas-filtro" onclick="filterRutas('verificada',this)">✅ Verificadas</button><button class="rutas-filtro" onclick="filterRutas('corta',this)">Corta</button><button class="rutas-filtro" onclick="filterRutas('media',this)">Media</button><button class="rutas-filtro" onclick="filterRutas('larga',this)">Larga</button><button class="rutas-filtro" onclick="filterRutas('facil',this)">Fácil</button></div>
-      <div class="avist-list"><h3>Rutas de paseo</h3><div id="rutas-container"><p style="color:#555;font-size:13px">Cargando rutas...</p></div></div>
-      <div style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;z-index:1500;display:flex;gap:8px">
-        <button onclick="openRutaModal()" style="flex:1;padding:14px;background:#2980b9;color:#fff;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.4)">🐕 Trazar ruta</button>
-        <button onclick="startGpsRecording()" style="flex:1;padding:14px;background:#27ae60;color:#fff;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.4)">📡 Grabar paseo</button>
+      <div class="rutas-filtros">
+        <button class="rutas-filtro active" onclick="filterRutas('all',this)">TODAS</button>
+        <button class="rutas-filtro" onclick="filterRutas('verificada',this)"><i class="ti ti-circle-check"></i>VERIFICADAS</button>
+        <button class="rutas-filtro" onclick="filterRutas('corta',this)">CORTA</button>
+        <button class="rutas-filtro" onclick="filterRutas('media',this)">MEDIA</button>
+        <button class="rutas-filtro" onclick="filterRutas('larga',this)">LARGA</button>
+        <button class="rutas-filtro" onclick="filterRutas('facil',this)">FÁCIL</button>
+      </div>
+      <div class="map-section-head"><div class="eyebrow muted">RUTAS DE PASEO</div></div>
+      <div id="rutas-container"><p style="color:var(--text-tertiary);font-family:'Inter',sans-serif;font-size:13px;padding:22px">Cargando rutas...</p></div>
+      <div class="rutas-fab-container">
+        <button class="rutas-fab rutas-fab-trazar" onclick="openRutaModal()"><i class="ti ti-route"></i>TRAZAR RUTA</button>
+        <button class="rutas-fab rutas-fab-grabar" onclick="startGpsRecording()"><i class="ti ti-broadcast"></i>GRABAR PASEO</button>
       </div>
     </div>
-    <div class="brand-footer"><p>Una iniciativa de <strong>Perros de la Isla</strong><br>Adiestramiento Canino Profesional · @perrosdelaisla</p></div>
+
+    <!-- FOOTER SLOGAN COMÚN -->
+    <div class="footer-slogan">
+      <div class="footer-line"></div>
+      <div class="footer-main bebas">TU PERRO MERECE SER FELIZ HOY</div>
+      <div class="footer-sub bebas">PERROS DE LA ISLA · MALLORCA</div>
+    </div>
+
   </div>
 
   <div id="vets" class="section">
@@ -695,6 +720,6 @@
   <div class="img-hint">Toca dos veces para ampliar · Toca fuera para cerrar</div>
 </div>
 
-<script src="app.js?v=38"></script>
+<script src="app.js?v=39"></script>
 </body>
 </html>

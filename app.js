@@ -572,7 +572,7 @@ function createRutaIcon(verificada){return L.divIcon({html:`<div class="ruta-mar
 // BUG 4 FIX: toast z-index subido en CSS (6500) y duración 4500ms
 function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'success');setTimeout(()=>t.classList.remove('show'),4500);}
 
-function checkHotZone(){const box=document.getElementById('hotZoneBox'),text=document.getElementById('hotZoneText');if(!box||!text) return;if(!userLat||!userLng){box.style.display='none';return;}const items=document.querySelectorAll('.avist-item');if(items.length===0){box.style.display='none';return;}if(items.length>=3){box.style.display='block';box.style.borderColor='#c0392b';text.textContent='🚨 Zona caliente: varios reportes cerca';return;}if(items.length>=1){box.style.display='block';box.style.borderColor='#e67e22';text.textContent='⚠️ Precaución: hay reportes cercanos';return;}box.style.display='block';box.style.borderColor='#27ae60';text.textContent='✅ Sin actividad cercana';}
+function checkHotZone(){const box=document.getElementById('hotZoneBox'),text=document.getElementById('hotZoneText');if(!box||!text) return;box.classList.remove('hotZoneBox--hot','hotZoneBox--warning','hotZoneBox--ok');if(!userLat||!userLng){box.style.display='none';return;}const items=document.querySelectorAll('.avist-item');if(items.length===0){box.style.display='none';return;}if(items.length>=3){box.style.display='flex';box.classList.add('hotZoneBox--hot');text.textContent='Zona caliente: varios reportes cerca';return;}if(items.length>=1){box.style.display='flex';box.classList.add('hotZoneBox--warning');text.textContent='Precaución: hay reportes cercanos';return;}box.style.display='flex';box.classList.add('hotZoneBox--ok');text.textContent='Sin actividad cercana';}
 function calcWaypointsDistance(wps){if(!wps||wps.length<2) return null;let total=0;for(let i=1;i<wps.length;i++){total+=getDistance(wps[i-1].lat,wps[i-1].lng,wps[i].lat,wps[i].lng);}return total;}
 
 // VETS
@@ -626,7 +626,7 @@ async function loadNamesCache(ids){const toFetch=ids.filter(id=>id&&!namesCache[
 
 // Capas de mapa: 2 estados alternables (callejero ↔ satélite). Toggle 🗺️/🛰️
 const MAP_LAYERS_ORDER=['street','satellite'];
-const MAP_LAYER_NEXT_LABELS={street:'🛰️',satellite:'🗺️'};
+const MAP_LAYER_NEXT_LABELS={street:'<i class="ti ti-satellite"></i>',satellite:'<i class="ti ti-map-2"></i>'};
 
 function initMap(){
   if(mapInit) return;mapInit=true;
@@ -643,7 +643,7 @@ function initMap(){
   // Capa inicial: callejero. El botón muestra el icono de la capa siguiente.
   window.currentLayer='street';
   window.streetLayer.addTo(window.map);
-  document.getElementById('layerToggleBtn').innerHTML='🛰️';
+  document.getElementById('layerToggleBtn').innerHTML='<i class="ti ti-satellite"></i>';
 
   window.rIcon=createRiskIcon('#c0392b');
   const bIcon=L.divIcon({html:'<div style="background:#2980b9;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>',iconSize:[13,13],iconAnchor:[6,6],className:''});
@@ -1117,7 +1117,7 @@ async function deleteOwnReport(){
 
 function goToUserLocation(){if(!navigator.geolocation){showToast('Tu dispositivo no soporta geolocalización','error');return;}navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude,lng=pos.coords.longitude;window.map.setView([lat,lng],15);if(userMarker) window.map.removeLayer(userMarker);userMarker=L.marker([lat,lng],{icon:L.divIcon({html:'<div style="background:#3498db;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.6)"></div>',className:''})}).addTo(window.map).bindPopup("📍 Estás aquí").openPopup();selectedLat=lat;selectedLng=lng;userLat=lat;userLng=lng;if(currentMapMode==='avistamientos') loadAvistamientos(); else loadRutas();checkHotZone();setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`).then(r=>r.json()).then(d=>{const lugar=d.address.city||d.address.town||d.address.village||"Ubicación actual";document.getElementById('inp-ubicacion').value=lugar+" ("+lat.toFixed(5)+", "+lng.toFixed(5)+")";}).catch(()=>{});},100);},err=>{if(err.code===1) showToast('Permiso de ubicación bloqueado','error');else if(err.code===2) showToast('No se pudo detectar tu ubicación','error');else if(err.code===3) showToast('La ubicación tardó demasiado','error');else showToast('Error al obtener ubicación','error');},{enableHighAccuracy:false,timeout:5000,maximumAge:60000});}
 
-function toggleMapFull(e){if(e){e.stopPropagation();e.preventDefault();}const m=document.getElementById('map'),b=document.getElementById('exitFullBtn');const f=m.classList.toggle('fullscreen');b.style.display=f?'block':'none';setTimeout(()=>{if(window.map) window.map.invalidateSize();},200);}
+function toggleMapFull(e){if(e){e.stopPropagation();e.preventDefault();}const m=document.getElementById('map'),b=document.getElementById('exitFullBtn');const f=m.classList.toggle('fullscreen');b.style.display=f?'flex':'none';setTimeout(()=>{if(window.map) window.map.invalidateSize();},200);}
 
 // IMAGEN MODAL
 function openImage(src){

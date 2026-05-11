@@ -1689,7 +1689,11 @@ document.addEventListener('touchmove',e=>{
   applySwipeTransform(dx);
 },{passive:true});
 
-document.addEventListener('touchend',()=>{
+document.addEventListener('touchend',e=>{
+  // Si quedan dedos en pantalla (saliendo de un pinch), no resetear nada:
+  // swipeStartX pertenece al dedo que acaba de levantarse; el dedo que sigue
+  // dispararía un swipe falso con dx artificialmente grande.
+  if(e.touches.length>0) return;
   if(!swipeStarted){swipeBlocked=false;return;}
   const width=window.innerWidth||380;
   const threshold=width*SWIPE_THRESHOLD_PCT;

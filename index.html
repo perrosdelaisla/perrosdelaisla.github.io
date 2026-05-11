@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=35">
+<link rel="stylesheet" href="styles.css?v=36">
 </head>
 <body>
 
@@ -841,28 +841,32 @@
 <!-- GPS RECORDING TOOLBAR -->
 <div class="gps-toolbar" id="gpsToolbar">
   <div class="gps-header"><h4><span class="gps-dot"></span> Grabando paseo</h4></div>
-  <div class="gps-stats"><span>📍 <strong id="gpsPoints">0</strong> puntos</span><span>📏 <strong id="gpsDist">0 m</strong></span><span>⏱️ <strong id="gpsTime">0:00</strong></span></div>
+  <div class="gps-stats">
+    <span><i class="ti ti-map-pin"></i><strong id="gpsPoints">0</strong> puntos</span>
+    <span><i class="ti ti-ruler-measure"></i><strong id="gpsDist">0 m</strong></span>
+    <span><i class="ti ti-clock"></i><strong id="gpsTime">0:00</strong></span>
+  </div>
   <div class="gps-actions">
-    <button class="btn-gps-cancel" onclick="cancelGpsRecording()">✕ Cancelar</button>
-    <button class="btn-gps-stop" onclick="stopGpsRecording()">✓ Terminar y guardar</button>
+    <button class="btn-gps-cancel" onclick="cancelGpsRecording()"><i class="ti ti-x"></i> Cancelar</button>
+    <button class="btn-gps-stop" onclick="stopGpsRecording()"><i class="ti ti-device-floppy"></i> Terminar y guardar</button>
   </div>
 </div>
 
 <!-- BARRA DE TRAZADO DE RUTA -->
 <div class="trace-toolbar" id="traceToolbar">
-  <div class="trace-header"><h4>🐕 Trazando ruta</h4><span class="trace-count" id="traceCount">0 puntos</span></div>
+  <div class="trace-header"><h4><i class="ti ti-route"></i> Trazando ruta</h4><span class="trace-count" id="traceCount">0 puntos</span></div>
   <div class="trace-hint" id="traceHint"><strong>Toca el mapa</strong> para marcar el punto de inicio de tu ruta.</div>
   <div class="trace-actions">
-    <button class="btn-trace-undo" id="btnTraceUndo" onclick="traceUndo()" disabled>↩️ Deshacer</button>
-    <button class="btn-trace-cancel" onclick="traceCancel()">✕ Cancelar</button>
-    <button class="btn-trace-done" id="btnTraceDone" onclick="traceDone()" disabled>✓ Listo</button>
+    <button class="btn-trace-undo" id="btnTraceUndo" onclick="traceUndo()" disabled><i class="ti ti-arrow-back-up"></i> Deshacer</button>
+    <button class="btn-trace-cancel" onclick="traceCancel()"><i class="ti ti-x"></i> Cancelar</button>
+    <button class="btn-trace-done" id="btnTraceDone" onclick="traceDone()" disabled><i class="ti ti-check"></i> Listo</button>
   </div>
 </div>
 
 <!-- LOCATION PICKER TOOLBAR (modo cambiar ubicación al editar) -->
 <div id="locationPickerToolbar" class="location-picker-toolbar">
-  <div class="location-picker-hint">📍 Toca o arrastra el marcador para mover la ubicación</div>
-  <button class="location-picker-done" onclick="finishLocationPicker()">✓ Listo</button>
+  <div class="location-picker-hint"><i class="ti ti-map-pin"></i><span>Toca o arrastra el marcador para mover la ubicación</span></div>
+  <button class="location-picker-done" onclick="finishLocationPicker()"><i class="ti ti-check"></i> Listo</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -946,6 +950,6 @@
   </div>
 </div>
 
-<script src="app.js?v=47"></script>
+<script src="app.js?v=48"></script>
 </body>
 </html>

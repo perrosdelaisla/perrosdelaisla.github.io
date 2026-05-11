@@ -19,21 +19,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=36">
+<link rel="stylesheet" href="styles.css?v=37">
 </head>
 <body>
 
 <!-- ONBOARDING -->
 <div class="onboarding" id="onboarding">
   <div class="onb-box">
-    <div class="onb-logo"><img src="https://i.ibb.co/FbBcFvBQ/logo-png.png" alt="Perros de la Isla"></div>
-    <div class="onb-title">Perros de la Isla</div>
+    <div class="onb-logo"><img src="assets/logo-paseos-seguros-icon.png" alt="Paseos Seguros"></div>
+    <h1 class="onb-title">PASEOS SEGUROS</h1>
     <div class="onb-sub">Por paseos felices y seguros</div>
-    <p class="onb-text">Únete a la comunidad que protege los paseos de nuestros perros en Mallorca.</p>
+    <div class="onb-divider"></div>
+    <p class="onb-text">Reporta peligros y descubre rutas seguras de paseo en Mallorca.</p>
     <div class="onb-form">
       <div class="photo-picker" onclick="document.getElementById('onb-foto').click()">
-        <div class="photo-picker-circle" id="onb-foto-preview"><div class="placeholder"><span>📷</span>Tu foto</div></div>
-        <div class="photo-picker-badge">✏️</div>
+        <div class="photo-picker-circle" id="onb-foto-preview"><div class="placeholder"><i class="ti ti-camera"></i>Tu foto</div></div>
+        <div class="photo-picker-badge"><i class="ti ti-pencil"></i></div>
         <input type="file" id="onb-foto" accept="image/*" onchange="previewProfilePhoto(event)">
       </div>
       <div class="form-group"><label>Tu nombre</label><input type="text" id="onb-nombre" placeholder="Ej: María, Alex, Pedro..."></div>
@@ -41,8 +42,9 @@
       <div class="form-group"><label>Municipio habitual de paseo</label><select id="onb-zona"><option value="Palma">Palma</option><option value="Inca">Inca</option><option value="Manacor">Manacor</option><option value="Calvià">Calvià</option><option value="Llucmajor">Llucmajor</option><option value="Alcúdia">Alcúdia</option><option value="Sóller">Sóller</option><option value="Marratxí">Marratxí</option><option value="Andratx">Andratx</option><option value="Pollença">Pollença</option><option value="Campos">Campos</option><option value="Felanitx">Felanitx</option><option value="Son Servera">Son Servera</option><option value="Artà">Artà</option><option value="Santa Maria">Santa Maria</option><option value="Otro">Otro</option></select></div>
       <div class="toggle-row"><span>Mostrar mi nombre en los reportes<small>Si no, aparecerás como "Un vecino de tu zona"</small></span><label class="toggle"><input type="checkbox" id="onb-visible" checked><span class="toggle-slider"></span></label></div>
     </div>
-    <button class="btn-onboarding" onclick="saveProfile()">🐾 Unirme a la comunidad</button>
-    <p style="font-size:11px;color:#555;margin-top:10px">Sin email ni contraseña. Tus datos se guardan en tu dispositivo.</p>
+    <button class="btn-onboarding" onclick="saveProfile()"><i class="ti ti-paw"></i> UNIRME A LA COMUNIDAD</button>
+    <p class="onb-footer">Sin email ni contraseña. Tus datos se guardan en tu dispositivo.</p>
+    <p class="onb-attribution">Una iniciativa de Perros de la Isla</p>
   </div>
 </div>
 
@@ -950,6 +952,6 @@
   </div>
 </div>
 
-<script src="app.js?v=48"></script>
+<script src="app.js?v=49"></script>
 </body>
 </html>

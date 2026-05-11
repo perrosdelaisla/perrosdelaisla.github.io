@@ -381,8 +381,8 @@ async function openProfile(){
     avatar.classList.remove('clickable');
   }
   document.getElementById('prof-name').textContent=p.nombre;
-  document.getElementById('prof-dog').textContent='🐕 '+p.nombre_perro;
-  document.getElementById('prof-zone').textContent='📍 '+p.zona;
+  document.getElementById('prof-dog').textContent=p.nombre_perro;
+  document.getElementById('prof-zone').textContent=p.zona;
   const since=p.created_at?new Date(p.created_at):new Date();
   const months=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   document.getElementById('prof-since').textContent='Miembro desde '+months[since.getMonth()]+' '+since.getFullYear();

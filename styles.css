@@ -361,34 +361,58 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .photo-picker input{display:none}
 .photo-picker-badge{position:absolute;bottom:0;right:0;width:24px;height:24px;border-radius:50%;background:#9cb64b;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid #111}
 
-/* PERFIL MODAL */
-.profile-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:4000;align-items:center;justify-content:center;padding:20px}
+/* PERFIL MODAL · Fase 2H */
+.profile-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:4000;align-items:flex-start;justify-content:center;padding:22px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .profile-modal.open{display:flex}
-.profile-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;width:100%;max-width:380px;padding:24px 20px;text-align:center;max-height:90vh;overflow-y:auto}
-.profile-avatar{width:70px;height:70px;border-radius:50%;background:#9cb64b;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;color:#111;font-weight:700;font-family:'Bebas Neue',sans-serif;overflow:hidden;border:2px solid #9cb64b}
+.profile-card{background:var(--bg-surface-1);border:1px solid var(--bg-surface-2);width:100%;max-width:460px;padding:28px 22px;text-align:center;margin:auto}
+
+.profile-eyebrow{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:1.6px;color:var(--text-tertiary);margin-bottom:14px}
+
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:var(--pdli-oliva);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--bg-base);margin:0 auto 14px;overflow:hidden;border:2px solid var(--pdli-oliva)}
 .profile-avatar.clickable{cursor:pointer}
 .profile-avatar img{width:100%;height:100%;object-fit:cover}
-.profile-name{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:.5px}
-.profile-dog{font-size:13px;color:#9cb64b;margin-top:2px}
-.profile-zone{font-size:12px;color:#888;margin-top:4px}
-.profile-since{font-size:11px;color:#555;margin-top:4px}
-.profile-stats{display:flex;gap:8px;margin-top:16px}
-.stat-box{flex:1;background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:10px 6px;text-align:center}
-.stat-num{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff}
-.stat-label{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.badges-title{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#9cb64b;letter-spacing:1px;margin-top:18px;margin-bottom:10px;text-transform:uppercase}
+
+.profile-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.6px;color:var(--text-primary);margin:0;line-height:1.15}
+
+.profile-meta{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:10px}
+.profile-meta-row{display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text-secondary);line-height:1.3}
+.profile-meta-row i{font-size:14px;color:var(--pdli-rojo)}
+
+.profile-divider{width:36px;height:1px;background:var(--pdli-rojo);margin:20px auto 18px}
+
+/* Rank banner editorial sobrio */
+.profile-rank{display:none;flex-direction:column;align-items:center;gap:8px;padding:14px 16px;border:1px solid var(--bg-surface-2);cursor:pointer;transition:background .2s}
+.profile-rank:active{background:var(--bg-base)}
+.profile-rank-eyebrow{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:1.6px;color:var(--text-tertiary)}
+.profile-rank-row{display:flex;align-items:center;justify-content:center;gap:10px}
+.profile-rank-position{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.4px;color:var(--text-primary);line-height:1}
+.profile-rank i.ti-trophy{font-size:20px;color:var(--pdli-oliva)}
+.profile-rank.no-rank .profile-rank-position{font-size:13px;color:var(--text-secondary);letter-spacing:0.8px;font-family:'Inter',sans-serif;font-weight:600}
+
+/* Stats grid editorial */
+.profile-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--bg-surface-2)}
+.profile-stat{padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;border-right:1px solid var(--bg-surface-2)}
+.profile-stat:last-child{border-right:none}
+.profile-stat i{font-size:16px;color:var(--pdli-oliva)}
+.profile-stat-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--text-primary);letter-spacing:0.4px;line-height:1}
+.profile-stat-label{font-family:'Bebas Neue',sans-serif;font-size:9px;letter-spacing:1.2px;color:var(--text-tertiary)}
+
+/* Badges (emojis intactos · identidad de gamificación) */
+.badges-section{margin-top:22px;padding-top:18px;border-top:1px solid var(--bg-surface-2)}
+.badges-title{font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--pdli-oliva);letter-spacing:1.4px;margin-bottom:12px;text-transform:uppercase;text-align:left}
+.badges-title-rutas{color:#5dade2}
+.badges-title-shares{color:var(--pdli-oliva)}
+.badges-title-sociales{color:#f9ca24}
 .badges-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.badge-item{background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:10px 8px;text-align:center;transition:all .3s}
-.badge-item.unlocked{border-color:#9cb64b;background:#111a0a}
+.badge-item{background:var(--bg-base);border:1px solid var(--bg-surface-2);padding:10px 8px;text-align:center;transition:all .3s}
+.badge-item.unlocked{border-color:var(--pdli-oliva);background:#111a0a}
 .badge-item.unlocked-ruta{border-color:#2980b9;background:#0a1520}
-.badge-item.unlocked-share{border-color:#9cb64b;background:#141a0a}
+.badge-item.unlocked-share{border-color:var(--pdli-oliva);background:#141a0a}
+.badge-item.unlocked-social{border-color:#f9ca24;background:#1a1a00}
 .badge-item.locked{opacity:.35}
 .badge-emoji{font-size:24px;display:block;margin-bottom:4px}
-.badge-name{font-size:11px;font-weight:700;color:#fff;line-height:1.2}
-.badge-desc{font-size:9px;color:#888;margin-top:3px;line-height:1.3}
-.profile-actions{margin-top:16px;display:flex;gap:8px}
-.btn-profile-edit{flex:1;padding:10px;background:#222;color:#aaa;border:1px solid #333;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
-.btn-profile-close{flex:1;padding:10px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.badge-name{font-size:11px;font-weight:700;color:var(--text-primary);line-height:1.2}
+.badge-desc{font-size:9px;color:var(--text-tertiary);margin-top:3px;line-height:1.3}
 
 /* === Pantalla Servicios · Fase 2A === */
 /* Reemplaza el bloque viejo .adi-* / .srv-* / .wa-btn / .ig-* / .group-card /
@@ -670,59 +694,6 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
   border-radius:50%;
 }
 
-/* Banner de posición en el ranking dentro del perfil */
-.rank-banner{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  background:linear-gradient(135deg,#1a1a00,#111);
-  border:1px solid #3a3a1a;
-  border-radius:12px;
-  padding:12px 14px;
-  margin:12px 0;
-  cursor:pointer;
-  transition:all .2s;
-}
-.rank-banner:active{
-  background:linear-gradient(135deg,#2a2a10,#1a1a1a);
-  transform:scale(0.98);
-}
-.rank-banner-icon{
-  font-size:28px;
-  flex-shrink:0;
-}
-.rank-banner-text{
-  flex:1;
-  min-width:0;
-  text-align:left;
-}
-.rank-banner-label{
-  font-size:11px;
-  color:#888;
-  text-transform:uppercase;
-  letter-spacing:.8px;
-  font-weight:600;
-}
-.rank-banner-position{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:22px;
-  color:#f9ca24;
-  letter-spacing:.5px;
-  margin-top:2px;
-  line-height:1;
-}
-.rank-banner-arrow{
-  font-size:22px;
-  color:#666;
-  flex-shrink:0;
-}
-
-/* Variante sin posición (aún sin puntos) */
-.rank-banner.no-rank .rank-banner-position{
-  color:#9cb64b;
-  font-size:16px;
-}
-
 /* HUELLITAS */
 .btn-huellita{margin-top:10px;padding:8px 14px;background:transparent;color:var(--pdli-oliva);border:1px solid var(--pdli-oliva);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .btn-huellita:active{transform:scale(0.95)}
@@ -749,8 +720,6 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .empty-state-text{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-tertiary);line-height:1.55;max-width:280px;margin:0 auto}
 .btn-huellita-sm{padding:4px 10px;font-size:11px;margin-top:0;margin-left:6px}
 .huellita-count{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;min-width:14px;text-align:center}
-.badge-item.unlocked-social{border-color:#f9ca24;background:#1a1a00}
-
 /* FIX bug Flor: recoverModal por encima de onboarding */
 #recoverModal{z-index:5500 !important}
 #recoverModal.open{display:flex !important}
@@ -796,9 +765,10 @@ header{background:#111;padding:14px 16px 12px;display:flex;align-items:center;ga
 .btn-delete-own i{font-size:14px}
 .btn-delete-own:active{background:var(--bg-surface-2)}
 .btn-delete-own:disabled{opacity:0.4;cursor:not-allowed}
-.btn-mis-reportes{display:block;width:100%;padding:12px;margin:12px 0;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;color:#c0392b;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s}
-.btn-mis-reportes:active{background:#2a0a0a;transform:scale(0.98)}
-.btn-mis-reportes #mis-reportes-count{color:#888;font-weight:500;margin-left:4px}
+.btn-mis-reportes{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;margin:18px 0 0;background:transparent;border:1px solid var(--bg-surface-2);color:var(--text-primary);font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1.4px;cursor:pointer;transition:background .2s}
+.btn-mis-reportes:active{background:var(--bg-base)}
+.btn-mis-reportes i{font-size:14px;color:var(--pdli-rojo)}
+.btn-mis-reportes #mis-reportes-count{color:var(--text-tertiary);font-weight:400;margin-left:0}
 .mis-reportes-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:4500;align-items:stretch;justify-content:center;padding:0}
 .mis-reportes-modal.open{display:flex}
 .mis-reportes-card{background:var(--bg-base);border:1px solid var(--bg-surface-2);width:100%;max-width:520px;height:100%;max-height:100vh;display:flex;flex-direction:column}

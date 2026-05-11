@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="styles.css?v=34">
+<link rel="stylesheet" href="styles.css?v=35">
 </head>
 <body>
 
@@ -49,37 +49,48 @@
 <!-- PERFIL MODAL -->
 <div class="profile-modal" id="profileModal">
   <div class="profile-card">
+    <div class="profile-eyebrow">TU PERFIL</div>
     <div class="profile-avatar" id="prof-avatar">?</div>
-    <div class="profile-name" id="prof-name">—</div>
-    <div class="profile-dog" id="prof-dog">—</div>
-    <div class="profile-zone" id="prof-zone">—</div>
-    <div class="profile-since" id="prof-since">—</div>
-    <div class="rank-banner" id="rankBanner" onclick="openRanking()" style="display:none">
-      <div class="rank-banner-icon">🏆</div>
-      <div class="rank-banner-text">
-        <div class="rank-banner-label">Tu posición en el ranking</div>
-        <div class="rank-banner-position" id="rankBannerPosition">—</div>
+    <h2 class="profile-name" id="prof-name">—</h2>
+    <div class="profile-meta">
+      <div class="profile-meta-row"><i class="ti ti-dog"></i><span id="prof-dog">—</span></div>
+      <div class="profile-meta-row"><i class="ti ti-map-pin"></i><span id="prof-zone">—</span></div>
+      <div class="profile-meta-row"><i class="ti ti-calendar"></i><span id="prof-since">—</span></div>
+    </div>
+    <div class="profile-divider"></div>
+    <div class="profile-rank" id="rankBanner" onclick="openRanking()">
+      <div class="profile-rank-eyebrow">TU POSICIÓN</div>
+      <div class="profile-rank-row">
+        <div class="profile-rank-position" id="rankBannerPosition">—</div>
+        <i class="ti ti-trophy"></i>
       </div>
-      <div class="rank-banner-arrow">›</div>
     </div>
     <div class="profile-stats">
-      <div class="stat-box"><div class="stat-num" id="prof-reports">0</div><div class="stat-label">Alertas</div></div>
-      <div class="stat-box"><div class="stat-num" id="prof-confirms">0</div><div class="stat-label">Votos</div></div>
-      <div class="stat-box"><div class="stat-num" id="prof-rutas">0</div><div class="stat-label">Rutas</div></div>
-      <div class="stat-box"><div class="stat-num" id="prof-shares">0</div><div class="stat-label">Shares</div></div>
+      <div class="profile-stat"><i class="ti ti-alert-triangle"></i><div class="profile-stat-num" id="prof-reports">0</div><div class="profile-stat-label">Alertas</div></div>
+      <div class="profile-stat"><i class="ti ti-thumb-up"></i><div class="profile-stat-num" id="prof-confirms">0</div><div class="profile-stat-label">Votos</div></div>
+      <div class="profile-stat"><i class="ti ti-map-2"></i><div class="profile-stat-num" id="prof-rutas">0</div><div class="profile-stat-label">Rutas</div></div>
+      <div class="profile-stat"><i class="ti ti-share"></i><div class="profile-stat-num" id="prof-shares">0</div><div class="profile-stat-label">Shares</div></div>
     </div>
-    <button id="btn-mis-reportes" class="btn-mis-reportes" onclick="openMisReportes()">📋 Mis reportes <span id="mis-reportes-count">(0)</span></button>
-    <div class="badges-title">⚠️ Insignias de alerta</div>
-    <div class="badges-grid" id="badges-grid-alertas"></div>
-    <div class="badges-title" style="color:#5dade2">🗺️ Insignias de rutas</div>
-    <div class="badges-grid" id="badges-grid-rutas"></div>
-    <div class="badges-title" style="color:#9cb64b">📢 Insignias de difusión</div>
-    <div class="badges-grid" id="badges-grid-shares"></div>
-    <div class="badges-title" style="color:#f9ca24">🐾 Insignias Sociales</div>
-    <div class="badges-grid" id="badges-grid-sociales"></div>
-    <div class="profile-actions">
-      <button class="btn-profile-edit" onclick="editProfile()">✏️ Editar perfil</button>
-      <button class="btn-profile-close" onclick="closeProfile()">Cerrar</button>
+    <button id="btn-mis-reportes" class="btn-mis-reportes" onclick="openMisReportes()"><i class="ti ti-list-details"></i> MIS REPORTES <span id="mis-reportes-count">(0)</span></button>
+    <div class="badges-section">
+      <div class="badges-title">⚠️ Insignias de alerta</div>
+      <div class="badges-grid" id="badges-grid-alertas"></div>
+    </div>
+    <div class="badges-section">
+      <div class="badges-title badges-title-rutas">🗺️ Insignias de rutas</div>
+      <div class="badges-grid" id="badges-grid-rutas"></div>
+    </div>
+    <div class="badges-section">
+      <div class="badges-title badges-title-shares">📢 Insignias de difusión</div>
+      <div class="badges-grid" id="badges-grid-shares"></div>
+    </div>
+    <div class="badges-section">
+      <div class="badges-title badges-title-sociales">🐾 Insignias Sociales</div>
+      <div class="badges-grid" id="badges-grid-sociales"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeProfile()">CERRAR</button>
+      <button class="btn-submit btn-submit--oliva" onclick="editProfile()"><i class="ti ti-pencil"></i> EDITAR PERFIL</button>
     </div>
   </div>
 </div>
@@ -935,6 +946,6 @@
   </div>
 </div>
 
-<script src="app.js?v=46"></script>
+<script src="app.js?v=47"></script>
 </body>
 </html>

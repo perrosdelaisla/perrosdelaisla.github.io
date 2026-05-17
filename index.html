@@ -887,56 +887,6 @@
   <button class="btn btn-primary install-banner-btn" id="installBtn" onclick="installApp()">INSTALAR AHORA</button>
 </div>
 
-<!-- MODAL RECLAMAR PREMIO -->
-<div class="modal" id="claimPrizeModal">
-  <div class="modal-box">
-    <div class="modal-eyebrow">RECLAMAR PREMIO</div>
-    <h2>Datos para el envío</h2>
-    <p class="modal-hint">
-      <i class="ti ti-gift"></i>
-      Felicidades por ganar. Necesitamos algunos datos para enviarte el premio.
-    </p>
-
-    <div class="form-group">
-      <label>Nombre completo</label>
-      <input type="text" id="claim-nombre" placeholder="Ej: María García López">
-    </div>
-
-    <div class="form-group">
-      <label>Teléfono</label>
-      <input type="tel" id="claim-telefono" placeholder="Ej: 666 777 888">
-    </div>
-
-    <div class="form-group">
-      <label>Dirección completa</label>
-      <textarea id="claim-direccion" placeholder="Calle, número, piso, código postal, ciudad"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Talla del arnés</label>
-      <select id="claim-talla">
-        <option value="">Elige una talla</option>
-        <option value="Pequeña">Pequeña — perros de hasta 8 kg</option>
-        <option value="Mediana">Mediana — perros de 8 a 18 kg</option>
-        <option value="Grande">Grande — perros de 18 a 30 kg</option>
-        <option value="XL">XL — perros de más de 30 kg</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Observaciones <span class="form-label-aux">(opcional)</span></label>
-      <textarea id="claim-observaciones" placeholder="Horario de entrega, indicaciones especiales..."></textarea>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeClaimPrizeModal()">CANCELAR</button>
-      <button class="btn-submit btn-submit--oliva" id="btn-claim-submit" onclick="submitClaimPrize()">
-        <i class="ti ti-check"></i> ENVIAR DATOS
-      </button>
-    </div>
-  </div>
-</div>
-
 <!-- MINI PERFIL PÚBLICO -->
 <div id="miniPerfilModal">
   <div id="miniPerfilContent"></div>
@@ -952,6 +902,6 @@
   </div>
 </div>
 
-<script src="app.js?v=49"></script>
+<script src="app.js?v=50"></script>
 </body>
 </html>

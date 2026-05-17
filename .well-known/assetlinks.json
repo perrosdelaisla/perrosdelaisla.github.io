@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.perrosdelaisla.paseos",
+      "sha256_cert_fingerprints": [
+        "0B:65:0B:51:77:A5:C2:28:D5:B8:1E:14:67:2F:0C:D7:68:CF:52:DC:66:D3:CB:75:22:C1:A3:F0:1D:E1:6F:DB"
+      ]
+    }
+  }
+]

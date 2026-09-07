@@ -79,10 +79,10 @@ function previewRutaPhoto(event){
 
 // TIPO DE PELIGRO
 const PELIGRO_ICONS={Procesionaria:'🐛',Garrapatas:'🕷️',Cristales:'🔪',Veneno:'☠️',Otro:'⚠️'};
-const PELIGRO_COLORS={Procesionaria:'#c0392b',Garrapatas:'#8e44ad',Cristales:'#e67e22',Veneno:'#2c3e50',Otro:'#7f8c8d'};
+const PELIGRO_COLORS={Procesionaria:'#D91B1D',Garrapatas:'#8e44ad',Cristales:'#e67e22',Veneno:'#2c3e50',Otro:'#7f8c8d'};
 function getPeligroIcon(tipo){return PELIGRO_ICONS[tipo]||'⚠️';}
 function getPeligroTablerIcon(tipo){const map={'Procesionaria':'ti-line-dashed','Garrapatas':'ti-bug','Cristales':'ti-triangles','Veneno':'ti-skull','Otro':'ti-alert-triangle'};return map[tipo]||'ti-alert-triangle';}
-function getPeligroColor(tipo){return PELIGRO_COLORS[tipo]||'#c0392b';}
+function getPeligroColor(tipo){return PELIGRO_COLORS[tipo]||'#D91B1D';}
 function updateRiesgoOptions(){const tipo=document.getElementById('inp-tipo').value;const otroGroup=document.getElementById('otro-peligro-group');otroGroup.style.display=tipo==='Otro'?'block':'none';}
 
 let profilePhotoFile=null;
@@ -567,7 +567,7 @@ function escapeHtml(t){if(t===null||t===undefined) return '';return String(t).re
 function getDistance(lat1,lng1,lat2,lng2){const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
 function timeAgo(d){if(!d) return 'Fecha desconocida';const m=Math.floor((Date.now()-new Date(d).getTime())/60000);if(m<1) return 'Ahora mismo';if(m<60) return `Hace ${m} min`;const h=Math.floor(m/60);if(h<24) return `Hace ${h} h`;const dd=Math.floor(h/24);if(dd<30) return `Hace ${dd} día${dd>1?'s':''}`;const mm=Math.floor(dd/30);return `Hace ${mm} mes${mm>1?'es':''}`;}
 function isHistorico(d){if(!d) return false;return(Date.now()-new Date(d).getTime())/86400000>30;}
-function colorForRisk(a){const now=Date.now();if(a.denials&&a.denials>=2) return '#27ae60';if(a.last_confirmed_at){const ch=(now-new Date(a.last_confirmed_at).getTime())/3600000;if(ch<=48) return '#c0392b';}if(a.created_at){const ah=(now-new Date(a.created_at).getTime())/3600000;if(ah<=48) return '#e67e22';if(ah<=168) return '#f1c40f';}return '#7f8c8d';}
+function colorForRisk(a){const now=Date.now();if(a.denials&&a.denials>=2) return '#27ae60';if(a.last_confirmed_at){const ch=(now-new Date(a.last_confirmed_at).getTime())/3600000;if(ch<=48) return '#D91B1D';}if(a.created_at){const ah=(now-new Date(a.created_at).getTime())/3600000;if(ah<=48) return '#e67e22';if(ah<=168) return '#f1c40f';}return '#7f8c8d';}
 function createRiskIcon(color,faded){const o=faded?0.5:1;return L.divIcon({html:`<div style="background:${color};width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6);opacity:${o}"></div>`,iconSize:[13,13],iconAnchor:[6,6],className:''});}
 function createRutaIcon(verificada){return L.divIcon({html:`<div class="ruta-marker ${verificada?'verificada-marker':'pendiente-marker'}">${verificada?'✅':'🐕'}</div>`,iconSize:[28,28],iconAnchor:[14,14],className:''});}
 
@@ -647,7 +647,7 @@ function initMap(){
   window.streetLayer.addTo(window.map);
   document.getElementById('layerToggleBtn').innerHTML='<i class="ti ti-satellite"></i>';
 
-  window.rIcon=createRiskIcon('#c0392b');
+  window.rIcon=createRiskIcon('#D91B1D');
   const bIcon=L.divIcon({html:'<div style="background:#2980b9;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)"></div>',iconSize:[13,13],iconAnchor:[6,6],className:''});
 
   window.map.on('click',function(e){
@@ -686,7 +686,7 @@ function initMap(){
     }
   });
 
-  vets.forEach(v=>{L.marker([v.lat,v.lng],{icon:bIcon}).addTo(window.map).bindPopup(`<div style="font-size:13px">🏥 <b>${v.name}</b><br><small>${v.addr}</small><br><br><a href="tel:${v.phone}" style="display:block;margin-bottom:6px;background:#c0392b;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none">📞 Llamar</a><a href="${v.maps}" target="_blank" style="display:block;background:#3498db;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none">🧭 Cómo llegar</a></div>`);});
+  vets.forEach(v=>{L.marker([v.lat,v.lng],{icon:bIcon}).addTo(window.map).bindPopup(`<div style="font-size:13px">🏥 <b>${v.name}</b><br><small>${v.addr}</small><br><br><a href="tel:${v.phone}" style="display:block;margin-bottom:6px;background:#D91B1D;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none">📞 Llamar</a><a href="${v.maps}" target="_blank" style="display:block;background:#3498db;color:#fff;padding:6px;border-radius:6px;text-align:center;text-decoration:none">🧭 Cómo llegar</a></div>`);});
   loadAvistamientos();
 }
 
@@ -753,14 +753,14 @@ const SKELETON_FEED_HTML='<div class="skeleton-feed"><div class="skeleton-card">
 async function loadAvistamientos(){
   const _avistEl=document.getElementById('avist-container');
   if(_avistEl) _avistEl.innerHTML=SKELETON_FEED_HTML;
-  try{const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando avistamientos.</p>';return;}let data=await res.json();data=data.filter(a=>{if(!a.created_at) return true;const days=(Date.now()-new Date(a.created_at).getTime())/86400000;if(days<=DIAS_VISIBILIDAD_REPORTES) return true;if(a.last_confirmed_at){if((Date.now()-new Date(a.last_confirmed_at).getTime())/86400000<=DIAS_VISIBILIDAD_REPORTES) return true;}return false;});cachedAvistamientos=data;const reporterIds=[...new Set(data.map(a=>a.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);const reportCounts={};data.forEach(a=>{if(a.reporter_id){reportCounts[a.reporter_id]=(reportCounts[a.reporter_id]||0)+1;}});if(userLat&&userLng){data=data.map(a=>({...a,distance:(a.lat&&a.lng)?getDistance(userLat,userLng,parseFloat(a.lat),parseFloat(a.lng)):null}));data.sort((a,b)=>{if(a.distance===null) return 1;if(b.distance===null) return -1;return a.distance-b.distance;});}
+  try{const res=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=*&status=eq.activo&order=created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('avist-container').innerHTML='<p style="color:#D91B1D;font-size:13px">Error cargando avistamientos.</p>';return;}let data=await res.json();data=data.filter(a=>{if(!a.created_at) return true;const days=(Date.now()-new Date(a.created_at).getTime())/86400000;if(days<=DIAS_VISIBILIDAD_REPORTES) return true;if(a.last_confirmed_at){if((Date.now()-new Date(a.last_confirmed_at).getTime())/86400000<=DIAS_VISIBILIDAD_REPORTES) return true;}return false;});cachedAvistamientos=data;const reporterIds=[...new Set(data.map(a=>a.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);const reportCounts={};data.forEach(a=>{if(a.reporter_id){reportCounts[a.reporter_id]=(reportCounts[a.reporter_id]||0)+1;}});if(userLat&&userLng){data=data.map(a=>({...a,distance:(a.lat&&a.lng)?getDistance(userLat,userLng,parseFloat(a.lat),parseFloat(a.lng)):null}));data.sort((a,b)=>{if(a.distance===null) return 1;if(b.distance===null) return -1;return a.distance-b.distance;});}
   if(currentMapMode==='avistamientos'){
   markersLayer.clearLayers();
   markersById={};
   data.forEach(a=>{
     const lat=parseFloat(a.lat),lng=parseFloat(a.lng);
     if(isNaN(lat)||isNaN(lng)) return;
-    const icon=createRiskIcon('#c0392b',isHistorico(a.created_at));
+    const icon=createRiskIcon('#D91B1D',isHistorico(a.created_at));
     const tipo=a.tipo_peligro||'Procesionaria';
     const popupHtml=`<div class="popup-clickable" onclick="goToCard('${a.id}','.avist-item')"><div style="font-size:13px"><i class="ti ${getPeligroTablerIcon(tipo)}"></i> <b>${escapeHtml(a.ubicacion||'Sin ubicación')}</b><br><span style="color:#666;font-size:11px">${timeAgo(a.created_at)}</span><br>${escapeHtml(tipo)} · ${escapeHtml(a.riesgo||'')}</div><span class="popup-hint"><i class="ti ti-eye"></i> Ver detalles ↓</span></div>`;
     const mk=L.marker([lat,lng],{icon}).addTo(markersLayer).bindPopup(popupHtml);
@@ -786,12 +786,12 @@ async function loadAvistamientos(){
       const span = item.querySelector('.btn-huellita .huellita-count');
       if(span) span.textContent = count;
     }
-  });}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}
+  });}catch(err){console.error("Error:",err);document.getElementById('avist-container').innerHTML='<p style="color:#D91B1D;font-size:13px">Error de conexión.</p>';}
 }
 
 // RUTAS
 let allRutas=[];
-async function loadRutas(){try{const res=await fetch(SUPA_URL+"/rest/v1/rutas?select=*&status=eq.activo&order=verificada.desc,created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('rutas-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error cargando rutas.</p>';return;}allRutas=await res.json();if(cachedAvistamientos.length===0){try{const ar=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=lat,lng,ubicacion,riesgo,created_at&status=eq.activo&order=created_at.desc",{headers:HEADERS});cachedAvistamientos=await ar.json();}catch(e){}}const reporterIds=[...new Set(allRutas.map(r=>r.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);renderRutasList(allRutas);renderRutasOnMap(allRutas);}catch(err){console.error("Error rutas:",err);document.getElementById('rutas-container').innerHTML='<p style="color:#c0392b;font-size:13px">Error de conexión.</p>';}}
+async function loadRutas(){try{const res=await fetch(SUPA_URL+"/rest/v1/rutas?select=*&status=eq.activo&order=verificada.desc,created_at.desc",{headers:HEADERS});if(!res.ok){document.getElementById('rutas-container').innerHTML='<p style="color:#D91B1D;font-size:13px">Error cargando rutas.</p>';return;}allRutas=await res.json();if(cachedAvistamientos.length===0){try{const ar=await fetch(SUPA_URL+"/rest/v1/avistamientos?select=lat,lng,ubicacion,riesgo,created_at&status=eq.activo&order=created_at.desc",{headers:HEADERS});cachedAvistamientos=await ar.json();}catch(e){}}const reporterIds=[...new Set(allRutas.map(r=>r.reporter_id).filter(Boolean))];await loadNamesCache(reporterIds);renderRutasList(allRutas);renderRutasOnMap(allRutas);}catch(err){console.error("Error rutas:",err);document.getElementById('rutas-container').innerHTML='<p style="color:#D91B1D;font-size:13px">Error de conexión.</p>';}}
 
 function getNearbyAlerts(lat,lng,radiusKm,waypoints){if(!lat||!lng) return [];radiusKm=radiusKm||1.5;const recentAlerts=cachedAvistamientos.filter(a=>{if(!a.created_at) return true;return(Date.now()-new Date(a.created_at).getTime())/86400000<=14;});if(waypoints&&waypoints.length>=2){return recentAlerts.filter(a=>{if(!a.lat||!a.lng) return false;const aLat=parseFloat(a.lat),aLng=parseFloat(a.lng);for(const wp of waypoints){if(getDistance(wp.lat,wp.lng,aLat,aLng)<=radiusKm) return true;}return false;});}return recentAlerts.filter(a=>{if(!a.lat||!a.lng) return false;return getDistance(parseFloat(lat),parseFloat(lng),parseFloat(a.lat),parseFloat(a.lng))<=radiusKm;});}
 
@@ -801,7 +801,7 @@ function renderRutasOnMap(rutas){
   cachedAvistamientos.forEach(a=>{
     const lat=parseFloat(a.lat),lng=parseFloat(a.lng);
     if(isNaN(lat)||isNaN(lng)) return;
-    const icon=createRiskIcon('#c0392b',true);
+    const icon=createRiskIcon('#D91B1D',true);
     const tipo=a.tipo_peligro||'Procesionaria';
     const tipoIcon=getPeligroIcon(tipo);
     const tipoLabel=tipo==='Otro'&&a.otro_peligro?a.otro_peligro:tipo;
@@ -822,7 +822,7 @@ function renderRutasOnMap(rutas){
       const mkStart=L.marker([wps[0].lat,wps[0].lng],{icon:L.divIcon({html:'<div class="wp-start">A</div>',iconSize:[22,22],iconAnchor:[11,11],className:''})}).addTo(rutasLayer).bindPopup(startPopup);
       markersById[r.id]=mkStart;
       const lastWp=wps[wps.length-1];
-      L.marker([lastWp.lat,lastWp.lng],{icon:L.divIcon({html:'<div class="wp-end">B</div>',iconSize:[22,22],iconAnchor:[11,11],className:''})}).addTo(rutasLayer).bindPopup(`<div style="font-size:13px">${isVer?'<i class="ti ti-circle-check"></i>':'<i class="ti ti-paw"></i>'} <b>${escapeHtml(r.nombre)}</b><br><span style="color:#c0392b;font-size:11px">FINAL</span></div>`);
+      L.marker([lastWp.lat,lastWp.lng],{icon:L.divIcon({html:'<div class="wp-end">B</div>',iconSize:[22,22],iconAnchor:[11,11],className:''})}).addTo(rutasLayer).bindPopup(`<div style="font-size:13px">${isVer?'<i class="ti ti-circle-check"></i>':'<i class="ti ti-paw"></i>'} <b>${escapeHtml(r.nombre)}</b><br><span style="color:#D91B1D;font-size:11px">FINAL</span></div>`);
     } else {
       const lat=parseFloat(r.lat),lng=parseFloat(r.lng);
       if(isNaN(lat)||isNaN(lng)) return;
